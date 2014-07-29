@@ -1,0 +1,16 @@
+.dashboard .grid-sizer {
+  width: 49%;
+}
+
+.dashboard .panel {
+  width:  49%;
+  float: left;
+}
+
+.dashboard .panel.w2 {
+  width:  100%;
+}
+
+.dashboard .grid-gutter {
+  width: 2%;
+}

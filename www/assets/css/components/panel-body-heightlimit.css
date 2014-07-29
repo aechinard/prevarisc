@@ -1,0 +1,4 @@
+.panel-body.panel-body-heightlimit {
+  max-height: 300px;
+  overflow-y: scroll;
+}

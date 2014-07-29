@@ -1,0 +1,43 @@
+ul.search-list {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+ul.search-list li {
+  background-color: #f5f5f5;
+  padding: 6px;
+  height: 35px;
+  line-height: 24px;
+  overflow: hidden;
+}
+
+ul.search-list li.child {
+  background-color: white;
+  padding: 0px;
+  margin-left: 50px;
+}
+
+ul.search-list li.child ul.search-list {
+  background-color: white;
+}
+
+ul.search-list li:hover {
+  background-color: #f0f0f0;
+}
+
+ul.search-list li.slide {
+  border-left: 3px dotted #aaa;
+}
+
+ul.search-list li.slide:hover {
+  cursor: pointer;
+}
+
+ul.search-list li > .avis {
+  float: right
+}
+
+ul.search-list li + li {
+  margin-top: 3px;
+}

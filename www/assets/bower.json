@@ -1,0 +1,18 @@
+{
+  "name": "Prevarisc",
+  "dependencies": {
+    "jquery": "2.*",
+    "bootstrap": "3.*",
+    "dropzone": "3.*",
+    "fullcalendar": "1.*",
+    "bootstrap-multiselect": "0.9.*",
+    "jquery.tablesorter": "2.*",
+    "packery": "1.*",
+    "animate.css": "3.*",
+    "selectize": "0.10.*",
+    "jQuery.Marquee": "1.*"
+  },
+  "resolutions": {
+    "jquery": "2.*"
+  }
+}

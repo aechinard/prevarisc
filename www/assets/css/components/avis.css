@@ -1,0 +1,22 @@
+.avis {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #fff;
+  background-color: #aaa;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+}
+
+span.avis + span.avis {
+    margin-right: 2px;
+}
+
+.avis.avis-favorable { background-color:#8eb571; }
+.avis.avis-defavorable{ background-color:#d15c6a; }
+.avis.avis-differe { background-color: #3a87ad; }
+.avis.avis-echeancier { background-color: #3a87ad; }
