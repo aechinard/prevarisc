@@ -1,10 +1,10 @@
 # Prevarisc
 
-[Prevarisc](http://sdis62.github.io/prevarisc/) - Application web open-source gérant l'ensemble de l'activité du service prévention au sein d'un SDIS.
+[Prevarisc](http://prevarisc.github.io)
 
-![](https://www.dropbox.com/s/dcfsalor1tqcap9/Capture%20d%27%C3%A9cran%202014-06-20%2010.50.30.png?dl=1)
+![](http://prevarisc.github.io/img/screenshot.png)
 
-## Caractéristiques
+Application web open-source gérant l'ensemble de l'activité du service prévention au sein d'un SDIS.
 
 * Géo-localisation : Les établissements sont géolocalisés automatiquement à la saisie et sont visibles sur une carte GeoPortail.
 * LDAP : Prevarisc permet d'interagir  avec votre annuaire d'entreprise. Plus besoin de créer de double compte, utilisez simplement l'existant !
@@ -13,35 +13,20 @@
 * Extractions et statistiques : Exploitez la base de données de prevarisc pour sortir des statistiques aidant notamment à remplir INFOSDIS.
 * Propulsé par la communauté : Prevarisc est en constante évolution ! Simple utilisateur ou contributeur, participez à son amélioration.
 
-## Guide de démarrage
+## Documentation officielle
 
-Sur un serveur web :
-
-```sh
-$ git clone https://github.com/SDIS62/prevarisc
-$ cd prevarisc
-$ php composer.phar install --prefer-source
-$ chown –R www-data:www-data *
-$ chmod –R 555 *
-$ chmod –R 755 public/
-```
-Ensuite vous pouvez créer un fichier secret.ini dans application/configs afin de configurer Prevarisc pour qu'il ait accès à la base de données (entre autres).
-Vous devez créer un Virtualhost pointant vers le dossier public de Prevarisc.
-Une documentation détaillée est disponible ici : [Documentation d'installation](https://github.com/SDIS62/prevarisc/blob/master/docs/documentation_installation.md).
+Une documentation détaillée est disponible ici : [Documentation d'installation](http://prevarisc.github.io/docs).
 
 ## Suivi du projet
 
-* [Travail en cours / jalons](https://github.com/SDIS62/prevarisc/issues/milestones) ;
-* [Suivi des bugs et corrections](https://github.com/SDIS62/prevarisc/issues).
+* [Travail en cours / jalons](https://github.com/prevarisc/prevarisc/issues/milestones) ;
+* [Suivi des bugs et corrections](https://github.com/prevarisc/prevarisc/issues).
 
-## Participation au projet
+## Contribution au projet
 
-Voir la [documentation de contribution](https://github.com/SDIS62/prevarisc/blob/master/CONTRIBUTING.md).
-
-Ps: Nous sommes régulièrement solicité sur l'ajout et/ou sur la suppression de certaines fonctionnalités. Si un changement peut avoir un impact positif sur l'ensemble des utilisateurs, nous serions heureux de l'examiner. 
-
-Sinon, Prevarisc est une application fork-friendly et vous pouvez parfaitement maintenir une version personnalisée.
+Merci de vous intéresser à la contribution ! Avant d'effectuer un changement dans le code source de Prevarisc, veuillez vous référer à la [documentation de contribution](https://github.com/SDIS62/prevarisc/blob/master/CONTRIBUTING.md).
+Nous sommes régulièrement solicité sur l'ajout et/ou sur la suppression de certaines fonctionnalités. Si un changement peut avoir un impact positif sur l'ensemble des utilisateurs, nous serions heureux de l'examiner. Sinon, Prevarisc est une application fork-friendly et vous pouvez parfaitement maintenir une version personnalisée.
 
 ## Licence
 
-[CeCILL-B](http://www.cecill.info/licences/Licence_CeCILL-B_V1-fr.html)
+Prevarisc est une application web open-source sous licence [CeCILL-B](http://www.cecill.info/licences/Licence_CeCILL-B_V1-fr.html)
