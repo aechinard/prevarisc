@@ -9,8 +9,9 @@ class Service_Dossier
      */
     public function getAllTypes()
     {
-    	$DB_type = new Model_DbTable_DossierType;
-    	return $DB_type->fetchAll()->toArray();
+        $DB_type = new Model_DbTable_DossierType;
+
+        return $DB_type->fetchAll()->toArray();
     }
 
     /**
@@ -21,6 +22,7 @@ class Service_Dossier
     public function getAllNatures()
     {
         $db_nature = new Model_DbTable_DossierNatureliste;
+
         return $db_nature->fetchAll()->toArray();
     }
 }

@@ -24,7 +24,7 @@
         public function getUsersWithInformations($group = null)
         {
             $this->select = $this->select()->setIntegrityCheck(false);
-            $select = $this	 ->select
+            $select = $this->select
                              ->from(array("u" => "utilisateur"), array(
                                  "uid" => "ID_UTILISATEUR",
                                  "ID_UTILISATEUR",

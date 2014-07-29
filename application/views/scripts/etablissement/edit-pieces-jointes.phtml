@@ -1,30 +1,31 @@
+<?php echo $this->render('etablissement/partials/header.phtml') ?>
+
 <div class='pull-right' >
-    <a id="addPJQuick" class="btn"><i class="icon-upload"></i> Ajout rapide</a>
-    <a href='<?php echo $this->url(array('action' => 'add-piece-jointe')) ?>' class="btn" data-toggle="modal" data-backdrop="false" data-target="#reponse-modal" ><i class="icon-upload"></i> Ajouter une pièce jointe</a>
-    <a class='btn' href="<?php echo $this->url(array('action' => 'pieces-jointes')) ?>">Revenir sur l'affichage des pièces jointes</a>
+  <a class='btn btn-default' href="<?php echo $this->url(array('action' => 'pieces-jointes')) ?>">Revenir sur l'affichage des contacts</a>
+  <div class='btn-group'>
+    <a href='<?php echo $this->url(array('action' => 'add-piece-jointe')) ?>' class="btn btn-primary" data-toggle="modal" data-target="#reponse-modal" >Ajouter une pièce jointe</a>
+  </div>
 </div>
 
-<h3>Gestion des pièces jointes</h3>
-
-<div id="dropzone" class="dropzone" style="display:none"></div>
+<h2>Gestion des pièces jointes</h2>
 
 <?php if(count($this->pieces_jointes) == 0) : ?>
     <p class='muted'>Il n'y a pas de pièce jointe.</p>
 <?php else : ?>
-<table id="table-pieces-jointes" class='table table-bordered table-condensed table-hover'> 
-	<thead> 
+<table id="table-pieces-jointes" class='table table-bordered table-condensed table-hover'>
+	<thead>
 		<tr>
-			<th>Nom</th> 
+			<th>Nom</th>
 			<th>Description</th>
 			<th>Date d'ajout</th>
 			<th></th>
-		</tr> 
-	</thead> 
+		</tr>
+	</thead>
 	<tbody>
 		<?php foreach ($this->pieces_jointes as $piecejointe) : ?>
-			<tr>   
+			<tr>
 				<td>
-					<a href='/data/uploads/pieces-jointes/<?php echo $piecejointe['ID_PIECEJOINTE'] . $piecejointe['EXTENSION_PIECEJOINTE'] ?>' target='_blank' >
+					<a href='/download?file=<?php echo $piecejointe['ID_PIECEJOINTE'] . $piecejointe['EXTENSION_PIECEJOINTE'] ?>' target='_blank' >
 						<?php echo $piecejointe['NOM_PIECEJOINTE'] ?>
 					</a>
 				</td>
@@ -43,37 +44,4 @@
 </table>
 <?php endif ?>
 
-<div id="reponse-modal" class="modal hide fade" ></div>
-
-<script type="text/javascript">
-    Dropzone.autoDiscover = false;
-    
-    $(document).ready(function() { 
-        // Gestion des boites modales
-        $("a[data-toggle='modal']").click(function() {
-            var target = $(this).attr("data-target");
-            var url = $(this).attr("href");
-            $(target).load(url);
-        });
-        
-        
-        /* GESTION DU GLISSEZ DEPOSER */
-        $("#addPJQuick").click(function() {
-            $('#dropzone').toggle();
-        });
-
-        var myDropzone = new Dropzone("#dropzone", { 
-            url: "<?php echo $this->url(array('action' => 'add-piece-jointe')) ?>?mise_en_avant=0",
-            paramName: "file"
-        });
-        myDropzone.on("success", function(file, responseText) {
-            console.log(responseText);
-            if (responseText !== undefined) {
-                $('#fiche_etablissement').empty().append(responseText);
-            } else
-            {
-                document.location.reload();
-            }
-        });
-    });
-</script>
+<div id="reponse-modal" class="modal fade" ></div>

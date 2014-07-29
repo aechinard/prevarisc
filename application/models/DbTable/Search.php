@@ -8,19 +8,17 @@
         private $nb_items = 100;
 
         // On demare la recherche
-        public function run( $id_etablissement_parent = false, $numero_de_page = null, $paginator = true )
+        public function run($id_etablissement_parent = false, $numero_de_page = null, $paginator = true)
         {
             // Recherche par niveaux
-            if ($id_etablissement_parent !== false)
-            {
+            if ($id_etablissement_parent !== false) {
                 if($this->item == 'etablissement')
                     $this->select->where($id_etablissement_parent === true || $id_etablissement_parent == 0 ? "etablissementlie.ID_ETABLISSEMENT IS NULL" : "etablissementlie.ID_ETABLISSEMENT = " . $id_etablissement_parent);
                 elseif($this->item == 'dossier')
                     $this->select->where($id_etablissement_parent === true || $id_etablissement_parent == 0 ? "dossierlie.ID_DOSSIER1 IS NULL" : "dossierlie.ID_DOSSIER1 = " . $id_etablissement_parent);
             }
 
-            if(!$paginator)
-            {
+            if (!$paginator) {
                 return $this->fetchAll($this->select);
             }
 
@@ -44,7 +42,7 @@
         }
 
         // On set le type d'entité avec ce que l'on recherche
-        public function setItem( $item )
+        public function setItem($item)
         {
             $this->item = $item;
             $this->select = $this->select()->setIntegrityCheck(false);
@@ -136,7 +134,7 @@
         }
 
         // Filtre
-        public function setCriteria( $key, $value, $exact = true, $clause = "where")
+        public function setCriteria($key, $value, $exact = true, $clause = "where")
         {
             $string = null;
 
@@ -162,14 +160,14 @@
         }
 
         // Limiter les résultats
-        public function limit( $value )
+        public function limit($value)
         {
             $this->select->limit( $value );
 
             return $this;
         }
 
-        public function order( $value )
+        public function order($value)
         {
             $this->select->order( $value );
 

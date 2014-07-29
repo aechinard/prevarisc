@@ -41,7 +41,6 @@
                 AND DATE_COMMISSION BETWEEN '".$debut."'	AND '".$fin."'
             ";
             //echo $select;
-
             return $this->getAdapter()->fetchAll($select);
         }
         public function getNextCommission($date, $next_date)
@@ -51,15 +50,17 @@
                 LEFT JOIN commission c ON d.COMMISSION_CONCERNE = c.ID_COMMISSION
                 WHERE DATE_COMMISSION BETWEEN '".date('Y-m-d', $date)."' AND '".date('Y-m-d', $next_date)."'
                 ORDER BY DATE_COMMISSION, HEUREDEB_COMMISSION";
+
             return $this->getAdapter()->fetchAll($select);
         }
-        
+
         public function getMonthCommission($mois,$annee,$idcom)
         {
             $select = "SELECT *
                 FROM datecommission
                 WHERE MONTH(DATE_COMMISSION) = '".$mois."'  AND   YEAR(DATE_COMMISSION) = '".$annee."'
                 AND COMMISSION_CONCERNE = '".$idcom."'";
+
             return $this->getAdapter()->fetchAll($select);
         }
 
@@ -83,7 +84,6 @@
                 ORDER BY DATE_COMMISSION
             ";
             //echo $select;
-
             return $this->getAdapter()->fetchAll($select);
         }
 

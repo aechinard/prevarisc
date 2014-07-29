@@ -1,17 +1,19 @@
+<?php echo $this->render('etablissement/partials/header.phtml') ?>
+
 <div id='etablissement'>
 
     <div class='pull-right' >
-        <a class='btn' href="<?php echo $this->url(array('action' => 'edit')) ?>">Modifier la fiche</a>
+        <a class='btn btn-default' href="<?php echo $this->url(array('action' => 'edit')) ?>">Modifier la fiche</a>
     </div>
 
-    <h3>Fiche d'informations générales</h3>
+    <h2>Fiche d'informations générales</h2>
 
-    <div class='row-fluid'>
+    <div class='row'>
         <!-- Informations générales de l'établissement -->
-        <div class='span6'>
+        <div class='col-xs-6'>
 
             <!-- Classement de l'établissement -->
-            <h4 class='h4_subtitle'>Classement</h4>
+            <h3>Classement</h3>
             <dl class='dl-horizontal'>
                 <dt>Genre</dt>
                 <dd>
@@ -52,16 +54,16 @@
 
             <!-- Activités de l'établissement -->
             <?php if(in_array($this->etablissement['informations']['ID_GENRE'], array(2, 3))) : ?>
-            <h4 class='h4_subtitle'>Activités <?php if( $this->etablissement['informations']["LOCALSOMMEIL_ETABLISSEMENTINFORMATIONS"] && $this->etablissement['informations']['ID_GENRE'] == 2) echo "<span class='badge badge-info pull-right'>Présence de locaux à sommeil</span>" ?></h4>
+            <h3>Activités <?php if( $this->etablissement['informations']["LOCALSOMMEIL_ETABLISSEMENTINFORMATIONS"] && $this->etablissement['informations']['ID_GENRE'] == 2) echo "<span class='badge badge-info pull-right'>Présence de locaux à sommeil</span>" ?></h3>
             <dl class='dl-horizontal'>
                 <!-- Type et activités -->
                 <dt>Types & activités</dt>
                 <dd>
-                    <ul class='unstyled'>
+                    <ul class='list-unstyled'>
                         <li>
                             <strong>
                                 <?php
-                                    echo file_exists(APPLICATION_PATH . DS . '..' . DS . 'public' . DS . 'images' . DS . 'types' . DS . 'b' . DS . 'icone-type-' . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . '.png') ? "<img src='/images/types/b/icone-type-" . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . ".png' title='" . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . "' />&nbsp;-&nbsp;" : $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . "&nbsp;-&nbsp;";
+                                    echo file_exists(APPLICATION_PATH . DS . '..' . DS . 'public' . DS . 'img' . DS . 'types' . DS . 'b' . DS . 'icone-type-' . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . '.png') ? "<img src='/img/types/b/icone-type-" . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . ".png' title='" . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . "' />&nbsp;-&nbsp;" : $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . "&nbsp;-&nbsp;";
                                 ?>
                                 <?php echo $this->etablissement['informations']['LIBELLE_TYPEACTIVITE_PRINCIPAL'] ?>
                             </strong>
@@ -82,7 +84,7 @@
 
             <!-- Rubriques -->
             <?php if($this->etablissement['informations']["ICPE_ETABLISSEMENTINFORMATIONS"]) : ?>
-            <h4 class='h4_subtitle'>Rubriques ICPE</h4>
+            <h3>Rubriques ICPE</h3>
             <?php if(count($this->etablissement['rubriques']) == 0) : ?>
             <p class='muted text-center'>Pas de rubriques disponible</p>
             <?php else : ?>
@@ -113,7 +115,7 @@
 
             <!-- Les effectifs -->
             <?php if(in_array($this->etablissement['informations']['ID_GENRE'], array(2, 3, 5, 6))) : ?>
-            <h4 class='h4_subtitle'>Les effectifs</h4>
+            <h3>Les effectifs</h3>
             <dl class='dl-horizontal'>
                 <!-- Effectif public -->
                 <?php if(in_array($this->etablissement['informations']['ID_GENRE'], array(2, 3, 5))) : ?>
@@ -157,7 +159,7 @@
 
             <!-- Plan -->
             <?php if(in_array($this->etablissement['informations']['ID_GENRE'], array(2, 3, 5, 6))) : ?>
-            <h4 class='h4_subtitle'>Plans d'intervention</h4>
+            <h3>Plans d'intervention</h3>
             <?php if(count($this->etablissement['plans']) == 0) : ?>
             <p class='muted text-center'>Pas de plans disponible</p>
             <?php else : ?>
@@ -186,15 +188,15 @@
 
             <!-- Etablissement lié -->
             <?php if(count($this->etablissement['etablissement_lies']) > 0) : ?>
-            <h4 class='h4_subtitle'>Établissements liés <small><?php echo count($this->etablissement['etablissement_lies']) > 0 ? "(" . count($this->etablissement['etablissement_lies']) . " établissements)" : "" ?></small></h4>
-            <ul class='recherche_liste unstyled'>
+            <h3>Établissements liés <small><?php echo count($this->etablissement['etablissement_lies']) > 0 ? "(" . count($this->etablissement['etablissement_lies']) . " établissements)" : "" ?></small></h3>
+            <ul class='search-list'>
                 <?php echo $this->partialLoop('search/results/etablissement.phtml', $this->etablissement['etablissement_lies']); ?>
             </ul>
             <?php endif ?>
         </div>
 
         <!-- Carte de l'emplacement de l'établissement / informations  -->
-        <div class='span6'>
+        <div class='col-xs-6'>
             <!-- Cartes et diaporama -->
             <ul id='menu_nav' class="nav nav-tabs" style="margin: 0; padding: 0; border-bottom: none;">
                 <?php if( count($this->etablissement['diapo_plans']) > 0 ) : ?>
@@ -295,7 +297,7 @@
                             <div class="item <?php if($key == 0 ) echo 'active' ?>"  >
                                 <img style="margin: 0 auto; width: auto; height: 350px; max-height: 350px;" src="/data/uploads/pieces-jointes/miniatures/<?php echo $item["ID_PIECEJOINTE"].".jpg" ?>" alt="" />
                                 <div class="carousel-caption">
-                                  <h4><?php echo $item['NOM_PIECEJOINTE'] ?></h4>
+                                  <h3><?php echo $item['NOM_PIECEJOINTE'] ?></h3>
                                   <p><?php echo $item['DESCRIPTION_PIECEJOINTE'] ?></p>
                                 </div>
                             </div>
@@ -322,7 +324,7 @@
                             <div class="item <?php if($key == 0 ) echo 'active' ?>" >
                                 <img style="margin: 0 auto; width: auto; height: 350px; max-height: 350px;" src="/data/uploads/pieces-jointes/miniatures/<?php echo $item["ID_PIECEJOINTE"].".jpg" ?>" alt="" />
                                 <div class="carousel-caption">
-                                  <h4><?php echo $item['NOM_PIECEJOINTE'] ?></h4>
+                                  <h3><?php echo $item['NOM_PIECEJOINTE'] ?></h3>
                                   <p><?php echo $item['DESCRIPTION_PIECEJOINTE'] ?></p>
                                 </div>
                             </div>
@@ -337,7 +339,7 @@
             </div>
 
             <?php if(count($this->etablissement['adresses']) > 0) : ?>
-            <h4 class='h4_subtitle'>Adresse</h4>
+            <h3>Adresse</h3>
             <dl class='dl-horizontal'>
                 <dt>Adresses</dt>
                 <dd>
@@ -362,11 +364,9 @@
                 <?php if(count($this->groupements_de_communes) > 0) : ?>
                 <dt>Groupements</dt>
                 <dd>
-                    <ul class='unstyled'>
+                    <ul class='list-unstyled'>
                         <?php foreach($this->groupements_de_communes as $groupement) : ?>
-                        <li>
-                            <a href="/groupement/view?id=<?php echo $groupement["ID_GROUPEMENT"] ?>"><?php echo $groupement["LIBELLE_GROUPEMENT"] ?> (<?php echo $groupement["LIBELLE_GROUPEMENTTYPE"] ?>)</a>
-                        </li>
+                        <li><?php echo $groupement["LIBELLE_GROUPEMENT"] ?> (<?php echo $groupement["LIBELLE_GROUPEMENTTYPE"] ?>)</li>
                         <?php endforeach ?>
                     </ul>
                 </dd>
@@ -375,7 +375,7 @@
             <?php endif ?>
 
             <?php if(!empty($this->etablissement['general']['TELEPHONE_ETABLISSEMENT']) || !empty($this->etablissement['general']['FAX_ETABLISSEMENT']) || !empty($this->etablissement['general']['COURRIEL_ETABLISSEMENT'])) : ?>
-            <h4 class='h4_subtitle'>Coordonnées</h4>
+            <h3>Coordonnées</h3>
             <dl class='dl-horizontal'>
                 <!-- Téléphone -->
                 <?php if(!empty($this->etablissement['general']['TELEPHONE_ETABLISSEMENT'])) : ?>
@@ -405,7 +405,7 @@
             </dl>
             <?php endif ?>
 
-            <h4 class='h4_subtitle'>Données prévention</h4>
+            <h3>Données prévention</h3>
             <dl class='dl-horizontal'>
                 <!-- Commission compétente -->
                 <?php if(in_array($this->etablissement['informations']['ID_GENRE'], array(2, 5))) : ?>
@@ -466,13 +466,13 @@
 
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function() {
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
         // Par défaut, on montre le premier onglet disponible (carte, diapo, ou plans) sinon rien
         $('#menu_nav a:last').tab('show');
 
         // Slide des établissements enfants contenant d'autres établissements
-        $("ul.recherche_liste li.slide").live("click", function() {
+        $("ul.recherche_liste li.slide").on("click", function() {
             var container = this;
             if( $(this).hasClass("active") ) {
                 $(this).next().slideUp(400, function() {$(container).next().remove()});
@@ -483,7 +483,7 @@
                 $.getJSON("/api/1.0/search/etablissements", {parent: $(this).attr("id"), count: 100}, function(data) {
                     $(container).toggleClass("active").find(".load").hide();
                     $.post("/search/display-ajax-search", {items: 'etablissement', data: data.response.results}, function(html) {
-                        $(container).after("<li class='ui-helper-hidden' >" + html + "</li>").next().slideDown();
+                        $(container).after("<li class='hide' >" + html + "</li>").next().slideDown();
                     });
                 });
             }

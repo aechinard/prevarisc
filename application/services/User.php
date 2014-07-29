@@ -5,7 +5,7 @@ class Service_User
     /**
      * Récupération d'un utilisateur
      *
-     * @param int $id_user
+     * @param  int   $id_user
      * @return array
      */
     public function find($id_user)
@@ -22,13 +22,14 @@ class Service_User
         $user = array_merge($user, array('groupements' => $model_user->getGroupements($user['ID_UTILISATEUR']) == null ? null : $model_user->getGroupements($user['ID_UTILISATEUR'])->toArray()));
         $user = array_merge($user, array('commissions' => $model_user->getCommissions($user['ID_UTILISATEUR']) == null ? null : $model_user->getCommissions($user['ID_UTILISATEUR'])->toArray()));
         $user['infos'] = array_merge($user['infos'], array('LIBELLE_FONCTION' => $model_fonction->find($user['infos']['ID_FONCTION'])->current()->toArray()['LIBELLE_FONCTION']));
+
         return $user;
     }
 
     /**
      * Récupération des données du tableau de bord utilisateur
      *
-     * @param int $id_user
+     * @param  int   $id_user
      * @return array
      */
     public function getDashboardData($id_user)
@@ -41,49 +42,46 @@ class Service_User
 
         $dateCommission = new Model_DbTable_DateCommission;
         $prochainesCommission = $dateCommission->getNextCommission(time(), time() + 3600 * 24 * 15);
+
         $dbEtablissement = new Model_DbTable_Etablissement;
         $etablissementAvisDefavorable = $dbEtablissement->listeDesERPSousAvisDefavorable();
+
         $dbDossier = new Model_DbTable_Dossier ;
         $listeDesDossierDateCommissionEchu = $dbDossier->listeDesDossierDateCommissionEchu();
+
         $dbDossierAffectation = new Model_DbTable_DossierAffectation;
-        foreach($prochainesCommission as $commissiondujour)
-        {
+        foreach ($prochainesCommission as $commissiondujour) {
             //Si on prend en compte les heures on récupère uniquement les dossiers n'ayant pas d'heure de passage
             $listeDossiersAffect = $dbDossierAffectation->getListDossierAffect($commissiondujour['ID_DATECOMMISSION']);
             $dbDossier = new Model_DbTable_Dossier;
             $service_etablissement = new Service_Etablissement;
             $nbrdossier=0;
             $NbrDossiersAffect[$commissiondujour['ID_DATECOMMISSION']] = 0;
-                foreach($listeDossiersAffect as $val => $ue)
-                {
+                foreach ($listeDossiersAffect as $val => $ue) {
                     //On recupere la liste des établissements qui concernent le dossier
                     $listeEtab = $dbDossier->getEtablissementDossierGenConvoc($ue['ID_DOSSIER']);
                      //on recupere la liste des infos des établissement
-                    if($nbrdossier == 0)
-                    {
+                    if ($nbrdossier == 0) {
                        $NbrDossiersAffect[$commissiondujour['ID_DATECOMMISSION']] = 0;
                     }
-                    if(count($listeEtab) > 0)
-                    {  $nbrdossier++;
+                    if (count($listeEtab) > 0) {  $nbrdossier++;
                        $NbrDossiersAffect[$commissiondujour['ID_DATECOMMISSION']] = $nbrdossier ;
                     }
                }
         }
 
         //Liste des Erp sans commission périodique alors que c'est ouvert
-         $listeErpOuvertSansProchainesVisitePeriodiques = $dbEtablissement->listeErpOuvertSansProchainesVisitePeriodiques();
-
-
+        $listeErpOuvertSansProchainesVisitePeriodiques = $dbEtablissement->listeErpOuvertSansProchainesVisitePeriodiques();
 
         // Définition des données types par profil
-        switch($profil) {
+        switch ($profil) {
           case 'Secrétariat':
             $listeDesCourrierSansReponse = $dbDossier->listeDesCourrierSansReponse(5);
-            if(count($user['commissions']) > 0) {
+            if (count($user['commissions']) > 0) {
               $dbDossierAffectation = new Model_DbTable_DossierAffectation;
               $dbDateCommission = new Model_DbTable_DateCommission;
 
-              foreach($user['commissions'] as $commission) {
+              foreach ($user['commissions'] as $commission) {
                 // Dossiers avec avis différé
                 $search = new Model_DbTable_Search;
                 $search->setItem("dossier");
@@ -92,7 +90,7 @@ class Service_User
                 $dossiers = array_merge($search->run(false, null, false)->toArray(), $dossiers);
 
                 // Récupération de l'ordre du jour des 3 prochaines commissions
-                foreach($dbDateCommission->fetchAll("COMMISSION_CONCERNE = '" . $commission["ID_COMMISSION"] . "' AND DATE_COMMISSION >= NOW()", "DATE_COMMISSION ASC", 3, 0)->toArray() as $date) {
+                foreach ($dbDateCommission->fetchAll("COMMISSION_CONCERNE = '" . $commission["ID_COMMISSION"] . "' AND DATE_COMMISSION >= NOW()", "DATE_COMMISSION ASC", 3, 0)->toArray() as $date) {
                   $listeDossiersNonAffect = $dbDossierAffectation->getDossierNonAffect($date["ID_DATECOMMISSION"]);
                   $listeDossiersAffect = $dbDossierAffectation->getDossierAffect($date["ID_DATECOMMISSION"]);
                   $odj = array_merge($listeDossiersNonAffect, $listeDossiersAffect);
@@ -110,14 +108,14 @@ class Service_User
             $search->setCriteria("avis.ID_AVIS", 2);
             $etablissements = $search->run(false, null, false)->toArray();
 
-            if(count($user['commissions']) > 0) {
+            if (count($user['commissions']) > 0) {
 
               $dbDossierAffectation = new Model_DbTable_DossierAffectation;
               $dbDateCommission = new Model_DbTable_DateCommission;
 
-              foreach($user['commissions'] as $commission) {
+              foreach ($user['commissions'] as $commission) {
                 // Récupération de l'ordre du jour des 3 prochaines commissions
-                foreach($dbDateCommission->fetchAll("COMMISSION_CONCERNE = '" . $commission["ID_COMMISSION"] . "' AND DATE_COMMISSION >= NOW()", "DATE_COMMISSION ASC", 3, 0)->toArray() as $date) {
+                foreach ($dbDateCommission->fetchAll("COMMISSION_CONCERNE = '" . $commission["ID_COMMISSION"] . "' AND DATE_COMMISSION >= NOW()", "DATE_COMMISSION ASC", 3, 0)->toArray() as $date) {
                   $listeDossiersNonAffect = $dbDossierAffectation->getDossierNonAffect($date["ID_DATECOMMISSION"]);
                   $listeDossiersAffect = $dbDossierAffectation->getDossierAffect($date["ID_DATECOMMISSION"]);
                   $odj = array_merge($listeDossiersNonAffect, $listeDossiersAffect);
@@ -130,7 +128,7 @@ class Service_User
             break;
 
           case 'Maire':
-            if($user["NUMINSEE_COMMUNE"] != null) {
+            if ($user["NUMINSEE_COMMUNE"] != null) {
               $search = new Model_DbTable_Search;
               $search->setItem("etablissement");
               $search->setCriteria("etablissementadresse.NUMINSEE_COMMUNE", $user["NUMINSEE_COMMUNE"]);
@@ -181,13 +179,13 @@ class Service_User
             // Dossiers avec avis différé
             $service_etablissement = new Service_Etablissement;
             $dossiers = array();
-            foreach($etablissements as $etablissement) {
+            foreach ($etablissements as $etablissement) {
               $dossiers_ets = $service_etablissement->getDossiers($etablissement['ID_ETABLISSEMENT']);
               $dossiers_merged = $dossiers_ets['etudes'];
               $dossiers_merged = array_merge($dossiers_merged, $dossiers_ets['visites']);
               $dossiers_merged = array_merge($dossiers_merged, $dossiers_ets['autres']);
-              foreach($dossiers_merged as $dossier_ets) {
-                if($dossier_ets['DIFFEREAVIS_DOSSIER'] == 1) {
+              foreach ($dossiers_merged as $dossier_ets) {
+                if ($dossier_ets['DIFFEREAVIS_DOSSIER'] == 1) {
                   $dossiers[] = $dossier_ets;
                 }
               }
@@ -213,20 +211,21 @@ class Service_User
     /**
      * Récupération d'un utilisateur via son nom d'utilisateur
      *
-     * @param string $username
+     * @param  string     $username
      * @return array|null
      */
     public function findByUsername($username)
     {
         $model_user = new Model_DbTable_Utilisateur;
         $user = $model_user->fetchRow($model_user->select()->where('USERNAME_UTILISATEUR = ?', $username));
+
         return $user !== null ? $this->find($user->ID_UTILISATEUR) : null;
     }
 
     /**
      * Mise à jour de la dernière action de l'utilisateur
      *
-     * @param int $id_user
+     * @param int    $id_user
      * @param string $last_action_date Par défaut date("Y:m-d H:i:s")
      */
     public function updateLastActionDate($id_user, $last_action_date = '')
@@ -245,6 +244,7 @@ class Service_User
     public function getAllGroupes()
     {
         $DB_groupe = new Model_DbTable_Groupe;
+
         return $DB_groupe->fetchAll()->toArray();
     }
 
@@ -256,16 +256,17 @@ class Service_User
     public function getAllFonctions()
     {
         $DB_fonction = new Model_DbTable_Fonction();
+
         return $DB_fonction->fetchAll()->toArray();
     }
 
     /**
      * Sauvegarde d'un utilisateur
      *
-     * @param array $data
-     * @param array $avatar optionnel
-     * @param int $id_user optionnel
-     * @return int Id de l'utilisateur édité
+     * @param  array $data
+     * @param  array $avatar  optionnel
+     * @param  int   $id_user optionnel
+     * @return int   Id de l'utilisateur édité
      */
     public function save($data, $avatar = null, $id_user = null)
     {
@@ -299,7 +300,7 @@ class Service_User
             $user->ACTIF_UTILISATEUR = $data['ACTIF_UTILISATEUR'];
             $user->ID_UTILISATEURINFORMATIONS = $informations->ID_UTILISATEURINFORMATIONS;
 
-            if(array_key_exists('PASSWD_INPUT', $data)) {
+            if (array_key_exists('PASSWD_INPUT', $data)) {
                 $user->PASSWD_UTILISATEUR = $data['PASSWD_INPUT'] == '' ? null : md5($user->USERNAME_UTILISATEUR . getenv('PREVARISC_SECURITY_SALT') . $data['PASSWD_INPUT']);
             }
 
@@ -308,8 +309,8 @@ class Service_User
             $DB_groupementsUser->delete("ID_UTILISATEUR = " . $user->ID_UTILISATEUR);
             $DB_commissionsUser->delete("ID_UTILISATEUR = " . $user->ID_UTILISATEUR);
 
-            if(array_key_exists('commissions', $data)) {
-                foreach($data["commissions"] as $id) {
+            if (array_key_exists('commissions', $data)) {
+                foreach ($data["commissions"] as $id) {
                     $row = $DB_commissionsUser->createRow();
                     $row->ID_UTILISATEUR = $user->ID_UTILISATEUR;
                     $row->ID_COMMISSION = $id;
@@ -317,8 +318,8 @@ class Service_User
                 }
             }
 
-            if(array_key_exists('groupements', $data)) {
-                foreach($data["groupements"] as $id) {
+            if (array_key_exists('groupements', $data)) {
+                foreach ($data["groupements"] as $id) {
                     $row = $DB_groupementsUser->createRow();
                     $row->ID_UTILISATEUR = $user->ID_UTILISATEUR;
                     $row->ID_GROUPEMENT = $id;
@@ -330,7 +331,7 @@ class Service_User
             $db->commit();
 
             // Gestion de l'avatar
-            if($avatar !== null) {
+            if ($avatar !== null) {
 
                 $path = APPLICATION_PATH . DS . '..' . DS . 'public' . DS . 'data' . DS . 'uploads' . DS . 'avatars' . DS;
                 $extension = strtolower(strrchr($avatar['name'], "."));
@@ -351,20 +352,21 @@ class Service_User
     /**
      * Récupération d'un groupe
      *
-     * @param int $id_group
+     * @param  int   $id_group
      * @return array
      */
     public function getGroup($id_group)
     {
         $model_groupe = new Model_DbTable_Groupe;
+
         return $model_groupe->find($id_group)->current()->toArray();
     }
 
     /**
      * Sauvegarde d'un groupe
      *
-     * @param array $data
-     * @param int $id_group Optionnel
+     * @param  array $data
+     * @param  int   $id_group Optionnel
      * @return int
      */
     public function saveGroup($data, $id_group = null)

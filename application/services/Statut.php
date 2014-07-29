@@ -9,7 +9,8 @@ class Service_Statut
      */
     public function getAll()
     {
-    	$DB_statut = new Model_DbTable_Statut;
-    	return $DB_statut->fetchAll()->toArray();
+        $DB_statut = new Model_DbTable_Statut;
+
+        return $DB_statut->fetchAll()->toArray();
     }
 }

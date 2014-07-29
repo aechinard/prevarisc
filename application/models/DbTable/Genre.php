@@ -14,7 +14,7 @@
         protected $_primary = "ID_GENRE"; // Clé primaire
 
         // Donne la liste des genres
-        public function getGenre( $id = null )
+        public function getGenre($id = null)
         {
             $select = $this->select()
                 ->setIntegrityCheck(false)

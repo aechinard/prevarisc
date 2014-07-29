@@ -5,23 +5,23 @@ class Service_Search
     /**
      * Recherche des établissements
      *
-     * @param string $label
-     * @param string $identifiant
-     * @param string|array $genre
-     * @param string|array $categorie
-     * @param string|array $classe
-     * @param string|array $famille
-     * @param string|array $types
-     * @param bool $avis_favorable
-     * @param string|array $statuts
-     * @param bool $local_sommeil
-     * @param float $lon
-     * @param float $lat
-     * @param int $parent
-     * @param string $city
-     * @param int $street_id
-     * @param int $count Par défaut 10, max 100
-     * @param int $page par défaut = 1
+     * @param  string       $label
+     * @param  string       $identifiant
+     * @param  string|array $genre
+     * @param  string|array $categorie
+     * @param  string|array $classe
+     * @param  string|array $famille
+     * @param  string|array $types
+     * @param  bool         $avis_favorable
+     * @param  string|array $statuts
+     * @param  bool         $local_sommeil
+     * @param  float        $lon
+     * @param  float        $lat
+     * @param  int          $parent
+     * @param  string       $city
+     * @param  int          $street_id
+     * @param  int          $count          Par défaut 10, max 100
+     * @param  int          $page           par défaut = 1
      * @return array
      */
     public function etablissements($label = null, $identifiant = null, $genres = null, $categories = null, $classes = null, $familles = null, $types = null, $avis_favorable = null, $statuts = null, $local_sommeil = null, $lon = null, $lat = null, $parent = null, $city = null, $street_id = null, $count = 10, $page = 1)
@@ -32,7 +32,7 @@ class Service_Search
         // Identifiant de la recherche
         $search_id = 'search_etablissements_' . md5(serialize(func_get_args()));
 
-        if(($results = unserialize($cache->load($search_id))) === false) {
+        if (($results = unserialize($cache->load($search_id))) === false) {
 
             // Création de l'objet recherche
             $select = new Zend_Db_Select(Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('db'));
@@ -68,112 +68,128 @@ class Service_Search
                 ->group("e.ID_ETABLISSEMENT");
 
             // Critères : nom de l'établissement
-            if($label !== null) {
+            if ($label !== null) {
                $this->setCriteria($select, "LIBELLE_ETABLISSEMENTINFORMATIONS", $label, false);
             }
 
             // Critères : identifiant
-            if($identifiant !== null) {
+            if ($identifiant !== null) {
                $this->setCriteria($select, "NUMEROID_ETABLISSEMENT", $identifiant);
             }
 
             // Critères : genre
-            if($genres !== null) {
+            if ($genres !== null) {
                $this->setCriteria($select, "genre.ID_GENRE", $genres);
             }
 
             // Critères : catégorie
-            if($categories !== null) {
+            if ($categories !== null) {
                $this->setCriteria($select, "ID_CATEGORIE", $categories);
             }
 
             // Critères : classe
-            if($classes !== null) {
+            if ($classes !== null) {
                $this->setCriteria($select, "ID_CLASSE", $classes);
             }
 
             // Critères : famille
-            if($familles !== null) {
+            if ($familles !== null) {
                $this->setCriteria($select, "ID_FAMILLE", $familles);
             }
 
             // Critères : type
-            if($types !== null) {
+            if ($types !== null) {
                $this->setCriteria($select, "type.ID_TYPE", $types);
             }
 
             // Critères : avis favorable
-            if($avis_favorable !== null) {
+            if ($avis_favorable !== null) {
                $this->setCriteria($select, "avis.ID_AVIS", $avis_favorable ? 1 : 2);
             }
 
             // Critères : statuts
-            if($statuts !== null) {
+            if ($statuts !== null) {
                $this->setCriteria($select, "ID_STATUT", $statuts);
             }
 
             // Critères : statuts
-            if($local_sommeil !== null) {
+            if ($local_sommeil !== null) {
                $this->setCriteria($select, "LOCALSOMMEIL_ETABLISSEMENTINFORMATIONS", $local_sommeil);
             }
 
             // Critère : commune et rue
-            if($city !== null) {
-                if($genres !== null && count($genres) > 0) {
-                    foreach($genres as $genre) {
-                        switch($genre) {
+            if ($city !== null) {
+                if ($genres !== null && count($genres) > 0) {
+                    foreach ($genres as $genre) {
+                        switch ($genre) {
                             case "1":
                                 $this->setCriteria($select, "adressecommunesite.LIBELLE_COMMUNE", $city);
-                                if($street_id !== null) {
+                                if ($street_id !== null) {
                                     $this->setCriteria($select, "etablissementadressesite.ID_RUE", $street_id);
                                 }
                                 break;
                             case "3":
                                 $this->setCriteria($select, "adressecommunecell.LIBELLE_COMMUNE", $city);
-                                if($street_id !== null) {
+                                if ($street_id !== null) {
                                     $this->setCriteria($select, "etablissementadressecell.ID_RUE", $street_id);
                                 }
                                 break;
 
                             default:
                                 $this->setCriteria($select, "adressecommune.LIBELLE_COMMUNE", $city);
-                                if($street_id !== null) {
+                                if ($street_id !== null) {
                                     $this->setCriteria($select, "etablissementadresse.ID_RUE", $street_id);
                                 }
                         }
                     }
-                }
-                else {
+                } else {
                     $this->setCriteria($select, "LIBELLE_COMMUNE_ADRESSE_SITE", $city, true, "orHaving");
                     $this->setCriteria($select, "LIBELLE_COMMUNE_ADRESSE_CELLULE", $city, true, "orHaving");
                     $this->setCriteria($select, "LIBELLE_COMMUNE_ADRESSE_DEFAULT", $city, true, "orHaving");
 
-                    if($street_id !== null) {
-                        $this->setCriteria($select, "ID_RUE_SITE", $street_id, true, "orHaving");
-                        $this->setCriteria($select, "ID_RUE_CELL", $street_id, true, "orHaving");
-                        $this->setCriteria($select, "etablissementadresse.ID_RUE", $street_id, true, "orHaving");
+                    if ($street_id !== null) {
+                        $this->setCriteria($select, "etablissementadresse.ID_RUE", $street_id);
                     }
                 }
             }
 
             // Critères : géolocalisation
-            if($lon !== null && $lat !== null) {
+            if ($lon !== null && $lat !== null) {
                $this->setCriteria($select, "LON_ETABLISSEMENTADRESSE", $lon);
                $this->setCriteria($select, "LAT_ETABLISSEMENTADRESSE", $lat);
             }
 
             // Critères : parent
-            if($parent !== null) {
+            if ($parent !== null) {
                $select->where($parent == 0 ? "etablissementlie.ID_ETABLISSEMENT IS NULL" : "etablissementlie.ID_ETABLISSEMENT = ?", $parent);
             }
 
             // Gestion des pages et du count
             $select->limitPage($page, $count > 100 ? 100 : $count);
 
+            // Exécution de la requête
+            $fetchAll = $select->query()->fetchAll();
+
+            // Modification pour l'ajout de l'adresse
+            foreach ($fetchAll as &$etablissement) {
+              switch ($etablissement['ID_GENRE']) {
+                  case 1:
+                      $etablissement['LIBELLE_COMMUNE'] = $etablissement['LIBELLE_COMMUNE_ADRESSE_SITE'];
+                      break;
+
+                  case 3:
+                      $etablissement['LIBELLE_COMMUNE'] = $etablissement['LIBELLE_COMMUNE_ADRESSE_CELLULE'];
+                      break;
+
+                  default:
+                      $etablissement['LIBELLE_COMMUNE'] = $etablissement['LIBELLE_COMMUNE_ADRESSE_DEFAULT'] == null ? "non localisé" : $etablissement['LIBELLE_COMMUNE_ADRESSE_DEFAULT'];
+              }
+            }
+
             // Construction du résultat
             $rows_counter = new Zend_Paginator_Adapter_DbSelect($select);
             $results = array(
-                'results' => $select->query()->fetchAll(),
+                'results' => $fetchAll,
                 'search_metadata' => array(
                     'search_id' => $search_id,
                     'current_page' => $page,
@@ -190,13 +206,13 @@ class Service_Search
     /**
      * Recherche des dossiers
      *
-     * @param array $types
-     * @param string $objet
-     * @param string $num_doc_urba
-     * @param int $parent Id d'un dossier parent
-     * @param bool $avis_differe Avis différé
-     * @param int $count Par défaut 10, max 100
-     * @param int $page par défaut = 1
+     * @param  array  $types
+     * @param  string $objet
+     * @param  string $num_doc_urba
+     * @param  int    $parent       Id d'un dossier parent
+     * @param  bool   $avis_differe Avis différé
+     * @param  int    $count        Par défaut 10, max 100
+     * @param  int    $page         par défaut = 1
      * @return array
      */
     public function dossiers($types = null, $objet = null, $num_doc_urba = null, $parent = null, $avis_differe = null, $count = 10, $page = 1)
@@ -207,7 +223,7 @@ class Service_Search
         // Identifiant de la recherche
         $search_id = 'search_dossiers_' . md5(serialize(func_get_args()));
 
-        if(($results = unserialize($cache->load($search_id))) === false) {
+        if (($results = unserialize($cache->load($search_id))) === false) {
 
             // Création de l'objet recherche
             $select = new Zend_Db_Select(Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('db'));
@@ -243,27 +259,27 @@ class Service_Search
                 ->group("d.ID_DOSSIER");
 
             // Critères : numéro de doc urba
-            if($num_doc_urba !== null) {
+            if ($num_doc_urba !== null) {
                $select->having("NB_URBA like ?", "%$num_doc_urba%");
             }
 
             // Critères : objet
-            if($objet !== null) {
+            if ($objet !== null) {
                $this->setCriteria($select, "OBJET_DOSSIER", $objet, false);
             }
 
             // Critères : parent
-            if($parent !== null) {
+            if ($parent !== null) {
                $select->where($parent == 0 ? "dossierlie.ID_DOSSIER1 IS NULL" : "dossierlie.ID_DOSSIER1 = ?", $parent);
             }
 
             // Critères : type
-            if($types !== null) {
+            if ($types !== null) {
                $this->setCriteria($select, "dossiertype.ID_DOSSIERTYPE", $types);
             }
 
             // Critères : avis différé
-            if($avis_differe !== null) {
+            if ($avis_differe !== null) {
                $this->setCriteria($select, "d.DIFFEREAVIS_DOSSIER", $avis_differe);
             }
 
@@ -283,19 +299,19 @@ class Service_Search
 
             $cache->save(serialize($results));
         }
-        
+
         return $results;
     }
-    
+
     /**
      * Recherche des courriers
      *
-     * @param array $types
-     * @param string $objet
-     * @param string $num_doc_urba
-     * @param int $parent Id d'un dossier parent
-     * @param int $count Par défaut 10, max 100
-     * @param int $page par défaut = 1
+     * @param  array  $types
+     * @param  string $objet
+     * @param  string $num_doc_urba
+     * @param  int    $parent       Id d'un dossier parent
+     * @param  int    $count        Par défaut 10, max 100
+     * @param  int    $page         par défaut = 1
      * @return array
      */
     public function courriers($objet = null, $num_doc_urba = null, $parent = null, $count = 10, $page = 1)
@@ -306,7 +322,7 @@ class Service_Search
         // Identifiant de la recherche
         $search_id = 'search_dossiers_' . md5(serialize(func_get_args()));
 
-        if(($results = unserialize($cache->load($search_id))) === false) {
+        if (($results = unserialize($cache->load($search_id))) === false) {
 
             // Création de l'objet recherche
             $select = new Zend_Db_Select(Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('db'));
@@ -342,16 +358,16 @@ class Service_Search
                 ->group("d.ID_DOSSIER");
 
             // Critères : numéro de doc urba
-            if($num_doc_urba !== null) {
+            if ($num_doc_urba !== null) {
                $this->setCriteria($select, "NUM_DOCURBA", $num_doc_urba);
             }
-            
+
             if (null !== $objet) {
                 $select->where("DEMANDEUR_DOSSIER LIKE '%{$objet}%' OR OBJET_DOSSIER LIKE '%{$objet}%'");
             }
 
             // Critères : parent
-            if($parent !== null) {
+            if ($parent !== null) {
                $select->where($parent == 0 ? "dossierlie.ID_DOSSIER1 IS NULL" : "dossierlie.ID_DOSSIER1 = ?", $parent);
             }
 
@@ -380,12 +396,12 @@ class Service_Search
     /**
      * Recherche des utilisateurs
      *
-     * @param string|array $fonctions
-     * @param string $name
-     * @param int|array $groups
-     * @param bool $actif Optionnel
-     * @param int $count Par défaut 10, max 100
-     * @param int $page par défaut = 1
+     * @param  string|array $fonctions
+     * @param  string       $name
+     * @param  int|array    $groups
+     * @param  bool         $actif     Optionnel
+     * @param  int          $count     Par défaut 10, max 100
+     * @param  int          $page      par défaut = 1
      * @return array
      */
     public function users($fonctions = null, $name = null, $groups = null, $actif = true, $count = 10, $page = 1)
@@ -396,7 +412,7 @@ class Service_Search
         // Identifiant de la recherche
         $search_id = 'search_users_' . md5(serialize(func_get_args()));
 
-        if(($results = unserialize($cache->load($search_id))) === false) {
+        if (($results = unserialize($cache->load($search_id))) === false) {
 
             // Création de l'objet recherche
             $select = new Zend_Db_Select(Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('db'));
@@ -412,26 +428,25 @@ class Service_Search
                 ->order("utilisateurinformations.NOM_UTILISATEURINFORMATIONS");
 
             // Critères : activité
-            if($actif === true) {
+            if ($actif === true) {
                 $this->setCriteria($select, "u.ACTIF_UTILISATEUR", 1);
-            }
-            elseif($actif === false) {
+            } elseif ($actif === false) {
               $this->setCriteria($select, "u.ACTIF_UTILISATEUR", 0);
             }
 
             // Critères : groupe
-            if($groups !== null) {
+            if ($groups !== null) {
                $this->setCriteria($select, "ID_GROUPE", $groups);
             }
 
             // Critères : nom
-            if($name !== null) {
+            if ($name !== null) {
                $this->setCriteria($select, "NOM_UTILISATEURINFORMATIONS", $name, false);
                 $this->setCriteria($select, "PRENOM_UTILISATEURINFORMATIONS", $name, false, "orWhere");
             }
 
             // Critères : fonctions
-            if($fonctions !== null) {
+            if ($fonctions !== null) {
                $this->setCriteria($select, "fonction.ID_FONCTION", $fonctions);
             }
 
@@ -458,11 +473,11 @@ class Service_Search
     /**
      * Méthode pour aider à placer des conditions sur la requête
      *
-     * @param Zend_Db_Select $select
-     * @param string $key
-     * @param string|array $value
-     * @param bool $exact
-     * @param string $clause Par défaut where
+     * @param  Zend_Db_Select $select
+     * @param  string         $key
+     * @param  string|array   $value
+     * @param  bool           $exact
+     * @param  string         $clause Par défaut where
      * @return Service_Search Interface fluide
      */
     private function setCriteria(Zend_Db_Select &$select, $key, $value, $exact = true, $clause = "where")

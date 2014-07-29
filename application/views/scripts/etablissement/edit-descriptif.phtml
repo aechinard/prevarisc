@@ -1,27 +1,29 @@
+<?php echo $this->render('etablissement/partials/header.phtml') ?>
+
 <form action='<?php echo $this->url(array('action' => 'edit-descriptif')) ?>' method='post'>
 
     <div class='pull-right' >
         <div class="btn-group">
-            <a class='btn' href="<?php echo $this->url(array('action' => 'descriptif')) ?>">Annuler la modification</a>
+            <a class='btn btn-default' href="<?php echo $this->url(array('action' => 'descriptif')) ?>">Annuler la modification</a>
             <input type='submit' class="btn btn-success" value='Sauvegarder'>
         </div>
     </div>
 
     <h3>Modification des descriptifs</h3>
 
-    <h4 class='h4_subtitle'>Historique de l'établissement</h4>
-    <textarea name='historique' cols='' rows='' style='width: 100%; height: 100px;' ><?php echo $this->historique ?></textarea>
+    <h3>Historique de l'établissement</h3>
+    <textarea name='historique' cols='' rows='' style='width: 100%; height: 150px;' class='form-control' ><?php echo $this->historique ?></textarea>
 
-    <h4 class='h4_subtitle'>Descriptif</h4>
-    <textarea name='descriptif' cols='' rows='' style='width: 100%; height: 100px;' ><?php echo $this->descriptif ?></textarea>
+    <h3>Descriptif</h3>
+    <textarea name='descriptif' cols='' rows='' style='width: 100%; height: 150px;' class='form-control' ><?php echo $this->descriptif ?></textarea>
 
-    <h4 class='h4_subtitle'>Dérogations accordées</h4>
-    <textarea name='derogations' cols='' rows='' style='width: 100%; height: 100px;' ><?php echo $this->derogations ?></textarea>
+    <h3>Dérogations accordées</h3>
+    <textarea name='derogations' cols='' rows='' style='width: 100%; height: 150px;' class='form-control' ><?php echo $this->derogations ?></textarea>
 
-    <h4 class='h4_subtitle'>Descriptif technique</h4>
+    <h3>Descriptif technique</h3>
     <?php
         foreach($this->champs_descriptif_technique as $title => $champ_destech) {
-            echo "<h5 class='lead'>".$title."</h5>";
+            echo "<h4 class='lead'>".$title."</h4>";
             echo "<dl>";
             foreach($champ_destech as $key => $value) {
                 echo "<dt>".$key."</dt>";
@@ -34,15 +36,15 @@
                         break;
 
                     case 'int':
-                        echo "<input type='number' name='descriptifs_techniques[" . $value['key'] . "]' value='" . ($value['value'] == '' ? '0' : $value['value']) . "' />";
+                        echo "<input class='form-control' type='number' name='descriptifs_techniques[" . $value['key'] . "]' value='" . ($value['value'] == '' ? '0' : $value['value']) . "' />";
                         break;
 
                     case 'text':
-                        echo "<textarea name='descriptifs_techniques[" . $value['key'] . "]' cols='' rows='' style='width: 100%; height: 50px;' >" . $value['value'] . "</textarea>";
+                        echo "<textarea class='form-control' name='descriptifs_techniques[" . $value['key'] . "]' cols='' rows='' style='width: 100%; height: 50px;' >" . $value['value'] . "</textarea>";
                         break;
 
                     default:
-                        echo "<input type='text' name='descriptifs_techniques[" . $value['key'] . "]' value='" . $value['value'] . "' />";
+                        echo "<input class='form-control' type='text' name='descriptifs_techniques[" . $value['key'] . "]' value='" . $value['value'] . "' />";
                 }
 
                 echo "</dd>";

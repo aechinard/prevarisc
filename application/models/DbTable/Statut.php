@@ -14,7 +14,7 @@
         protected $_primary = "ID_STATUT"; // Clé primaire
 
         // Donne la liste des catégories
-        public function getStatuts( $id = null )
+        public function getStatuts($id = null)
         {
             $select = $this->select()
                 ->setIntegrityCheck(false)

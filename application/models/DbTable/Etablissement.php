@@ -14,6 +14,7 @@
                     ->where("ID_ETABLISSEMENTINFORMATIONS = ?", $id_ets_info);
 
             $result = $this->fetchAll($select);
+
             return $result == null ? null : $result->toArray();
         }
 
@@ -50,18 +51,14 @@
             }
 
             // Etape 2 : Code commune
-            if($genre != "S" || $genre != "C" || count($adresses) > 0)
-            {
+            if ($genre != "S" || $genre != "C" || count($adresses) > 0) {
                 $codecommune = str_pad($adresses[0]["NUMINSEE_COMMUNE"], 6, "0", STR_PAD_LEFT);
-            }
-            else
-            {
+            } else {
                 $codecommune = "000000";
             }
 
             // Etape 3 : Ordre sur la commune
-            if($genre != "S" || $genre != "C" || count($adresses) > 0)
-            {
+            if ($genre != "S" || $genre != "C" || count($adresses) > 0) {
                 $select = $this->select()
                     ->setIntegrityCheck(false)
                     ->distinct()
@@ -71,9 +68,7 @@
                     ->where("adressecommune.NUMINSEE_COMMUNE = ?", $adresses[0]["NUMINSEE_COMMUNE"])
                     ->where("etablissement.DATEENREGISTREMENT_ETABLISSEMENT  <= ( SELECT etablissement.DATEENREGISTREMENT_ETABLISSEMENT FROM etablissement WHERE etablissement.ID_ETABLISSEMENT = '".($genre == "B" ? $parent["ID_ETABLISSEMENT"] : $id)."')");
                 $nbetscommune = str_pad(count($this->fetchAll($select)), 5, "0", STR_PAD_LEFT);
-            }
-            else
-            {
+            } else {
                 $nbetscommune = "00000";
             }
 
@@ -111,7 +106,7 @@
             return ( $this->fetchAll( $select ) != null ) ? $this->fetchAll( $select )->toArray() : null;
         }
 
-        public function getInformations( $id_etablissement )
+        public function getInformations($id_etablissement)
         {
             $DB_information = new Model_DbTable_EtablissementInformations;
 
@@ -122,7 +117,7 @@
                 ->where("DATE_ETABLISSEMENTINFORMATIONS = (select max(DATE_ETABLISSEMENTINFORMATIONS) from etablissementinformations where ID_ETABLISSEMENT = '$id_etablissement' ) ");
 
                 //echo $select->__toString();
-				//Zend_Debug::dump($DB_information->fetchRow($select));
+                //Zend_Debug::dump($DB_information->fetchRow($select));
             if ( $DB_information->fetchRow($select) != null ) {
                 $result = $DB_information->fetchRow($select)->toArray();
 
@@ -132,11 +127,11 @@
                 return null;
         }
 
-        public function getLibelle( $id_etablissement )
+        public function getLibelle($id_etablissement)
         {
             $select = $this->select()->setIntegrityCheck(false);
 
-            $select	->from(array("e" => "etablissement"), null)
+            $select->from(array("e" => "etablissement"), null)
                     ->join("etablissementinformations", "e.ID_ETABLISSEMENT = etablissementinformations.ID_ETABLISSEMENT", "LIBELLE_ETABLISSEMENTINFORMATIONS")
                     ->where("etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS = ( SELECT MAX(etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS) FROM etablissementinformations WHERE etablissementinformations.ID_ETABLISSEMENT = e.ID_ETABLISSEMENT )")
                     ->order("etablissementinformations.LIBELLE_ETABLISSEMENTINFORMATIONS ASC")
@@ -145,11 +140,11 @@
             return ( $this->fetchRow( $select ) != null ) ? $this->fetchRow( $select )->toArray() : null;
         }
 
-        public function getPeriodicite( $id_etablissement )
+        public function getPeriodicite($id_etablissement)
         {
             $select = $this->select()->setIntegrityCheck(false);
 
-            $select	->from(array("e" => "etablissement"), null)
+            $select->from(array("e" => "etablissement"), null)
                     ->join("etablissementinformations", "e.ID_ETABLISSEMENT = etablissementinformations.ID_ETABLISSEMENT", "PERIODICITE_ETABLISSEMENTINFORMATIONS")
                     ->where("etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS = ( SELECT MAX(etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS) FROM etablissementinformations WHERE etablissementinformations.ID_ETABLISSEMENT = e.ID_ETABLISSEMENT )")
                     ->order("etablissementinformations.LIBELLE_ETABLISSEMENTINFORMATIONS ASC")
@@ -162,11 +157,11 @@
                 return null;
         }
 
-        public function getGenre( $id_etablissement )
+        public function getGenre($id_etablissement)
         {
             $select = $this->select()->setIntegrityCheck(false);
 
-            $select	->from(array("e" => "etablissement"), null)
+            $select->from(array("e" => "etablissement"), null)
                     ->join("etablissementinformations", "e.ID_ETABLISSEMENT = etablissementinformations.ID_ETABLISSEMENT", "ID_GENRE")
                     ->join("genre", "etablissementinformations.ID_GENRE = genre.ID_GENRE", "LIBELLE_GENRE")
                     ->where("etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS = ( SELECT MAX(etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS) FROM etablissementinformations WHERE etablissementinformations.ID_ETABLISSEMENT = e.ID_ETABLISSEMENT )")
@@ -175,7 +170,7 @@
             return ( $this->fetchRow( $select ) != null ) ? $this->fetchRow( $select )->toArray() : null;
         }
 
-        public function getParent( $id_etablissement )
+        public function getParent($id_etablissement)
         {
             $select = $this->select()
                 ->setIntegrityCheck(false)
@@ -188,7 +183,7 @@
             return ( $this->fetchRow( $select ) != null ) ? $this->fetchRow( $select )->toArray() : null;
         }
 
-        public function getAllParents( $id_etablissement )
+        public function getAllParents($id_etablissement)
         {
             $result = $this->getParent($id_etablissement);
 
@@ -276,10 +271,10 @@
 
             }
         }
-        
+
         public function listeDesERPSousAvisDefavorable()
         {
-                      
+
             $select= "select LIBELLE_ETABLISSEMENTINFORMATIONS,etablissementinformations.ID_ETABLISSEMENT,DATE_ETABLISSEMENTINFORMATIONS,DATEDIFF(dossier.DATEVISITE_DOSSIER,CURDATE()) as PERIODE from  etablissementinformations,dossier,etablissement,etablissementdossier
                    WHERE etablissementinformations.ID_ETABLISSEMENT = etablissement.ID_ETABLISSEMENT
                    AND etablissementdossier.ID_ETABLISSEMENT = etablissement.ID_ETABLISSEMENT
@@ -288,43 +283,40 @@
                    AND DATEDIFF(dossier.DATEVISITE_DOSSIER,CURDATE()) <= -10
                    AND etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS = ( SELECT MAX(etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS) FROM etablissementinformations WHERE etablissementinformations.ID_ETABLISSEMENT = etablissement.ID_ETABLISSEMENT )
                    ";
-                 
+
             return $this->getAdapter()->fetchAll($select);
         }
-        
+
          public function listeERPSansPreventionniste()
         {
-                      
+
             $select= "select LIBELLE_ETABLISSEMENTINFORMATIONS,etablissementinformations.ID_ETABLISSEMENT,DATE_ETABLISSEMENTINFORMATIONS from  etablissementinformations,etablissement
                    WHERE etablissementinformations.ID_ETABLISSEMENT = etablissement.ID_ETABLISSEMENT
                    AND etablissementinformations.ID_ETABLISSEMENTINFORMATIONS not in (SELECT ID_ETABLISSEMENTINFORMATIONS FROM etablissementinformationspreventionniste)
                    AND etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS = ( SELECT MAX(etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS) FROM etablissementinformations WHERE etablissementinformations.ID_ETABLISSEMENT = etablissement.ID_ETABLISSEMENT )
                     GROUP BY ID_ETABLISSEMENT
                    ";
-                 
+
             return $this->getAdapter()->fetchAll($select);
         }
-        
+
         public function listeErpOuvertSansProchainesVisitePeriodiques()
         {
             $select = "SELECT LIBELLE_ETABLISSEMENTINFORMATIONS,ei.ID_ETABLISSEMENT ,ed.ID_DOSSIER, MAX(DATE_ADD(c.DATE_COMMISSION, INTERVAL ei.PERIODICITE_ETABLISSEMENTINFORMATIONS MONTH)) AS DATECOM
                       FROM etablissementinformations ei
                       LEFT JOIN etablissementdossier ed ON ed.ID_ETABLISSEMENT = ei.ID_ETABLISSEMENT
-                      LEFT JOIN dossier d ON ed.ID_DOSSIER = d.ID_DOSSIER 
-                      LEFT JOIN dossiernature nd ON d.ID_DOSSIER = nd.ID_DOSSIER 
-                      LEFT JOIN dossieraffectation da ON da.ID_DOSSIER_AFFECT = d.ID_DOSSIER 
+                      LEFT JOIN dossier d ON ed.ID_DOSSIER = d.ID_DOSSIER
+                      LEFT JOIN dossiernature nd ON d.ID_DOSSIER = nd.ID_DOSSIER
+                      LEFT JOIN dossieraffectation da ON da.ID_DOSSIER_AFFECT = d.ID_DOSSIER
                       LEFT JOIN datecommission c ON da.ID_DATECOMMISSION_AFFECT = c.ID_DATECOMMISSION
                       WHERE d.TYPE_DOSSIER IN (2,3)
-                      AND nd.ID_NATURE IN (21,26) 
-                      AND ei.DATE_ETABLISSEMENTINFORMATIONS = ( SELECT MAX(DATE_ETABLISSEMENTINFORMATIONS) FROM etablissementinformations eii WHERE eii.ID_ETABLISSEMENT = ei.ID_ETABLISSEMENT )  
+                      AND nd.ID_NATURE IN (21,26)
+                      AND ei.DATE_ETABLISSEMENTINFORMATIONS = ( SELECT MAX(DATE_ETABLISSEMENTINFORMATIONS) FROM etablissementinformations eii WHERE eii.ID_ETABLISSEMENT = ei.ID_ETABLISSEMENT )
                       AND ei.ID_STATUT = 2
-                      GROUP BY ei.ID_ETABLISSEMENT 
+                      GROUP BY ei.ID_ETABLISSEMENT
                       ";
+
              return $this->getAdapter()->fetchAll($select);
         }
-        
-        
-        
-          
 
     }

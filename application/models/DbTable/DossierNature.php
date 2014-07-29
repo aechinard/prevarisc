@@ -41,7 +41,7 @@ class Model_DbTable_DossierNature extends Zend_Db_Table_Abstract
         return $this->getAdapter()->fetchRow($select);
     }
 
-	public function getDossierNatureLibelle($idDossier)
+    public function getDossierNatureLibelle($idDossier)
     {
         $select = "SELECT dossiernatureliste.LIBELLE_DOSSIERNATURE
             FROM dossiernature, dossiernatureliste

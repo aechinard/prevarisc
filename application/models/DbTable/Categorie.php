@@ -5,7 +5,7 @@
         protected $_primary = "ID_CATEGORIE"; // Clé primaire
 
         // Donne la liste des catégories
-        public function getCategories( $id = null )
+        public function getCategories($id = null)
         {
             $select = $this->select()
                 ->setIntegrityCheck(false)

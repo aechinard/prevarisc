@@ -1,9 +1,6 @@
-<li <?php if($this->NB_DOSS_LIES > 0) echo "class='slide'" ?> id="<?php echo $this->ID_DOSSIER ?>">
+<li class='dossier <?php if($this->NB_DOSS_LIES > 0) echo "slide" ?>' id="<?php echo $this->ID_DOSSIER ?>">
 
-    <!-- Icone représentant le dropdown des fils -->
-    <?php if($this->NB_DOSS_LIES > 0) : ?>
-    <span class="icone_enfants" ><i class='ui-icon ui-icon-triangle-1-e' style='position: relative; left: -25px; float: left; margin-right: -25px;' ></i></span>
-    <?php endif ?>
+  <div class='pull-left'>
 
     <!-- Nom du dossier -->
     <span class="doss-nom">
@@ -52,18 +49,22 @@
 
     <!-- Icone de chargement des enfants (si il y'en a, et si on est en mode niveau -->
     <?php if($this->NB_DOSS_LIES > 0) : ?>
-        <span class='load ui-helper-hidden' ><img src='/images/load.gif' alt='Chargement ...' /></span>
+        <span class='load hide' ><img src='/img/load.gif' alt='Chargement ...' /></span>
     <?php endif ?>
+
+  </div>
+
+  <div class='pull-right'>
 
     <!-- Avis du dossier -->
     <?php if($this->INCOMPLET_DOSSIER == 1) : ?>
     <span class='avis' style='background-color: #f89406;'>Dossier incomplet</span>
     <?php elseif($this->DIFFEREAVIS_DOSSIER == 1) : ?>
-    <span class='avis' style='background-color: #3a87ad;'>Avis différé</span>
+    <span class='avis aveis-differe'>Avis différé</span>
     <?php elseif($this->ID_AVIS == 1) : ?>
-    <span class="avis F">Favorable <?php echo in_array($this->ID_DOSSIERNATURE, array(19, 21, 23, 24, 47, 26, 28 ,29, 48)) ? ' à l\'exploitation' : '' ?></span>
+    <span class="avis avis-favorable">Favorable <?php echo in_array($this->ID_DOSSIERNATURE, array(19, 21, 23, 24, 47, 26, 28 ,29, 48)) ? ' à l\'exploitation' : '' ?></span>
     <?php elseif($this->ID_AVIS == 2) : ?>
-    <span class="avis D">Défavorable <?php echo in_array($this->ID_DOSSIERNATURE, array(19, 21, 23, 24, 47, 26, 28 ,29, 48)) ? ' à l\'exploitation' : '' ?></span>
+    <span class="avis avis-defavorable">Défavorable <?php echo in_array($this->ID_DOSSIERNATURE, array(19, 21, 23, 24, 47, 26, 28 ,29, 48)) ? ' à l\'exploitation' : '' ?></span>
     <?php else : ?>
     <span class="avis">Avis indisponible</span>
     <?php endif ?>
@@ -75,7 +76,11 @@
 
     <!-- Alerte sur le fait que la visite fait partie d'un échéancier de travaux -->
     <?php if($this->ECHEANCIER_TRAVAUX > 0) : ?>
-    <span class='avis' style='background-color: #3a87ad'>Fait l'objet d'un échéancier de travaux</span>
+    <span class='avis avis-echeancier' >Fait l'objet d'un échéancier de travaux</span>
     <?php endif ?>
+
+  </div>
+
+  <div style='clear: both'></div>
 
 </li>

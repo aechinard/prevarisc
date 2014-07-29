@@ -7,8 +7,8 @@ class Api_Service_Test
      *
      * @return string
      */
-	public function test()
-	{
+    public function test()
+    {
         return 'Api OK';
     }
 }

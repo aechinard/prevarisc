@@ -1,32 +1,34 @@
+<?php echo $this->render('etablissement/partials/header.phtml') ?>
+
 <div class='pull-right' >
-    <a class='btn' href="<?php echo $this->url(array('action' => 'edit-pieces-jointes')) ?>">Gestion des pièces jointes</a>
+    <a class='btn btn-default' href="<?php echo $this->url(array('action' => 'edit-pieces-jointes')) ?>">Gestion des pièces jointes</a>
 </div>
 
-<h3>Pièces jointes</h3>
+<h2>Pièces jointes</h2>
 
 <?php if(count($this->pieces_jointes) == 0) : ?>
 
     <div class='well well-large text-center'>
         <p class='lead'>Il n'y a pas de pièce jointe.</p>
-        <p><a href='<?php echo $this->url(array('action' => 'edit-pieces-jointes')) ?>' class='btn btn-large'>Ajouter une pièce jointe</a></p>
+        <p><a href='<?php echo $this->url(array('action' => 'edit-pieces-jointes')) ?>' class='btn btn-default btn-large'>Ajouter une pièce jointe</a></p>
     </div>
 
 <?php else : ?>
 
-	<h4>Documents</h4>
+	<h3>Documents</h3>
 
-	<table class='table table-bordered table-condensed'> 
-		<thead> 
+	<table class='table table-bordered table-condensed'>
+		<thead>
 			<tr>
-				<th>Nom</th> 
+				<th>Nom</th>
 				<th>Description</th>
 				<th>Date d'ajout</th>
-			</tr> 
-		</thead> 
+			</tr>
+		</thead>
 		<tbody>
 			<?php foreach ($this->pieces_jointes as $piecejointe) : ?>
 				<?php if(!in_array($piecejointe['EXTENSION_PIECEJOINTE'], array(".jpg", ".jpeg", ".png", ".gif"))) : ?>
-				<tr>   
+				<tr>
 					<td>
 						<a href='/data/uploads/pieces-jointes/<?php echo $piecejointe['ID_PIECEJOINTE'] . $piecejointe['EXTENSION_PIECEJOINTE'] ?>' target='_blank' >
 							<?php echo $piecejointe['NOM_PIECEJOINTE'] ?>
@@ -44,7 +46,7 @@
 		</tbody>
 	</table>
 
-	<h4>Images</h4>
+	<h3>Images</h3>
 
 	<ul class="thumbnails">
 		<?php foreach ($this->pieces_jointes as $piecejointe) : ?>
@@ -63,12 +65,12 @@
 <?php endif ?>
 
 <script>
-	$(document).ready(function() {
+	document.addEventListener('DOMContentLoaded', function() {
 		$('a[href$=png], a[href$=jpg], a[href$=jpeg]').fancybox({
-            'transitionIn'	:	'elastic',
-            'transitionOut'	:	'elastic',
-            'speedIn'		:	600, 
-            'speedOut'		:	200, 
-        });
+        'transitionIn'	:	'elastic',
+        'transitionOut'	:	'elastic',
+        'speedIn'		:	600,
+        'speedOut'		:	200,
+    });
 	});
 </script>

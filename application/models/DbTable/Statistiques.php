@@ -62,12 +62,12 @@
 
             return $this;
         }
-        
+
         public function listeDesERPVisitePeriodique($dateDebut, $dateFin)
         {
             if($dateDebut == null) $dateDebut = date("01/01/".date("Y"), time());
             if($dateFin == null) $dateFin = date("31/12/".date("Y"), time());
-            
+
             $this->ets_dateDebut = $dateDebut;
             $this->ets_dateFin = $dateFin;
 
@@ -81,7 +81,7 @@
                     AND dossiernature.ID_DOSSIER = dossier.ID_DOSSIER
                     AND etablissementdossier.ID_ETABLISSEMENT = etablissement.ID_ETABLISSEMENT
                     AND etablissement.ID_ETABLISSEMENT = e.ID_ETABLISSEMENT
-                    AND dossiernature.ID_NATURE in (21,26) 
+                    AND dossiernature.ID_NATURE in (21,26)
                     AND dossier.TYPE_DOSSIER in (2,3)
                     GROUP BY etablissement.ID_ETABLISSEMENT)",
                     "ARRONDISSEMENT" => "(SELECT `groupement`.LIBELLE_GROUPEMENT FROM `groupement` INNER JOIN `groupementcommune` ON groupementcommune.ID_GROUPEMENT = groupement.ID_GROUPEMENT INNER JOIN `groupementtype` ON groupementtype.ID_GROUPEMENTTYPE = groupement.ID_GROUPEMENTTYPE WHERE (groupementcommune.NUMINSEE_COMMUNE = adressecommune.NUMINSEE_COMMUNE AND groupementtype.ID_GROUPEMENTTYPE = 2) LIMIT 1)"
@@ -99,7 +99,7 @@
                 ->joinLeft("type", "etablissementinformations.ID_TYPE= type.ID_TYPE ","LIBELLE_TYPE")
                 ->joinLeft("etablissementinformationspreventionniste", "etablissementinformations.ID_ETABLISSEMENTINFORMATIONS  = etablissementinformationspreventionniste.ID_ETABLISSEMENTINFORMATIONS")
                 ->joinLeft("utilisateur", "utilisateur.ID_UTILISATEUR = etablissementinformationspreventionniste.ID_UTILISATEUR")
-                ->joinLeft("utilisateurinformations", "utilisateur.ID_UTILISATEURINFORMATIONS = utilisateurinformations.ID_UTILISATEURINFORMATIONS",array("NOM_UTILISATEURINFORMATIONS","PRENOM_UTILISATEURINFORMATIONS"))    
+                ->joinLeft("utilisateurinformations", "utilisateur.ID_UTILISATEURINFORMATIONS = utilisateurinformations.ID_UTILISATEURINFORMATIONS",array("NOM_UTILISATEURINFORMATIONS","PRENOM_UTILISATEURINFORMATIONS"))
                 ->joinLeft("dossier", "e.ID_DOSSIER_DONNANT_AVIS = dossier.ID_DOSSIER", array("ID_AVIS" => "AVIS_DOSSIER_COMMISSION"))
                 ->joinLeft("avis", "dossier.AVIS_DOSSIER = avis.ID_AVIS", array("LIBELLE_AVIS" => "LIBELLE_AVIS"))
                 ->joinLeft("commission", "commission.ID_COMMISSION = etablissementinformations.ID_COMMISSION", "LIBELLE_COMMISSION")
@@ -122,8 +122,6 @@
 
             return $this;
         }
-         
-        
 
         // CHAMPS SUPPLEMENTAIRES
         public function enExploitation()

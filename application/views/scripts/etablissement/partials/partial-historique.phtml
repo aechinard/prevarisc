@@ -1,7 +1,7 @@
 <?php if(count($this->array) == 1 && empty($this->array[0]["valeur"])) : ?>
-<p class='muted'>Pas d'historique disponible.</p>
+<p>Pas d'historique disponible.<br><br></p>
 <?php else : ?>
-<table class='table table-bordered table-hover'>
+<table class='table table-hover'>
 	<thead>
 		<tr>
 			<th style='width: 250px' >Date</th>
@@ -15,8 +15,8 @@
 			<td>
 				<?php echo $item["valeur"] ?>
 				<span style="font-size: 0.8em">
-					(Dernière modification par 
-					<?php echo $item["author"] == null ? "<em>Inconnu</em>" : "<a href='/user/profile/uid/".$item["author"]["id"]."'>".$item["author"]["name"] . "</a>"?>)
+					(Dernière modification par
+					<?php echo $item["author"] == null ? "<em>Inconnu</em>" : $item["author"]["name"] ?>)
 				</span>
 			</td>
 		</tr>

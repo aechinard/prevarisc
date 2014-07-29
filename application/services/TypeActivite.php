@@ -9,8 +9,9 @@ class Service_TypeActivite
      */
     public function getAll()
     {
-    	$DB_activite = new Model_DbTable_TypeActivite;  
-    	return $DB_activite->fetchAll()->toArray();
+        $DB_activite = new Model_DbTable_TypeActivite;
+
+        return $DB_activite->fetchAll()->toArray();
     }
 
     /**
@@ -20,7 +21,8 @@ class Service_TypeActivite
      */
     public function getAllWithTypes()
     {
-        $DB_activite = new Model_DbTable_TypeActivite;  
+        $DB_activite = new Model_DbTable_TypeActivite;
+
         return $DB_activite->myfetchAll();
     }
 }

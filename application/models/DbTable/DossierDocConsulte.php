@@ -17,6 +17,5 @@ class Model_DbTable_DossierDocConsulte extends Zend_Db_Table_Abstract
         //echo $select;
         return $this->getAdapter()->fetchRow($select);
     }
-	
-	
+
 }

@@ -19,21 +19,21 @@ class Service_Carto
      */
     public function getAll()
     {
-        if(($couches_carto = unserialize($this->cache->load('couches_cartographiques'))) === false) {
+        if (($couches_carto = unserialize($this->cache->load('couches_cartographiques'))) === false) {
             // On récupère l'ensemble des couches
             $couches_carto = $this->repository->fetchAll()->toArray();
 
             // On stocke en cache
             $this->cache->save(serialize($couches_carto));
         }
-        
+
         return $couches_carto;
     }
 
     /**
      * Récupération d'une couche cartographique
      *
-     * @param int $id_couche_cartographique
+     * @param  int   $id_couche_cartographique
      * @return array
      */
     public function findById($id_couche_cartographique)
@@ -44,8 +44,8 @@ class Service_Carto
     /**
      * Édition d'une couche cartographique
      *
-     * @param array $data
-     * @param int $id_couche_cartographique Optionnel
+     * @param  array $data
+     * @param  int   $id_couche_cartographique Optionnel
      * @return array
      */
     public function save($data, $id_couche_cartographique = null)
@@ -58,7 +58,7 @@ class Service_Carto
     /**
      * Suppression d'une couche cartographique
      *
-     * @param int $id_couche_cartographique
+     * @param  int   $id_couche_cartographique
      * @return array
      */
     public function delete($id_couche_cartographique)

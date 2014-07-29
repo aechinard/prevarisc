@@ -12,10 +12,10 @@ class Service_GroupementCommunes
     {
         $model_groupement = new Model_DbTable_Groupement;
 
-        if($num_insee !== null) {
+        if ($num_insee !== null) {
             return $model_groupement->getGroupementParVille($num_insee);
         }
 
-        return $model_groupement->fetchAll()->toArray();
+        return $model_groupement->get()->toArray();
     }
 }

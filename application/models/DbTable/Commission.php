@@ -25,7 +25,7 @@
         }
 
         // Donne la liste des cat�gories
-        public function getCommissions( $id = null )
+        public function getCommissions($id = null)
         {
             $select = $this->select()
                 ->setIntegrityCheck(false)
@@ -43,7 +43,7 @@
         }
 
         // Donne la liste des cat�gories
-        public function getCommissionsByType( $type )
+        public function getCommissionsByType($type)
         {
             $select = $this->select()
                 ->setIntegrityCheck(false)
@@ -64,7 +64,7 @@
 
             return $this->getAdapter()->fetchAll($select);
         }
-		
+
         public function getAllCommissions()
         {
             //Récupération de l'ensemble des commissions
@@ -75,17 +75,16 @@
 
             return $this->getAdapter()->fetchAll($select);
         }
-        
+
         public function getLibelleCommissions($id)
         {
             //Récupération de l'ensemble des commissions
             $select = "SELECT LIBELLE_COMMISSION
                 FROM commission
                 WHERE ID_COMMISSION = '".$id."'";
+
             return $this->getAdapter()->fetchAll($select);
         }
-        
-          
 
         public function commissionPeriodicite($idCommission)
         {
@@ -98,7 +97,7 @@
             return $this->getAdapter()->fetchRow($select);
         }
 
-        public function getCommission( $commune, $categorie, $type, $localsommeil)
+        public function getCommission($commune, $categorie, $type, $localsommeil)
         {
             // Check de la sous commission / comunale / interco / arrondissement
             // R�cup�ration des types de commission
@@ -148,7 +147,7 @@
             }
         }
 
-        public function getCommissionIGH( $commune, $classe, $localsommeil)
+        public function getCommissionIGH($commune, $classe, $localsommeil)
         {
             // Check de la sous commission / comunale / interco / arrondissement
             // R�cup�ration des types de commission

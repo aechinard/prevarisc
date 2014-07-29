@@ -27,10 +27,10 @@ class Service_Feed
     /**
      * Ajout d'un message
      *
-     * @param int $type
+     * @param int    $type
      * @param string $message
-     * @param int $author
-     * @param array $confidentialite
+     * @param int    $author
+     * @param array  $confidentialite
      */
     public function addMessage($type, $message, $author, array $confidentialite)
     {
@@ -45,13 +45,13 @@ class Service_Feed
         ))->save();
 
         // Ajout des destinataires du message
-        foreach($confidentialite as $value) {
+        foreach ($confidentialite as $value) {
             $model_groupe->createRow(array(
                 'ID_NEWS' => $id_news,
                 'ID_GROUPE' => $value
             ))->save();
         }
-        
+
         return $id_news;
     }
 

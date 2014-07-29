@@ -3,10 +3,10 @@
 class Model_DbTable_EtsTextesAppl extends Zend_Db_Table_Abstract
 {
     protected $_name="etablissementtextapp";
-	protected $_primary = array("ID_TEXTESAPPL","ID_ETABLISSEMENT");
-		
+    protected $_primary = array("ID_TEXTESAPPL","ID_ETABLISSEMENT");
+
     public function recupTextes($id_etablissement)
-	{
+    {
         $select = $this->select()
             ->setIntegrityCheck(false)
             ->from("etablissementtextapp", null)
@@ -17,5 +17,5 @@ class Model_DbTable_EtsTextesAppl extends Zend_Db_Table_Abstract
         $results = $this->fetchAll($select);
 
         return $results !== null ? $results->toArray() : array();
-	}
+    }
 }

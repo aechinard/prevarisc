@@ -5,41 +5,42 @@ class Model_DbTable_DossierAffectation extends Zend_Db_Table_Abstract
     protected $_name="dossieraffectation"; // Nom de la base
     protected $_primary = array("ID_DATECOMMISSION_AFFECT","ID_DOSSIER_AFFECT"); // Clé primaire
 
-	public function getDossierNonAffect($idDateCom)
+    public function getDossierNonAffect($idDateCom)
     {
         //retourne l'ensemble des dossiers programés à la date de comm passée en param et dont les horaires N'ONT PAS été précisés
-		$select = $this->select()
-			->setIntegrityCheck(false)
-			->from(array('doss' => 'dossier'))
-			->join(array('dossAffect' => 'dossieraffectation'),'doss.ID_DOSSIER = dossAffect.ID_DOSSIER_AFFECT')
-			->join(array('dateComm' => 'datecommission'),'dossAffect.ID_DATECOMMISSION_AFFECT = dateComm.ID_DATECOMMISSION')
-			->join(array('dossNat' => 'dossiernature'),'dossNat.ID_DOSSIER = doss.ID_DOSSIER')
-			->join(array('dossNatListe' => 'dossiernatureliste'),'dossNat.ID_NATURE = dossNatListe.ID_DOSSIERNATURE')
+        $select = $this->select()
+            ->setIntegrityCheck(false)
+            ->from(array('doss' => 'dossier'))
+            ->join(array('dossAffect' => 'dossieraffectation'),'doss.ID_DOSSIER = dossAffect.ID_DOSSIER_AFFECT')
+            ->join(array('dateComm' => 'datecommission'),'dossAffect.ID_DATECOMMISSION_AFFECT = dateComm.ID_DATECOMMISSION')
+            ->join(array('dossNat' => 'dossiernature'),'dossNat.ID_DOSSIER = doss.ID_DOSSIER')
+            ->join(array('dossNatListe' => 'dossiernatureliste'),'dossNat.ID_NATURE = dossNatListe.ID_DOSSIERNATURE')
       ->join(array('dossType' => "dossiertype"), 'doss.TYPE_DOSSIER = dossType.ID_DOSSIERTYPE', 'LIBELLE_DOSSIERTYPE')
-			->where('dateComm.ID_DATECOMMISSION = ?',$idDateCom)
-			->where("dossAffect.HEURE_DEB_AFFECT IS NULL")
-			->where("dossAffect.HEURE_FIN_AFFECT IS NULL")
-			->group('doss.ID_DOSSIER');
+            ->where('dateComm.ID_DATECOMMISSION = ?',$idDateCom)
+            ->where("dossAffect.HEURE_DEB_AFFECT IS NULL")
+            ->where("dossAffect.HEURE_FIN_AFFECT IS NULL")
+            ->group('doss.ID_DOSSIER');
 
         return $this->getAdapter()->fetchAll($select);
     }
 
-	public function getDossierAffect($idDateCom)
+    public function getDossierAffect($idDateCom)
     {
         //retourne l'ensemble des dossiers programés à la date de comm passée en param et dont les horaires ONT été précisés
 
-		$select = $this->select()
-			->setIntegrityCheck(false)
-			->from(array('doss' => 'dossier'))
-			->join(array('dossAffect' => 'dossieraffectation'),'doss.ID_DOSSIER = dossAffect.ID_DOSSIER_AFFECT')
-			->join(array('dateComm' => 'datecommission'),'dossAffect.ID_DATECOMMISSION_AFFECT = dateComm.ID_DATECOMMISSION')
-			->join(array('dossNat' => 'dossiernature'),'dossNat.ID_DOSSIER = doss.ID_DOSSIER')
-			->join(array('dossNatListe' => 'dossiernatureliste'),'dossNat.ID_NATURE = dossNatListe.ID_DOSSIERNATURE')
+        $select = $this->select()
+            ->setIntegrityCheck(false)
+            ->from(array('doss' => 'dossier'))
+            ->join(array('dossAffect' => 'dossieraffectation'),'doss.ID_DOSSIER = dossAffect.ID_DOSSIER_AFFECT')
+            ->join(array('dateComm' => 'datecommission'),'dossAffect.ID_DATECOMMISSION_AFFECT = dateComm.ID_DATECOMMISSION')
+            ->join(array('dossNat' => 'dossiernature'),'dossNat.ID_DOSSIER = doss.ID_DOSSIER')
+            ->join(array('dossNatListe' => 'dossiernatureliste'),'dossNat.ID_NATURE = dossNatListe.ID_DOSSIERNATURE')
       ->join(array('dossType' => "dossiertype"), 'doss.TYPE_DOSSIER = dossType.ID_DOSSIERTYPE', 'LIBELLE_DOSSIERTYPE')
-			->where("dateComm.ID_DATECOMMISSION = ?",$idDateCom)
-			->where("dossAffect.HEURE_DEB_AFFECT IS NOT NULL")
-			->where("dossAffect.HEURE_FIN_AFFECT IS NOT NULL")
-			->group("doss.ID_DOSSIER");
+            ->where("dateComm.ID_DATECOMMISSION = ?",$idDateCom)
+            ->where("dossAffect.HEURE_DEB_AFFECT IS NOT NULL")
+            ->where("dossAffect.HEURE_FIN_AFFECT IS NOT NULL")
+            ->group("doss.ID_DOSSIER");
+
         return $this->getAdapter()->fetchAll($select);
     }
 
@@ -53,7 +54,7 @@ class Model_DbTable_DossierAffectation extends Zend_Db_Table_Abstract
 
         return $this->getAdapter()->fetchAll($select);
     }
-    
+
      public function getListDossierAffect($idDateCom)
     {
         $select = "SELECT ID_DOSSIER,OBJET_DOSSIER
@@ -86,23 +87,24 @@ class Model_DbTable_DossierAffectation extends Zend_Db_Table_Abstract
         return $this->delete("ID_DOSSIER_AFFECT = '".$idDossier."'");
     }
 
-	public function deleteDateDossierModifDateAffect($idDossier,$idDateComm)
+    public function deleteDateDossierModifDateAffect($idDossier,$idDateComm)
     {
         $this->delete(array(
-			'ID_DOSSIER_AFFECT = ?' => $idDossier,
-			'ID_DATECOMMISSION_AFFECT <> ?' => $idDateComm
-		));
+            'ID_DOSSIER_AFFECT = ?' => $idDossier,
+            'ID_DATECOMMISSION_AFFECT <> ?' => $idDateComm
+        ));
     }
 
-	public function getDossierAffectAndType($idDossier)
+    public function getDossierAffectAndType($idDossier)
     {
         //récupèration des affectations du dossier ainsi que le type d'affectation (salle / visite / visite de comm)
-		$select = $this->select()
-			->setIntegrityCheck(false)
-			->from(array('doss' => 'dossier'))
-			->join(array('dossAffect' => 'dossieraffectation'),'doss.ID_DOSSIER = dossAffect.ID_DOSSIER_AFFECT')
-			->join(array('dateComm' => 'datecommission'),'dossAffect.ID_DATECOMMISSION_AFFECT = dateComm.ID_DATECOMMISSION')
-			->where("doss.ID_DOSSIER = ?",$idDossier);
+        $select = $this->select()
+            ->setIntegrityCheck(false)
+            ->from(array('doss' => 'dossier'))
+            ->join(array('dossAffect' => 'dossieraffectation'),'doss.ID_DOSSIER = dossAffect.ID_DOSSIER_AFFECT')
+            ->join(array('dateComm' => 'datecommission'),'dossAffect.ID_DATECOMMISSION_AFFECT = dateComm.ID_DATECOMMISSION')
+            ->where("doss.ID_DOSSIER = ?",$idDossier);
+
         return $this->getAdapter()->fetchAll($select);
     }
 

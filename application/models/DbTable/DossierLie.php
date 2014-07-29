@@ -4,7 +4,7 @@
         protected $_name="dossierlie"; // Nom de la base
         protected $_primary = array("ID_DOSSIERLIE"); // Clé primaire
 
-        public function getDossierLie( $idDossier)
+        public function getDossierLie($idDossier)
         {
             /*
             $select = "SELECT *

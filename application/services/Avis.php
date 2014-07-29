@@ -9,7 +9,8 @@ class Service_Avis
      */
     public function getAll()
     {
-    	$DB_avis = new Model_DbTable_Avis;
-    	return $DB_avis->fetchAll()->toArray();
+        $DB_avis = new Model_DbTable_Avis;
+
+        return $DB_avis->fetchAll()->toArray();
     }
 }

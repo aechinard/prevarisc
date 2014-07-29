@@ -34,8 +34,8 @@ class Model_DbTable_DossierListeDoc extends Zend_Db_Table_Abstract
 
         return $this->getAdapter()->fetchAll($select);
     }
-	
-	public function getDocVisiteVAO()
+
+    public function getDocVisiteVAO()
     {
         $select = "SELECT *
             FROM listedocconsulte

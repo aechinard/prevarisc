@@ -6,12 +6,12 @@
 
         public function myfetchAll()
         {
-        	$select = $this->select()
+            $select = $this->select()
                     ->setIntegrityCheck(false)
                     ->from("typeactivite")
                     ->join("type", "type.ID_TYPE = typeactivite.ID_TYPE")
                     ->order('type.LIBELLE_TYPE');
-                    
+
             $result = $this->fetchAll($select);
 
             return $result == null ? null : $result->toArray();

@@ -10,7 +10,7 @@ class NewsController extends Zend_Controller_Action
 
         $this->view->groupes = $service_user->getAllGroupes();
 
-        if($this->_request->isPost()) {
+        if ($this->_request->isPost()) {
             try {
                 $service_feed = new Service_Feed;
                 $service_feed->addMessage($this->_request->getParam('type'), $this->_request->getParam('text'), Zend_Auth::getInstance()->getIdentity()['ID_UTILISATEUR'], $this->_request->getParam('conf') );

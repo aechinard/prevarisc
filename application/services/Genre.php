@@ -9,7 +9,8 @@ class Service_Genre
      */
     public function getAll()
     {
-    	$DB_genre = new Model_DbTable_Genre;
-    	return $DB_genre->fetchAll()->toArray();
+        $DB_genre = new Model_DbTable_Genre;
+
+        return $DB_genre->fetchAll()->toArray();
     }
 }

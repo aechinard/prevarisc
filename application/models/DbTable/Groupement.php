@@ -24,16 +24,22 @@ class Model_DbTable_Groupement extends Zend_Db_Table_Abstract
             ),
         );
 
-    public function get($id)
+    public function get($id = null)
     {
-        $select = $this	->select()
+        $select = $this->select()
                         ->setIntegrityCheck(false)
                         ->from("groupement", "LIBELLE_GROUPEMENT")
                         ->joinInner("groupementtype", "groupement.ID_GROUPEMENTTYPE = groupementtype.ID_GROUPEMENTTYPE", "LIBELLE_GROUPEMENTTYPE")
-                        ->joinLeft("utilisateurinformations", "utilisateurinformations.ID_UTILISATEURINFORMATIONS = groupement.ID_UTILISATEURINFORMATIONS")
-                        ->where("groupement.ID_GROUPEMENT = '$id'");
+                        ->joinLeft("utilisateurinformations", "utilisateurinformations.ID_UTILISATEURINFORMATIONS = groupement.ID_UTILISATEURINFORMATIONS");
 
-        return ( $this->fetchRow( $select ) != null ) ? $this->fetchRow( $select ) : null;
+        if ($id != null) {
+          $select->where("groupement.ID_GROUPEMENT = '$id'");
+
+          return ( $this->fetchRow( $select ) != null ) ? $this->fetchRow( $select ) : null;
+        } else {
+          return ( $this->fetchAll( $select ) != null ) ? $this->fetchAll( $select ) : null;
+        }
+
     }
 
     public function deleteGroupement($id)
@@ -45,7 +51,7 @@ class Model_DbTable_Groupement extends Zend_Db_Table_Abstract
 
     public function getPreventionnistes($id)
     {
-        $select = $this	->select()
+        $select = $this->select()
                         ->setIntegrityCheck(false)
                         ->from("groupementpreventionniste")
                         ->join("utilisateur", "utilisateur.ID_UTILISATEUR = groupementpreventionniste.ID_UTILISATEUR")
@@ -62,7 +68,7 @@ class Model_DbTable_Groupement extends Zend_Db_Table_Abstract
         $array_result = array();
 
         foreach ($gpts as $gpt) {
-            $select = $this	->select()
+            $select = $this->select()
                             ->setIntegrityCheck(false)
                             ->from("groupementpreventionniste")
                             ->join("utilisateur", "utilisateur.ID_UTILISATEUR = groupementpreventionniste.ID_UTILISATEUR")
@@ -81,7 +87,7 @@ class Model_DbTable_Groupement extends Zend_Db_Table_Abstract
 
     public function getGroupementParVille($code_insee)
     {
-        $select = $this	->select()
+        $select = $this->select()
                         ->setIntegrityCheck(false)
                         ->from("groupement")
                         ->joinInner("groupementcommune", "groupementcommune.ID_GROUPEMENT = groupement.ID_GROUPEMENT", null)

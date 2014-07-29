@@ -9,7 +9,8 @@ class Service_Categorie
      */
     public function getAll()
     {
-    	$DB_categorie = new Model_DbTable_Categorie;
-    	return $DB_categorie->fetchAllPK();
+        $DB_categorie = new Model_DbTable_Categorie;
+
+        return $DB_categorie->fetchAllPK();
     }
 }

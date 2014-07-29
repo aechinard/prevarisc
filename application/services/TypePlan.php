@@ -9,7 +9,8 @@ class Service_TypePlan
      */
     public function getAll()
     {
-    	$DB_typesplan = new Model_DbTable_TypePlan;
-    	return $DB_typesplan->fetchAllPK();
+        $DB_typesplan = new Model_DbTable_TypePlan;
+
+        return $DB_typesplan->fetchAllPK();
     }
 }

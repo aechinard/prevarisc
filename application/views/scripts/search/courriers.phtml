@@ -1,20 +1,27 @@
 <!-- Onglets permettant de selectionner les entités à rechercher -->
-<h2 class="page-header">Courriers</h2>
+<h1 class="page-header">Courriers</h1>
+
 <form method='get'>
-    <div class='navbar-form form-search well well-small' style='margin-bottom: 5px;'>
-        <div class="input-append">
-            <input type="text" name='objet' class="span6 search-query" placeholder="Objet du courrier, de l'expéditeur, ..." value='<?php if(isset($_GET["objet"])) echo $_GET["objet"] ?>' />
-            <input type='submit' class="btn" value="Rechercher dans Prevarisc"  />
-            <input type='hidden' name='page' value="1" />
-        </div>
+
+  <div class='well well-small'>
+
+    <div class="input-group col-xs-6">
+      <input type="text" name='objet' class="form-control search-query" placeholder="Objet du courrier, de l'expéditeur, ..." value='<?php if(isset($_GET["objet"])) echo $_GET["objet"] ?>' />
+      <input type='hidden' name='page' value="1" />
+      <span class="input-group-btn">
+        <input type='submit' class="btn btn-primary" value="Rechercher dans Prevarisc" disabled />
+      </span>
     </div>
+
+  </div>
+
 </form>
 
 <hr/>
 
 <?php if( count($this->results) > 0 ) : ?>
     <p class='muted'><small>Nombre total d'éléments : <?php echo $this->results->getTotalItemCount() ?></small></p>
-    <ul class='recherche_liste unstyled'>
+    <ul class='search-list'>
     <?php echo $this->partialLoop('search/results/dossier.phtml', $this->results ) ?>
     </ul>
     <br/>
@@ -26,30 +33,10 @@
 <?php endif ?>
 
 <script>
-    $(document).ready(function() {
+    document.addEventListener('DOMContentLoaded', function() {
 
-    	// Si le champ de recherche est vide, on empêche l'envoi d'une recherche
-    	$("input[name='num_doc_urba']").focus().keyup(function() {$('input[type="submit"]').attr('disabled', $(this).val() == '')}).keyup();
+      // Si le champ de recherche est vide, on empêche l'envoi d'une recherche
+      $("input[name='objet']").focus().keyup(function() {$('input[type="submit"]').attr('disabled', $(this).val() == '')}).keyup();
 
-			// Gestion des multiselects
-			$("select[name='types[]']").multiselect({header: false, noneSelectedText: "Tous les types"});
-
-      // Affichage des dossiers enfants
-      $("ul.recherche_liste li.slide").live("click", function() {
-          var container = this;
-          if( $(this).hasClass("active") ) {
-              $(this).next().slideUp(400, function() {$(container).next().remove()});
-              $(this).toggleClass("active");
-          }
-          else {
-              $(container).find(".load").show();
-              $.getJSON("/api/1.0/search/dossiers", {parent: $(this).attr("id"), count: 100}, function(data) {
-                  $(container).toggleClass("active").find(".load").hide();
-                  $.post("/search/display-ajax-search", {items: 'dossier', data: data.response.results}, function(html) {
-                      $(container).after("<li class='ui-helper-hidden' >" + html + "</li>").next().slideDown();
-                  });
-              });
-          }
-      });
-	});
+  });
 </script>

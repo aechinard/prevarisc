@@ -9,7 +9,8 @@ class Service_Commission
      */
     public function getAll()
     {
-    	$DB_commission = new Model_DbTable_Commission; 
-    	return $DB_commission->fetchAllPK();
+        $DB_commission = new Model_DbTable_Commission;
+
+        return $DB_commission->fetchAllPK();
     }
 }

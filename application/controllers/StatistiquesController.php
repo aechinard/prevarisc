@@ -32,7 +32,7 @@
 
         public function extractionProcess($champs_supplementaires, $noms_des_colonnes_a_afficher, Model_DbTable_Statistiques $requete)
         {
-          
+
             // Si on interroge l'action en json, on demande les champs supplémentaires
             if ($this->_getParam("format") == "json" ) {
                 $this->view->result = $champs_supplementaires;
@@ -44,7 +44,7 @@
                     "normalize" => $this->_request->getActionName(),
                     "full" => $this->liste[$this->_request->getActionName()]
                 );
-                
+
             }
         }
 
@@ -53,8 +53,7 @@
         {
             $model_stat = new Model_DbTable_Statistiques;
 
-            if ($this->_getParam("format") != "json") 
-            {
+            if ($this->_getParam("format") != "json") {
                 $date = new Zend_Date($this->_getParam("date"), Zend_Date::DATES);
                 $this->view->resume = "Liste ERP en exploitation connus soumis à contrôle à la date du " . $date->get( Zend_Date::WEEKDAY." ".Zend_Date::DAY_SHORT." ".Zend_Date::MONTH_NAME_SHORT." ".Zend_Date::YEAR );
             }
@@ -75,8 +74,7 @@
                     "Commission"=> "LIBELLE_COMMISSION"
                 ), $model_stat->listeDesERP($this->_getParam("date"))->enExploitation()->sousmisAControle()
             );
-            if ($this->_getParam("format") != "json") 
-            {
+            if ($this->_getParam("format") != "json") {
                 $this->render("extraction");
             }
         }
@@ -85,8 +83,7 @@
         {
             $model_stat = new Model_DbTable_Statistiques;
 
-            if ($this->_getParam("format") != "json") 
-            {
+            if ($this->_getParam("format") != "json") {
                 $date = new Zend_Date($this->_getParam("date"), Zend_Date::DATES);
                 $this->view->resume = "Liste ERP en exploitation sous avis défavorable à la date du " . $date->get( Zend_Date::WEEKDAY." ".Zend_Date::DAY_SHORT." ".Zend_Date::MONTH_NAME_SHORT." ".Zend_Date::YEAR );
             }
@@ -182,14 +179,14 @@
             $this->render("extraction");
             }
         }
-        
+
          // Extraction 4 : Liste ERP liées au commission de visite periodique dans une année
         public function listeErpAvecVisitePeriodiqueSurUnAnAction()
-        {  
+        {
             $model_stat = new Model_DbTable_Statistiques;
             $dateDebut = date("01/01/".date("Y"), time());
             $dateFin = date("31/12/".date("Y"), time());
-                      
+
             if ($this->_getParam("format") != "json") {
                 $date = new Zend_Date($this->_getParam("date"), Zend_Date::DATES);
                 $this->view->resume = "Liste ERP avec des visites periodiques à partir du " . $date->get( Zend_Date::WEEKDAY." ".Zend_Date::DAY_SHORT." ".Zend_Date::MONTH_NAME_SHORT." ".Zend_Date::YEAR );
@@ -215,7 +212,7 @@
                             "Date de prochaine visite" => "DATEVISITE_DOSSIER",
                         )
                     ),
-                    "iderp" => array ( 
+                    "iderp" => array (
                         "label" => "", "type" => "id","data" => "ID_ETABLISSEMENT"
                     )
                 ),
@@ -228,50 +225,40 @@
                     "Date de prochaine visite" => "DATEVISITE_DOSSIER",
                     "Date limite de prochaine visite" => "PERIODICITE_ETABLISSEMENTINFORMATIONS",
                     "Commission" => "LIBELLE_COMMISSION"
-                ), 
+                ),
                 $model_stat->listeDesERPVisitePeriodique($this->_getParam("date"),$this->_getParam("datefin"))->trierPar($this->_getParam("tri"))
-                    
-            ); 
-            
-            if ($this->_getParam("format") != "json") 
-            {
+
+            );
+
+            if ($this->_getParam("format") != "json") {
                 $results = $this->view->results;
-                foreach($results as $key => $row) 
-                {
-                    if($row['DATEVISITE_DOSSIER'] == null)
-                    {
+                foreach ($results as $key => $row) {
+                    if ($row['DATEVISITE_DOSSIER'] == null) {
                         $results[$key]['DATEVISITE_DOSSIER'] = "<a href='/dossier/add/id_etablissement/".$row['ID_ETABLISSEMENT']."'>Programmer une visite</a>";
                     }
-                    if($row['NOM_UTILISATEURINFORMATIONS'] == null)
-                    {
-                        $results[$key]['NOM_UTILISATEURINFORMATIONS'] =  "<a href='/etablissement/edit/id/".$row['ID_ETABLISSEMENT']."'>Ajouter un préventionniste</a>"; 
+                    if ($row['NOM_UTILISATEURINFORMATIONS'] == null) {
+                        $results[$key]['NOM_UTILISATEURINFORMATIONS'] =  "<a href='/etablissement/edit/id/".$row['ID_ETABLISSEMENT']."'>Ajouter un préventionniste</a>";
                     }
 
-                    if($row['PERIODICITE_ETABLISSEMENTINFORMATIONS']!=0)
-                    {
+                    if ($row['PERIODICITE_ETABLISSEMENTINFORMATIONS']!=0) {
 
-                        if($row['DATEVISITE_DOSSIER'] != null) 
-                        {
+                        if ($row['DATEVISITE_DOSSIER'] != null) {
                             $date = $row['DATEVISITE_DOSSIER'];
                             $d = new DateTime($date);
                             $i=new DateInterval('P'.$row['PERIODICITE_ETABLISSEMENTINFORMATIONS'].'M');
                             $d->add($i);
-                            $results[$key]['PERIODICITE_ETABLISSEMENTINFORMATIONS'] = $d->format('Y-m-d');                      
-                        } 
-                        else
-                        {
-                            $results[$key]['PERIODICITE_ETABLISSEMENTINFORMATIONS'] = "";    
-                        }    
+                            $results[$key]['PERIODICITE_ETABLISSEMENTINFORMATIONS'] = $d->format('Y-m-d');
+                        } else {
+                            $results[$key]['PERIODICITE_ETABLISSEMENTINFORMATIONS'] = "";
+                        }
 
-                    }
-                    else 
-                    {
-                       $results[$key]['PERIODICITE_ETABLISSEMENTINFORMATIONS'] = "<a href='/etablissement/edit/id/".$row['ID_ETABLISSEMENT']."'>Modifier la periodicité</a>"; 
+                    } else {
+                       $results[$key]['PERIODICITE_ETABLISSEMENTINFORMATIONS'] = "<a href='/etablissement/edit/id/".$row['ID_ETABLISSEMENT']."'>Modifier la periodicité</a>";
                     }
                 }
                 $this->view->results = $results;
                 $this->render("extraction");
             }
         }
- 
+
     }

@@ -13,27 +13,23 @@ class Model_DbTable_Avis extends Zend_Db_Table_Abstract
             $select = "SELECT *
                 FROM avis
             ;";
-        }
-        else {
+        } else {
             $select = "SELECT *
                 FROM avis
                 WHERE VISIBLE_DOSSIER = 0;";
         }
-        
 
         return $this->getAdapter()->fetchAll($select);
     }
 
     public function getAvisLibelle($idAvis, $tousLesChamps = 1)
     {
-        if ($tousLesChamps == 1) 
-        {
+        if ($tousLesChamps == 1) {
             $select = "SELECT *
                 FROM avis
                 WHERE ID_AVIS = '".$idAvis."'
             ;";
-        }
-        else {
+        } else {
             $select = "SELECT *
                 FROM avis
                 WHERE ID_AVIS = '".$idAvis."'

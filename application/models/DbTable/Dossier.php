@@ -2,7 +2,7 @@
 
     class Model_DbTable_Dossier extends Zend_Db_Table_Abstract
     {
-		
+
         protected $_name="dossier"; // Nom de la base
         protected $_primary = "ID_DOSSIER"; // Cl� primaire
 
@@ -60,7 +60,7 @@
         }
 
         //autocompletion utilis� dans la partie dossier - Recherche etablissement LAST VERSION
-        public function searchLibelleEtab( $etablissementLibelle )
+        public function searchLibelleEtab($etablissementLibelle)
         {
             $select = "
                 SELECT ID_ETABLISSEMENT, LIBELLE_ETABLISSEMENTINFORMATIONS, LIBELLE_GENRE
@@ -154,8 +154,8 @@
 
             return $this->fetchAll($select)->toArray();
         }
-		
-        public function getLastInfosEtab( $idEtablissement)
+
+        public function getLastInfosEtab($idEtablissement)
         {
             $select = "SELECT ID_ETABLISSEMENT, LIBELLE_ETABLISSEMENTINFORMATIONS, LIBELLE_GENRE
             FROM etablissementinformations,genre
@@ -203,7 +203,7 @@
             //echo $select;
             return $this->getAdapter()->fetchAll($select);
         }
-		
+
         public function findLastVp($idEtab)
         {
             $select = $this->select()
@@ -216,7 +216,7 @@
                     ->where("d.DATEVISITE_DOSSIER IS NOT NULL");
 
             //echo $select->__toString();
-            return $this->getAdapter()->fetchRow($select);	
+            return $this->getAdapter()->fetchRow($select);
 
         }
 
@@ -234,21 +234,21 @@
                     ->where("d.DATEVISITE_DOSSIER < ?",$dateVisite);
 
             //echo $select->__toString();
-            return $this->getAdapter()->fetchRow($select);	
+            return $this->getAdapter()->fetchRow($select);
 
         }
-		
+
         public function getAvisDossier($id_dossier)
         {
            $select = $this->select()
-				->setIntegrityCheck(false)
-				->from(array('a' => 'avis'),"LIBELLE_AVIS")
-				->join(array('d' => 'dossier') , "d.AVIS_DOSSIER_COMMISSION = a.ID_AVIS")
-				->where("d.ID_DOSSIER = ?",$id_dossier);
+                ->setIntegrityCheck(false)
+                ->from(array('a' => 'avis'),"LIBELLE_AVIS")
+                ->join(array('d' => 'dossier') , "d.AVIS_DOSSIER_COMMISSION = a.ID_AVIS")
+                ->where("d.ID_DOSSIER = ?",$id_dossier);
             //echo $select;
             return $this->getAdapter()->fetchRow($select);
         }
-		
+
         public function getEtablissementDossierGenConvoc($id_dossier)
         {
             $select = "
@@ -270,34 +270,29 @@
             //echo $select;
             return $this->getAdapter()->fetchAll($select);
         }
-        
+
         public function listeDesDossierDateCommissionEchu()
         {
-                      
-            $select= "select ID_DOSSIER,OBJET_DOSSIER,LIBELLE_DATECOMMISSION,DATE_COMMISSION,LIBELLE_DOSSIERTYPE,DATEINSERT_DOSSIER from dossiertype,dossier,dossieraffectation,datecommission 
+
+            $select= "select ID_DOSSIER,OBJET_DOSSIER,LIBELLE_DATECOMMISSION,DATE_COMMISSION,LIBELLE_DOSSIERTYPE,DATEINSERT_DOSSIER from dossiertype,dossier,dossieraffectation,datecommission
                    WHERE dossier.AVIS_DOSSIER_COMMISSION = 0
                    AND dossiertype.ID_DOSSIERTYPE = dossier.TYPE_DOSSIER
                    AND dossieraffectation.ID_DOSSIER_AFFECT = dossier.ID_DOSSIER
-                   AND dossieraffectation.ID_DATECOMMISSION_AFFECT = datecommission.ID_DATECOMMISSION 
+                   AND dossieraffectation.ID_DATECOMMISSION_AFFECT = datecommission.ID_DATECOMMISSION
                    AND DATEDIFF(datecommission.DATE_COMMISSION,CURDATE()) <= -10
                    ";
-            
-                 
+
             return $this->getAdapter()->fetchAll($select);
         }
-        
+
         public function listeDesCourrierSansReponse($duree_en_jour = 5)
         {
-                      
-            $select= "select OBJET_DOSSIER ,DATEREP_DOSSIER , DATEDIFF(DATEINSERT_DOSSIER,CURDATE()) as DATERETARDREPONSE, ID_DOSSIER from dossier 
+
+            $select= "select OBJET_DOSSIER ,DATEREP_DOSSIER , DATEDIFF(DATEINSERT_DOSSIER,CURDATE()) as DATERETARDREPONSE, ID_DOSSIER from dossier
                    WHERE TYPE_DOSSIER = 5
                    AND DATEDIFF(DATEINSERT_DOSSIER,CURDATE()) <= ".((int) $duree_en_jour * -1);
-            
-                 
+
             return $this->getAdapter()->fetchAll($select);
         }
-        
-        
-          
-        
+
     }
