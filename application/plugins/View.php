@@ -4,42 +4,56 @@ class Plugin_View extends Zend_Controller_Plugin_Abstract
 {
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
-        if($request->getModuleName() == 'default')
-        {
+        if ($request->getModuleName() == 'default' || $request->getModuleName() == '') {
+
             // On récupère la vue
             $view = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('view');
 
-            // Chargement de la navigation par défaut
-            $view->navigation(new Zend_Navigation(new Zend_Config_Xml(APPLICATION_PATH . DS . 'navigation.xml', 'nav')));
+            // Chemins vers les vues, les helpers ..
+            $view->setScriptPath(APPLICATION_PATH . DS . 'views');
+            $view->setScriptPath(APPLICATION_PATH . DS . 'views' . DS . 'scripts');
 
-            // On définie le titre de l'application
-            $view->headTitle(strip_tags($view->navigation()->breadcrumbs()->setMinDepth(0)->setSeparator(" / ")));
+            // JS
+            $view->inlineScript()->appendFile("/assets/bower_components/jquery/dist/jquery.min.js");
+            $view->inlineScript()->appendFile("/assets/bower_components/bootstrap/dist/js/bootstrap.min.js");
+            $view->inlineScript()->appendFile("/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js");
+            $view->inlineScript()->appendFile("/assets/bower_components/dropzone/downloads/dropzone.min.js");
+            $view->inlineScript()->appendFile("/assets/bower_components/fullcalendar/fullcalendar.min.js");
+            $view->inlineScript()->appendFile("/assets/bower_components/jquery.tablesorter/js/jquery.tablesorter.min.js");
+            $view->inlineScript()->appendFile("/assets/bower_components/packery/dist/packery.pkgd.js");
+            $view->inlineScript()->appendFile("/assets/bower_components/selectize/dist/js/standalone/selectize.min.js");
+            $view->inlineScript()->appendFile("/assets/bower_components/jQuery.Marquee/jquery.marquee.min.js");
+            $view->inlineScript()->appendFile("/assets/js/plugins.js");
+            $view->inlineScript()->appendFile("/assets/js/main.js");
 
-            // Liens vers les fichiers combinés CSS / JS
-            $view->inlineScript()->appendFile("/js/application.combined.js")->appendFile("/js/jquery.dateentry.js");
-            $view->headLink()->appendStylesheet('/css/application.combined.css', 'all');
-
-            // Envoi de la version en cours sur la vue
-            $view->version_prevarisc = '1.2.1';
-
-            // Icône du site
-            $view->headLink()->headLink(array("rel" => "shortcut icon","href" => "/images/favicon.ico"));
+            // CSS
+            $view->headLink()->appendStylesheet('/assets/bower_components/bootstrap/dist/css/bootstrap.min.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/css/main.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/bower_components/dropzone/downloads/css/basic.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/bower_components/dropzone/downloads/css/dropzone.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/bower_components/fullcalendar/fullcalendar.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/bower_components/jquery.tablesorter/css/theme.default.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/bower_components/animate.css/animate.min.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/bower_components/selectize/dist/css/selectize.bootstrap3.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/css/components/nav-side.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/css/components/search-list.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/css/components/panel-body-heightlimit.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/css/components/dashboard.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/css/components/avis.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/css/components/muted.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/css/components/etablissement.css', 'all');
 
             // Chargement des aides de vue
-            $view->registerHelper(new View_Helper_AfficheDoc, 'afficheDoc');
-            $view->registerHelper(new View_Helper_AgendaMois, 'agendaMois');
-            $view->registerHelper(new View_Helper_Avatar, 'avatar');
-            $view->registerHelper(new View_Helper_Carte, 'carte');
-            $view->registerHelper(new View_Helper_DateJqueryToBd, 'dateJqueryToBd');
-            $view->registerHelper(new View_Helper_ListeGroupement, 'listeGroupement');
             $view->registerHelper(new SDIS62_View_Helper_FlashMessenger, 'flashMessenger');
-            
+
             // Définition du partial de vue à utiliser pour le rendu d'une recherche
             Zend_View_Helper_PaginationControl::setDefaultViewPartial('search' . DIRECTORY_SEPARATOR . 'pagination_control.phtml');
 
             // On charge la vue correctement configurée dans le viewRenderer
             $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
             $viewRenderer->setView($view);
+
         }
     }
 }
