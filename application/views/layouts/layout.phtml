@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr" >
+
+    <head>
+
+        <style>body { padding-top: 70px; }</style>
+        <?php echo $this->render("includes/header.phtml"); ?>
+
+    </head>
+
+    <body>
+
+        <?php echo $this->render("includes/nav-main.phtml"); ?>
+
+        <div class='container-fluid' >
+
+            <div class="row">
+
+              <?php if(is_array($this->nav_side_items) && count($this->nav_side_items) > 0) : ?>
+                <div class="col-xs-2 nav-side">
+                  <?php echo $this->partial("includes/nav-side.phtml", array('nav_side_items' => $this->nav_side_items)); ?>
+                </div>
+              <?php endif ?>
+
+              <div class="<?php echo is_array($this->nav_side_items) && count($this->nav_side_items) > 0 ? 'col-xs-10' : 'col-xs-12' ?>">
+                <?php // echo $this->render("includes/breadcrumbs.phtml"); ?>
+                <?php echo $this->render("includes/notifications.phtml"); ?>
+                <?php echo $this->placeholder('before_content') ?>
+                <?php echo $this->layout()->content; ?>
+                <?php echo $this->placeholder('after_content') ?>
+              </div>
+
+            </div>
+
+        </div>
+
+        <?php echo $this->inlineScript() ?>
+
+    </body>
+
+</html>

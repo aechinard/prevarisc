@@ -1,0 +1,69 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+  <div class="container-fluid">
+
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><img src='/favicon.ico' style="width: 32px;" /></a>
+    </div>
+
+    <form class="navbar-form navbar-left" method="get" action="/search/etablissement">
+      <div class="form-group">
+        <div class='input-group'>
+          <input name="label" class="form-control" type="text" placeholder="Rechercher ..." />
+          <input name="page" type="hidden" value="1" />
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+            <a class="btn btn-default" href="/search" >Avancée »</a>
+          </span>
+        </div>
+      </div>
+    </form>
+
+    <ul class="nav navbar-nav navbar-left">
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Établissements <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href='/search/etablissement?label=&page=1'><i class="glyphicon glyphicon-th-list"></i> Lister</a></li>
+          <li><a href='/etablissement/add'><i class="glyphicon glyphicon-plus"></i> Ajouter</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dossiers <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href='/search/dossier?objet=&page=1'><i class="glyphicon glyphicon-th-list"></i> Lister</a></li>
+          <li><a href='/dossier/add'><i class="glyphicon glyphicon-plus"></i> Ajouter</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Courriers <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href='/search/courriers?objet=&page=1'><i class="glyphicon glyphicon-th-list"></i> Lister</a></li>
+          <li><a href='/dossier/add'><i class="glyphicon glyphicon-plus"></i> Ajouter</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href='/calendrier-des-commissions'>Calendrier des commissions</a>
+      </li>
+    </ul>
+
+    <ul class="nav navbar-nav pull-right">
+      <li>
+        <a href="#">
+          <img style="width: 19px; border: 1px solid #dfdfdf; border-radius: 25%;" src="/data/uploads/avatars/medium/default.jpg" />&nbsp;
+          <?php echo Zend_Auth::getInstance()->getIdentity()['infos']['PRENOM_UTILISATEURINFORMATIONS'] ?>
+        </a>
+      </li>
+      <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-plus" ></i> <span class="caret"></span></a>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li><a href='/statistiques'><i class="glyphicon glyphicon-th"></i> Statistiques</a></li>
+          <li><a href='/admin'><i class="glyphicon glyphicon-cog"></i> Administration</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="/session/logout"><i class="glyphicon glyphicon-log-out"></i></a>
+      </li>
+    </ul>
+
+  </div>
+
+</nav>

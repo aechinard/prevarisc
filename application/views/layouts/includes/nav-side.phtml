@@ -1,0 +1,16 @@
+<?php if(is_array($this->nav_side_items) && count($this->nav_side_items) > 0) : ?>
+
+  <div class="list-group">
+
+    <?php foreach($this->nav_side_items as $item) : ?>
+      <a href="<?php echo $item['link'] ?>" class="list-group-item <?php if($item['link'] == $_SERVER['REDIRECT_URL']) echo "active" ?>">
+        <?php if(array_key_exists('icon', $item)) : ?><span class="glyphicon glyphicon-<?php echo $item['icon'] ?>"></span>&nbsp;<?php endif ?>
+        <?php echo $item['text'] ?>
+      </a>
+    <?php endforeach ?>
+
+  </div>
+
+<?php endif ?>
+
+<?php echo $this->partial('includes/footer.phtml') ?>
