@@ -10,8 +10,8 @@ class Plugin_View extends Zend_Controller_Plugin_Abstract
             $view = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('view');
 
             // Chemins vers les vues, les helpers ..
-            $view->setScriptPath(APPLICATION_PATH . DS . 'views');
             $view->setScriptPath(APPLICATION_PATH . DS . 'views' . DS . 'scripts');
+            $view->addScriptPath(APPLICATION_PATH . DS . 'views');
 
             // JS
             $view->inlineScript()->appendFile("/assets/bower_components/jquery/dist/jquery.min.js");
