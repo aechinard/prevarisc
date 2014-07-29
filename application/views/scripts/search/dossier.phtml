@@ -1,0 +1,51 @@
+<!-- Onglets permettant de selectionner les entités à rechercher -->
+<h1 class="page-header">Dossiers</h1>
+
+<form method='get'>
+
+	<div class='well well-small'>
+
+		<div class="input-group col-xs-6">
+			<input type="text" name='objet' class="form-control search-query" placeholder="Objet du dossier ..." value='<?php if(isset($_GET["objet"])) echo $_GET["objet"] ?>' />
+			<input type='hidden' name='page' value="1" />
+			<span class="input-group-btn">
+				<input type='submit' class="btn btn-primary" value="Rechercher dans Prevarisc" disabled />
+			</span>
+		</div>
+
+	</div>
+
+	<select name='types[]' multiple>
+			<?php foreach( $this->DB_type as $type ) : ?>
+                            <option value='<?php echo $type["ID_DOSSIERTYPE"] ?>' <?php if(isset($_GET["types"]) && in_array($type["ID_DOSSIERTYPE"], (array) $_GET["types"])) echo 'selected' ?>><?php echo $type["LIBELLE_DOSSIERTYPE"] ?></option>
+			<?php endforeach ?>
+	</select>
+
+</form>
+
+<hr/>
+
+<?php if( count($this->results) > 0 ) : ?>
+    <p class='muted'><small>Nombre total d'éléments : <?php echo $this->results->getTotalItemCount() ?></small></p>
+    <ul class='search-list'>
+    <?php echo $this->partialLoop('search/results/dossier.phtml', $this->results ) ?>
+    </ul>
+    <br/>
+    <div style='clear: both'></div>
+    <?php echo $this->results ?>
+<?php else : ?>
+	<p class='muted'><small>Aucun résultat disponible.</small></p>
+    <h2 style='color: silver; text-align: center;' ></h2>
+<?php endif ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+    	// Si le champ de recherche est vide, on empêche l'envoi d'une recherche
+			$("input[name='objet']").focus().keyup(function() {$('input[type="submit"]').attr('disabled', $(this).val() == '')}).keyup();
+
+			// Gestion des multiselects
+			$("select[name='types[]']").multiselect({nonSelectedText: "Tous les types"});
+
+	});
+</script>
