@@ -11,11 +11,6 @@ class SearchController extends Zend_Controller_Action
       );
     }
 
-    public function indexAction()
-    {
-        $this->_helper->redirector('etablissement');
-    }
-
     public function etablissementAction()
     {
         $service_search = new Service_Search;
