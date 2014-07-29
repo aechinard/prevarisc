@@ -13,7 +13,8 @@
     "kdubuc/gd_resize": "1.*",
     "SDIS62/toolbox": "1.*",
     "league/flysystem": "0.*",
-    "phpseclib/phpseclib": "0.3.*"
+    "phpseclib/phpseclib": "0.3.*",
+    "monolog/monolog": "1.*"
   },
   "require-dev": {
     "fabpot/PHP-CS-Fixer": "dev-master",

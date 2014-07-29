@@ -44,35 +44,35 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initFileSystem()
     {
-      // Choix de l'adapter à utiliser
-      if(getenv('PREVARISC_FILESYSTEM_LOCAL_ENABLED') == 1) {
-        $adapter = new League\Flysystem\Adapter\Local(getenv('PREVARISC_FILESYSTEM_LOCAL_PATH'));
-      }
-      elseif(getenv('PREVARISC_FILESYSTEM_FTP_ENABLED') == 1) {
-        $adapter = new League\Flysystem\Adapter\Ftp(array(
-          'host' => getenv('PREVARISC_FILESYSTEM_FTP_HOST'),
-          'username' => getenv('PREVARISC_FILESYSTEM_FTP_USERNAME'),
-          'password' => getenv('PREVARISC_FILESYSTEM_FTP_PASSWORD'),
-          'root' => getenv('PREVARISC_FILESYSTEM_FTP_ROOT'),
-          'passive' => true,
-          'ssl' => getenv('PREVARISC_FILESYSTEM_FTP_SSL'),
-          'timeout' => getenv('PREVARISC_FILESYSTEM_FTP_TIMEOUT') ? getenv('PREVARISC_FILESYSTEM_FTP_TIMEOUT') : 30,
-        ));
-      }
-      elseif(getenv('PREVARISC_FILESYSTEM_SFTP_ENABLED') == 1) {
-        $adapter = new League\Flysystem\Adapter\Sftp(array(
-          'host' => getenv('PREVARISC_FILESYSTEM_SFTP_HOST'),
-          'port' => getenv('PREVARISC_FILESYSTEM_SFTP_PORT') ? getenv('PREVARISC_FILESYSTEM_SFTP_PORT') : 22,
-          'username' => getenv('PREVARISC_FILESYSTEM_SFTP_USERNAME'),
-          'password' => getenv('PREVARISC_FILESYSTEM_SFTP_PASSWORD'),
-          'privateKey' => getenv('PREVARISC_FILESYSTEM_SFTP_PRIVATEKEY') ? getenv('PREVARISC_FILESYSTEM_SFTP_PRIVATEKEY') : null,
-          'root' => getenv('PREVARISC_FILESYSTEM_SFTP_ROOT') ? getenv('PREVARISC_FILESYSTEM_SFTP_ROOT') : null,
-          'timeout' => getenv('PREVARISC_FILESYSTEM_SFTP_TIMEOUT') ? getenv('PREVARISC_FILESYSTEM_SFTP_TIMEOUT') : 10
-        ));
-      }
-      else {
-        die("Aucun adaptateur d'accès aux fichiers n'est paramétré.");
-      }
+        // Choix de l'adapter à utiliser
+        if(getenv('PREVARISC_FILESYSTEM_LOCAL_ENABLED') == 1) {
+            $adapter = new League\Flysystem\Adapter\Local(getenv('PREVARISC_FILESYSTEM_LOCAL_PATH'));
+        }
+        elseif(getenv('PREVARISC_FILESYSTEM_FTP_ENABLED') == 1) {
+            $adapter = new League\Flysystem\Adapter\Ftp(array(
+                'host' => getenv('PREVARISC_FILESYSTEM_FTP_HOST'),
+                'username' => getenv('PREVARISC_FILESYSTEM_FTP_USERNAME'),
+                'password' => getenv('PREVARISC_FILESYSTEM_FTP_PASSWORD'),
+                'root' => getenv('PREVARISC_FILESYSTEM_FTP_ROOT'),
+                'passive' => true,
+                'ssl' => getenv('PREVARISC_FILESYSTEM_FTP_SSL'),
+                'timeout' => getenv('PREVARISC_FILESYSTEM_FTP_TIMEOUT') ? getenv('PREVARISC_FILESYSTEM_FTP_TIMEOUT') : 30,
+            ));
+        }
+        elseif(getenv('PREVARISC_FILESYSTEM_SFTP_ENABLED') == 1) {
+            $adapter = new League\Flysystem\Adapter\Sftp(array(
+                'host' => getenv('PREVARISC_FILESYSTEM_SFTP_HOST'),
+                'port' => getenv('PREVARISC_FILESYSTEM_SFTP_PORT') ? getenv('PREVARISC_FILESYSTEM_SFTP_PORT') : 22,
+                'username' => getenv('PREVARISC_FILESYSTEM_SFTP_USERNAME'),
+                'password' => getenv('PREVARISC_FILESYSTEM_SFTP_PASSWORD'),
+                'privateKey' => getenv('PREVARISC_FILESYSTEM_SFTP_PRIVATEKEY') ? getenv('PREVARISC_FILESYSTEM_SFTP_PRIVATEKEY') : null,
+                'root' => getenv('PREVARISC_FILESYSTEM_SFTP_ROOT') ? getenv('PREVARISC_FILESYSTEM_SFTP_ROOT') : null,
+                'timeout' => getenv('PREVARISC_FILESYSTEM_SFTP_TIMEOUT') ? getenv('PREVARISC_FILESYSTEM_SFTP_TIMEOUT') : 10
+            ));
+        }
+        else {
+            die("Aucun adaptateur d'accès aux fichiers n'est paramétré.");
+        }
 
       return new League\Flysystem\Filesystem($adapter);
     }
@@ -128,5 +128,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $router->addRoutes($routes);
 
         return $router;
+    }
+
+    /**
+     * Logger pour tracer l'utilisation du logiciel
+     */
+    protected function _initLogger()
+    {
+        $logger = new Monolog\Logger('prevarisc_log');
+
+        if(getenv('PREVARISC_DEBUG_ENABLED')) {
+            $logger->pushHandler(new Monolog\Handler\FirePHPHandler());
+        }
+
+        return $logger;
     }
 }
