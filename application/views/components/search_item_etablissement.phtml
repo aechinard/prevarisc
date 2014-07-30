@@ -16,7 +16,7 @@
 
     <!-- nom de l'établissement -->
     <span class="nom-etablissement">
-      <a href='/etablissement/index/id/<?php echo $this->ID_ETABLISSEMENT ?>'>
+      <a href='<?php echo $this->url(array('id' => $this->ID_ETABLISSEMENT), 'ets') ?>'>
         <?php echo empty($this->LIBELLE_ETABLISSEMENTINFORMATIONS) ? "<em class='muted'>Libellé non renseigné</em>" : $this->LIBELLE_ETABLISSEMENTINFORMATIONS ?>
         <small>
           <?php
@@ -45,7 +45,7 @@
 
     <!-- Icone de chargement des enfants (si il y'en a, et si on est en mode niveau -->
     <?php if($this->NB_ENFANTS > 0) : ?>
-      <span class='load hide' ><img src='/img/load.gif' alt='Chargement ...' /></span>
+      <span class='load hide' ><img src='/assets/img/load.gif' alt='Chargement ...' /></span>
     <?php endif ?>
 
     <?php

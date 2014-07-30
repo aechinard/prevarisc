@@ -1,0 +1,70 @@
+<li class='dossier <?php if($this->NB_DOSS_LIES > 0) echo "slide" ?>' id="<?php echo $this->ID_DOSSIER ?>">
+
+  <div class='pull-left'>
+
+    <!-- Nom du courrier -->
+    <span class="doss-nom">
+        <a href='<?php echo $this->url(array('id' => $this->ID_DOSSIER), 'doss') ?>' title='<?php echo htmlspecialchars($this->LIBELLE_DOSSIERTYPE . " - " . $this->LIBELLE_DOSSIERNATURE . (!empty($this->OBJET_DOSSIER) ? " - " . $this->OBJET_DOSSIER : ""), ENT_QUOTES) ?>'>
+            <?php echo $this->LIBELLE_DOSSIERTYPE . " - " . $this->LIBELLE_DOSSIERNATURE . (!empty($this->OBJET_DOSSIER) ? " - " . substr($this->OBJET_DOSSIER, 0, 70) . ( strlen($this->OBJET_DOSSIER) > 70 ? "(...)" : "" ) : "") . ( $this->NB_URBA != '' ? " - " . $this->NB_URBA : '') ?>
+        </a>
+    </span>
+
+    <!-- Date du dossier -->
+    <?php
+        if($this->DATESDIS_INPUT != null)
+        {
+            $date = substr($this->DATESDIS_INPUT, 0, 10);
+            if($date != '0000-00-00'){
+                $date = new DateTime(substr($this->DATESDIS_INPUT,0,10));
+                $date = date_format($date, 'd/m/Y');
+            }else{
+                $date = "00/00/0000";
+            }
+            $date_text = "reçu au SDIS le";
+        }
+        elseif($this->DATESECRETARIAT_DOSSIER != null)
+        {
+            $date = substr($this->DATESECRETARIAT_DOSSIER, 0, 10);
+            if($date != '0000-00-00'){
+                $date = new DateTime(substr($this->DATESECRETARIAT_DOSSIER,0,10));
+                $date = date_format($date, 'd/m/Y');
+            }else{
+                $date = "00/00/0000";
+            }
+            $date_text = "reçu au secrétariat de commission le";
+        }
+        else
+        {
+            $date = substr($this->DATEMAIRIE_DOSSIER, 0, 10);
+            if($date != '0000-00-00'){
+                $date = new DateTime(substr($this->DATEMAIRIE_DOSSIER,0,10));
+                $date = date_format($date, 'd/m/Y');
+            }else{
+                $date = "00/00/0000";
+            }
+            $date_text = "reçu en mairie le";
+        }
+        echo "<small class='muted'>" . $date_text . " " . $date . "</small>";
+    ?>
+
+    <!-- Icone de chargement des enfants (si il y'en a, et si on est en mode niveau -->
+    <?php if($this->NB_DOSS_LIES > 0) : ?>
+        <span class='load hide' ><img src='/assets/img/load.gif' alt='Chargement ...' /></span>
+    <?php endif ?>
+
+  </div>
+
+  <div class='pull-right'>
+
+    <!-- Réponse ou pas -->
+    <?php if($this->DATEREP_DOSSIER != null) : ?>
+    <span class='avis avis-favorable'>Réponse envoyée</span>
+    <?php else : ?>
+    <span class="avis">Sans réponse</span>
+    <?php endif ?>
+
+  </div>
+
+  <div style='clear: both'></div>
+
+</li>

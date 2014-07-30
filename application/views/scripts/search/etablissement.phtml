@@ -15,12 +15,12 @@
 
 		<div class='pull-right' style='margin: 8px 0 0 5px'>
 			<small>
-						Zone de recherche :
-						<strong class='zone_de_recherche_text'>
-							<?php echo array_key_exists('zone_de_recherche_text', $_GET) && $_GET['zone_de_recherche_text'] != '' ? $_GET['zone_de_recherche_text'] : 'Département' ?>
-						</strong>
-						<a href='#' onclick="$('#zone_de_recherche_modal').modal(); return false; ">(Modifier la zone de recherche)</a>
-						<input type='hidden' name='zone_de_recherche_text' value="<?php if(array_key_exists('zone_de_recherche_text', $_GET)) echo $_GET['zone_de_recherche_text'] ?>" />
+				Zone de recherche :
+				<strong class='zone_de_recherche_text'>
+					<?php echo array_key_exists('zone_de_recherche_text', $_GET) && $_GET['zone_de_recherche_text'] != '' ? $_GET['zone_de_recherche_text'] : 'Département' ?>
+				</strong>
+				<a href='#' onclick="$('#zone_de_recherche_modal').modal(); return false; ">(Modifier la zone de recherche)</a>
+				<input type='hidden' name='zone_de_recherche_text' value="<?php if(array_key_exists('zone_de_recherche_text', $_GET)) echo $_GET['zone_de_recherche_text'] ?>" />
 			</small>
 		</div>
 
@@ -148,7 +148,7 @@
 <?php if( count($this->results) > 0 ) : ?>
     <p class='muted'><small>Nombre total d'éléments : <?php echo $this->results->getTotalItemCount() ?></small></p>
     <ul class='search-list'>
-    <?php echo $this->partialLoop('search/results/etablissement.phtml', $this->results ) ?>
+    <?php echo $this->partialLoop('components/search_item_etablissement.phtml', $this->results ) ?>
     </ul>
     <br/>
     <div style='clear: both'></div>
