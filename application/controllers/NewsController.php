@@ -4,8 +4,6 @@ class NewsController extends Zend_Controller_Action
 {
     public function addAction()
     {
-        $this->_helper->layout->disableLayout();
-
         $service_user = new Service_User;
 
         $this->view->groupes = $service_user->getAllGroupes();
@@ -19,7 +17,7 @@ class NewsController extends Zend_Controller_Action
                 $this->_helper->flashMessenger(array('context' => 'error','title' => 'Erreur !','message' => 'Erreur lors de l\'ajout du message : ' . $e->getMessage()));
             }
 
-            $this->_helper->redirector('index', 'index');
+            $this->_helper->redirector->gotoRoute(array(), 'home', true);
         }
     }
 
@@ -33,6 +31,6 @@ class NewsController extends Zend_Controller_Action
             $this->_helper->flashMessenger(array('context' => 'error','title' => 'Erreur !','message' => 'Erreur lors de la suppression du message : ' . $e->getMessage()));
         }
 
-        $this->_helper->redirector('index', 'index');
+        $this->_helper->redirector->gotoRoute(array(), 'home', true);
     }
 }
