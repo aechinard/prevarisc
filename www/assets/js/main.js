@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
       $.getJSON("/api/1.0/search/etablissements", {parent: $(this).attr("id"), count: 100}, function(data) {
         $(container).toggleClass("active").find(".load").hide();
         $.post("/search/display-ajax-search", {items: 'etablissement', data: data.response.results}, function(html) {
-          $(container).after("<li class='hide child' >" + html + "</li>").next().slideDown();
+          $(container).after("<li class='hide child' style='overflow: auto;' >" + html + "</li>").next().slideDown();
         });
       });
     }
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
       $.getJSON("/api/1.0/search/dossiers", {parent: $(this).attr("id"), count: 100}, function(data) {
         $(container).toggleClass("active").find(".load").hide();
         $.post("/search/display-ajax-search", {items: 'dossier', data: data.response.results}, function(html) {
-          $(container).after("<li class='hide child' >" + html + "</li>").next().slideDown();
+          $(container).after("<li class='hide child' style='overflow: auto;'>" + html + "</li>").next().slideDown();
         });
       });
     }
@@ -61,5 +61,14 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   });
+
+    // Gestion de la boite de recherche
+    $(".navbar.navbar-default.navbar-fixed-top input[name='label']").focus(function() {
+        $('.nav.navbar-nav.navbar-left').removeClass('fadeIn').addClass('animated fadeOut');
+        $(this).animate({width: "600px",}, 400 );
+    }).blur(function() {
+        $('.nav.navbar-nav.navbar-left').removeClass('fadeOut').addClass('animated fadeIn');
+        $(this).animate({width: "150px",}, 400 );
+    });
 
 });
