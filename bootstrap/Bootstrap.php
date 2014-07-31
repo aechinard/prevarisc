@@ -13,12 +13,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Controller_Front::getInstance()->registerPlugin(new Plugin_View);
         Zend_Controller_Front::getInstance()->registerPlugin(new Plugin_XmlHttpRequest);
 
-        // Ajout des aides d'action
-        Zend_Controller_Action_HelperBroker::addPath(
-            APPLICATION_PATH . DIRECTORY_SEPARATOR . "controllers" . DIRECTORY_SEPARATOR . "helpers",
-            "Application_Controller_Helper_"
-        );
-
         return parent::run();
     }
 
@@ -98,7 +92,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = new Zend_View();
 
         $view->headMeta()
-            ->appendName('viewport', 'width=device-width,initial-scale=1')
             ->appendHttpEquiv('X-UA-Compatible', 'IE=edge,chrome=1')
             ->appendName('description', 'Logiciel de gestion du service Prévention')
             ->appendName('author', 'SDIS62 - Service Recherche et Développement');
