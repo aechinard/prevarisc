@@ -6,7 +6,7 @@ class AuthController extends Zend_Controller_Action
     {
         $this->_helper->layout->setLayout('login');
 
-        $service_user = new Service_User;
+        $service_user = new Service_User();
 
         if ($this->_request->isPost()) {
 
@@ -29,19 +29,18 @@ class AuthController extends Zend_Controller_Action
                 $adapters['dbtable']->setIdentity($username)->setCredential(md5($username . getenv('PREVARISC_SECURITY_SALT') . $password));
 
                 // Adaptateur LDAP
-                if(getenv('PREVARISC_LDAP_ENABLED') == 1) {
+                if (getenv('PREVARISC_LDAP_ENABLED') == 1) {
                     $ldap = new Zend_Ldap(array('host' => getenv('PREVARISC_LDAP_HOST'), 'username' => getenv('PREVARISC_LDAP_USERNAME'), 'password' => getenv('PREVARISC_LDAP_PASSWORD'), 'baseDn' => getenv('PREVARISC_LDAP_BASEDN')));
                     try {
-                        $adapters['ldap'] = new Zend_Auth_Adapter_Ldap;
+                        $adapters['ldap'] = new Zend_Auth_Adapter_Ldap();
                         $adapters['ldap']->setLdap($ldap);
                         $adapters['ldap']->setUsername($ldap->getCanonicalAccountName($username, Zend_Ldap::ACCTNAME_FORM_DN));
                         $adapters['ldap']->setPassword($password);
-                    }
-                    catch(Exception $e) {}
+                    } catch (Exception $e) {}
                 }
 
                 // On lance le process d'identification
-                foreach($adapters as $key => $adapter) {
+                foreach ($adapters as $key => $adapter) {
                     if ($adapter->authenticate()->isValid()) {
                         $storage = Zend_Auth::getInstance()->getStorage()->write($user);
                         $this->_helper->redirector->gotoRoute(array(), 'home', true);
@@ -60,7 +59,7 @@ class AuthController extends Zend_Controller_Action
     {
         $this->_helper->viewRenderer->setNoRender();
 
-        $service_user = new Service_User;
+        $service_user = new Service_User();
         $service_user->updateLastActionDate(Zend_Auth::getInstance()->getIdentity()['ID_UTILISATEUR'], null);
 
         Zend_Auth::getInstance()->clearIdentity();
