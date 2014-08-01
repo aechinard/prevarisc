@@ -12,7 +12,7 @@ class Plugin_Security extends Zend_Controller_Plugin_Abstract
 
             $input = new Zend_Filter_Input($filters, array(), $params);
 
-            if (!$input->isValid()) {
+            if (@!$input->isValid()) {
                 $redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
                 $redirector->gotoRouteAndExit(array(), 'error', true);
             }
