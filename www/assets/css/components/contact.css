@@ -1,0 +1,32 @@
+.fiche_contact {
+	border: 1px dotted #818183;
+	padding: 20px 20px 20px 20px;
+	margin-bottom: 20px;
+}
+.fiche_contact_nom {
+    font-family: Verdana;
+    color: #ca0425;
+    font-size: 10px;
+    margin: 0 0 6px 0;
+}
+.fiche_contact_fonction {
+
+    font-family: Verdana;
+    color: #858585;
+    font-size: 10px;
+    font-style: italic;
+    margin: 0 0 20px 0;
+}
+.fiche_contact li {
+    width:100%;
+    border-bottom:1px solid #e9e9e9;
+    line-height:18px;
+    color:#858585;
+   }
+.fiche_contact li:last-child {
+    margin:0 0 15px 0;
+}
+.fiche_contact  .valeur{
+    display:block;
+    float:right;
+}

@@ -43,6 +43,7 @@ class Plugin_View extends Zend_Controller_Plugin_Abstract
             $view->headLink()->appendStylesheet('/assets/css/components/avis.css', 'all');
             $view->headLink()->appendStylesheet('/assets/css/components/muted.css', 'all');
             $view->headLink()->appendStylesheet('/assets/css/components/etablissement.css', 'all');
+            $view->headLink()->appendStylesheet('/assets/css/components/contact.css', 'all');
 
             // Chargement des aides de vue
             $view->registerHelper(new SDIS62_View_Helper_FlashMessenger, 'flashMessenger');
