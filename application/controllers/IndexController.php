@@ -12,15 +12,13 @@ class IndexController extends Zend_Controller_Action
 
         $data = $service_user->getDashboardData(Zend_Auth::getInstance()->getIdentity()['ID_UTILISATEUR']);
 
-        $this->view->etablissements = $data['etablissements'];
-        $this->view->dossiers = $data['dossiers'];
-        $this->view->commissions = $data['commissions'];
-        $this->view->erpSansPreventionniste =  $data['erpSansPreventionniste'];
-        $this->view->etablissementAvisDefavorable =  $data['etablissementAvisDefavorable'];
-        $this->view->dossierCommissionEchu =  $data['dossierCommissionEchu'];
-        $this->view->CourrierSansReponse =  $data['CourrierSansReponse'];
-        $this->view->prochainesCommission =  $data['prochainesCommission'];
-        $this->view->NbrDossiersAffect =  $data['NbrDossiersAffect'];
-        $this->view->ErpSansProchaineVisitePeriodeOuvert =  $data['ErpSansProchaineVisitePeriodeOuvert'];
+        $this->view->listeErpAvisDef = @$data['listeErpAvisDef'];
+        $this->view->listeDossiersDateEchue = @$data['listeDossiersDateEchue'];
+        $this->view->listeErpSansVP = @$data['listeErpSansVP'];
+        $this->view->listeDossiersAvisDiff =  @$data['listeDossiersAvisDiff'];
+        $this->view->listeCourriersSansRep = @$data['listeCourriersSansRep'];
+        $this->view->listeERPSansPrev =  @$data['listeERPSansPrev'];
+        $this->view->listeDossiersSuivis =  @$data['listeDossiersSuivis'];
+        $this->view->listeERPSuivis =  @$data['listeERPSuivis'];
     }
 }
