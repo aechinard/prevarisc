@@ -22,7 +22,7 @@ class Api_Service_Etablissement
      * @param  int    $id
      * @return string
      */
-    public function getHistorique($id)
+    public function historique($id)
     {
         $service_etablissement = new Service_Etablissement;
         $historique = $service_etablissement->getHistorique($id);
@@ -36,7 +36,7 @@ class Api_Service_Etablissement
      * @param  int    $id
      * @return string
      */
-    public function getDescriptifs($id)
+    public function descriptifs($id)
     {
         $service_etablissement = new Service_Etablissement;
         $descriptifs = $service_etablissement->getDescriptifs($id);
@@ -50,7 +50,7 @@ class Api_Service_Etablissement
      * @param  int    $id
      * @return string
      */
-    public function getTextesApplicables($id)
+    public function textes_applicables($id)
     {
         $service_etablissement = new Service_Etablissement;
         $textes_applicables = $service_etablissement->getAllTextesApplicables($id);
@@ -64,7 +64,7 @@ class Api_Service_Etablissement
      * @param  int    $id
      * @return string
      */
-    public function getPiecesJointes($id)
+    public function pieces_jointes($id)
     {
         $service_etablissement = new Service_Etablissement;
         $pieces_jointes = $service_etablissement->getAllPJ($id);
@@ -78,7 +78,7 @@ class Api_Service_Etablissement
      * @param  int    $id
      * @return string
      */
-    public function getContacts($id)
+    public function contacts($id)
     {
         $service_etablissement = new Service_Etablissement;
         $contacts = $service_etablissement->getAllContacts($id);
@@ -92,7 +92,7 @@ class Api_Service_Etablissement
      * @param  int    $id
      * @return string
      */
-    public function getDossiers($id)
+    public function dossiers($id)
     {
         $service_etablissement = new Service_Etablissement;
         $dossiers = $service_etablissement->getDossiers($id);
@@ -113,7 +113,7 @@ class Api_Service_Etablissement
      * @param  array  $ids_etablissements_enfants
      * @return string
      */
-    public function getDefaultValues($genre, $numinsee = null, $type = null, $categorie = null, $local_sommeil = null, $classe = null, $id_etablissement_pere = null, $ids_etablissements_enfants = null)
+    public function defaults_values($genre, $numinsee = null, $type = null, $categorie = null, $local_sommeil = null, $classe = null, $id_etablissement_pere = null, $ids_etablissements_enfants = null)
     {
         $service_etablissement = new Service_Etablissement;
         $defaults_values = $service_etablissement->getDefaultValues($genre, $numinsee, $type, $categorie, $local_sommeil, $classe, $id_etablissement_pere, $ids_etablissements_enfants);

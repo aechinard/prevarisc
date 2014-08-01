@@ -8,7 +8,7 @@ class Api_Service_Adresse
      * @param  string $q Code postal ou nom d'une commune
      * @return string
      */
-    public function get($q)
+    public function get_communes($q)
     {
         $service_adresse = new Service_Adresse;
 
@@ -21,7 +21,7 @@ class Api_Service_Adresse
      * @param  int    $code_insee
      * @return string
      */
-    public function getTypesVoieParVille($code_insee)
+    public function get_types_voie_par_ville($code_insee)
     {
         $service_adresse = new Service_Adresse;
 
@@ -35,7 +35,7 @@ class Api_Service_Adresse
      * @param  string $q
      * @return string
      */
-    public function getVoies($code_insee, $q = '')
+    public function get_voies($code_insee, $q = '')
     {
         $service_adresse = new Service_Adresse;
 
