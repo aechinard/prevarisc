@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
       $.getJSON("/api/1.0/search/etablissements", {parent: $(this).attr("id"), count: 100}, function(data) {
         $(container).toggleClass("active").find(".load").hide();
         $.post("/search/display-ajax-search", {items: 'etablissement', data: data.response.results}, function(html) {
-          $(container).after("<li class='hide child' style='overflow: auto;' >" + html + "</li>").next().slideDown();
+          $(container).after("<li class='hide child' style='overflow: auto; height: auto;' >" + html + "</li>").next().slideDown();
         });
       });
     }
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
       $.getJSON("/api/1.0/search/dossiers", {parent: $(this).attr("id"), count: 100}, function(data) {
         $(container).toggleClass("active").find(".load").hide();
         $.post("/search/display-ajax-search", {items: 'dossier', data: data.response.results}, function(html) {
-          $(container).after("<li class='hide child' style='overflow: auto;'>" + html + "</li>").next().slideDown();
+          $(container).after("<li class='hide child' style='overflow: auto; height: auto;'>" + html + "</li>").next().slideDown();
         });
       });
     }
