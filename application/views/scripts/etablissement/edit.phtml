@@ -1,6 +1,6 @@
 <?php echo $this->render('etablissement/partials/header.phtml') ?>
 
-<form id='etablissement' class='form-horizontal' action='<?php echo $this->url(array('action' => $this->add ? 'add' : 'edit')) ?>' method='post' >
+<form id='etablissement' class='form-horizontal' method='post' >
 
     <?php if($this->add) : ?>
     <div class='pull-right' >
@@ -10,10 +10,8 @@
     <h2>Ajout d'un établissement</h2>
     <?php else : ?>
     <div class='pull-right' >
-        <div class="btn-group">
-            <a class='btn btn-default' href="<?php echo $this->url(array('action' => 'index')) ?>">Annuler la modification</a>
-            <input type='submit' class="btn btn-success" value='Sauvegarder'>
-        </div>
+        <a class='btn btn-default' href="<?php echo $this->url(array("id" => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets', true) ?>">Annuler la modification</a>
+        <input type='submit' class="btn btn-success" value='Sauvegarder'>
     </div>
     <h2>Modification de l'établissement</h2>
     <?php endif ?>
@@ -259,7 +257,7 @@
             </table>
 
             <!-- Etablissement lié -->
-            <h3>Établissements liés <?php if($this->etablissement['general']) : ?> <a id='add_etablissement' href='/etablissement/add?pere=<?php echo $this->etablissement['general']['ID_ETABLISSEMENT'] ?>&libelle=<?php echo htmlspecialchars($this->etablissement['informations']["LIBELLE_ETABLISSEMENTINFORMATIONS"], ENT_QUOTES) ?>' class='edit' style='font-size: 14px; line-height: 24px; float: right; font-weight: normal;' >Créer un établissement enfant</a> <?php endif ?></h3>
+            <h3>Établissements liés <?php if($this->etablissement['general']) : ?> <a id='add_etablissement' href='<?php echo $this->url(array(), 'ets_add', true)?>?pere=<?php echo $this->etablissement['general']['ID_ETABLISSEMENT'] ?>&libelle=<?php echo htmlspecialchars($this->etablissement['informations']["LIBELLE_ETABLISSEMENTINFORMATIONS"], ENT_QUOTES) ?>' class='edit' style='font-size: 14px; line-height: 24px; float: right; font-weight: normal;' >Créer un établissement enfant</a> <?php endif ?></h3>
             <div>
               <div class="form-group etablissement_pere">
                 <label class="col-sm-3 control-label">Père de l'établissement</label>
@@ -405,7 +403,7 @@
 
       <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h3 class='modal-title'>Confirmation de l'édition</h3>
+          <h4 class='modal-title'>Confirmation de l'édition</h4>
       </div>
 
       <div class="modal-body">
@@ -447,7 +445,7 @@
 
       <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h3 class='modal-title'>Ajouter une adresse</h3>
+          <h4 class='modal-title'>Ajouter une adresse</h4>
       </div>
 
       <div class="modal-body">
@@ -532,7 +530,7 @@
                 if(data.status == 'success' && Object.keys(data.response).length > 0) {
                     // A l'apparition de la boite de confirmation on met à jour les valeurs saisies par l'utilisateur dans la boite
                     var preventionnistes = [];
-                    var date = new Date($('input[name="date"]').val());
+                    var date = new Date();
                     $('#confirm-modal-commission .confirm-modal-input').text($('select[name="ID_COMMISSION"] option:selected').text());
                     $('#confirm-modal-periodicite .confirm-modal-input').text($('input[name="PERIODICITE_ETABLISSEMENTINFORMATIONS"]').val());
                     $('#confirm-modal-localsommeil .confirm-modal-input').text($('input[name="LOCALSOMMEIL_ETABLISSEMENTINFORMATIONS"][value=1]').is(':checked') ? 'Oui' : 'Non' );
@@ -719,7 +717,7 @@
         });
 
         // Géolocalisation de l'adresse
-        $('#adresse-modal #geolocme').click(function() {
+        $('#adresse-modal button#geolocme').click(function() {
             element = $(this);
             $.ajax({
                 url: "http://nominatim.openstreetmap.org/search",
@@ -729,9 +727,9 @@
                     format: "json",
                     limit: 1,
                     country: "France",
-                    street: $("input[name='numero']").val() + " " + $("input[name='voie_ac']").val(),
-                    city: $("input[name='commune_ac']").val(),
-                    postalcode: $("input[name='code_insee']").val().substring(0,2)
+                    street: $("input.adresse_numero").val() + " " + $(".selectize-control.adresse_voie .item").text(),
+                    city: $(".selectize-control.adresse_commune .item").text(),
+                    postalcode: $("select.adresse_commune").val().substring(0,2)
                 },
                 beforeSend: function() {
                     element.text("Géolocalisation en cours ...");
@@ -755,7 +753,6 @@
                     element.text("Serveur de géolocalisation introuvable").attr('disabled', true);
                 }
             });
-
             return false;
         });
 
@@ -801,8 +798,8 @@
               '</div>';
             }
         },
-          onDropdownOpen: function() {$(".selectize-dropdown").stop().show();},
-          onDropdownClose: function() {$(".selectize-dropdown").stop().hide();}
+          onDropdownOpen: function() {$("select[name='ID_PERE']").next().find(".selectize-dropdown").stop().show();},
+          onDropdownClose: function() {$("select[name='ID_PERE']").next().find(".selectize-dropdown").stop().hide();}
         });
 
         // Auto-complétion des établissements enfants
@@ -828,8 +825,8 @@
               '</div>';
             }
           },
-          onDropdownOpen: function() {$(".selectize-dropdown").stop().show();},
-          onDropdownClose: function() {$(".selectize-dropdown").stop().hide();}
+          onDropdownOpen: function() {$("select[name='ID_FILS_ETABLISSEMENT[]']").next().find(".selectize-dropdown").stop().show();},
+          onDropdownClose: function() {$("select[name='ID_FILS_ETABLISSEMENT[]']").next().find(".selectize-dropdown").stop().hide();}
         });
 
         // Auto complétion de la ville
@@ -856,8 +853,8 @@
               $("input.adresse_numero, input.adresse_complement").attr("disabled", true);
             }
           },
-          onDropdownOpen: function() {$(".selectize-dropdown.adresse_commune").stop().show();},
-          onDropdownClose: function() {$(".selectize-dropdown.adresse_commune").stop().hide();}
+          onDropdownOpen: function() {$("select.adresse_commune").next().find(".selectize-dropdown.adresse_commune").stop().show();},
+          onDropdownClose: function() {$("select.adresse_commune").next().find(".selectize-dropdown.adresse_commune").stop().hide();}
         });
 
         // Auto complétion de la rue
@@ -883,8 +880,8 @@
               $("input.adresse_numero, input.adresse_complement").attr("disabled", true);
             }
           },
-          onDropdownOpen: function() {$(".selectize-dropdown.adresse_voie").stop().show();},
-          onDropdownClose: function() {$(".selectize-dropdown.adresse_voie").stop().hide();}
+          onDropdownOpen: function() {$("select.adresse_voie").next().find(".selectize-dropdown.adresse_voie").stop().show();},
+          onDropdownClose: function() {$("select.adresse_voie").next().find(".selectize-dropdown.adresse_voie").stop().hide();}
         });
 
     });

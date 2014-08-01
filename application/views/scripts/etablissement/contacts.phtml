@@ -1,7 +1,7 @@
 <?php echo $this->render('etablissement/partials/header.phtml') ?>
 
 <div class='pull-right' >
-    <a class='btn btn-default' href="<?php echo $this->url(array('action' => 'edit-contacts')) ?>">Gestion des contacts</a>
+    <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_contacts_edit', true) ?>">Gestion des contacts</a>
 </div>
 
 <h2>Contacts</h2>
@@ -12,7 +12,7 @@
 	<div class='row'>
 	<?php foreach($this->contacts_etablissements_parents as $contact) : ?>
 		<div class='col-sm-4'>
-			<?php echo $this->partial('etablissement/partials/partial-contact.phtml', $contact) ?>
+			<?php echo $this->partial('components/contact.phtml', $contact) ?>
 		</div>
 		<?php if(!isset($i)) $i = 1; else $i++; ?>
 		<?php if($i == 3) : ?>
@@ -27,7 +27,7 @@
 
     <div class='well well-large text-center'>
         <p class='lead'>Il n'y a pas de contact.</p>
-        <p><a href='<?php echo $this->url(array('action' => 'edit-contacts')) ?>' class='btn btn-default btn-large'>Ajouter un contact</a></p>
+        <p><a href='<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_contacts_edit', true) ?>' class='btn btn-default btn-large'>Ajouter un contact</a></p>
     </div>
 
 <?php else : ?>
@@ -38,7 +38,7 @@
 	<div class='row'>
 	<?php foreach($this->contacts as $contact) : ?>
 		<div class='col-sm-4'>
-			<?php echo $this->partial('etablissement/partials/partial-contact.phtml', $contact) ?>
+			<?php echo $this->partial('components/contact.phtml', $contact) ?>
 		</div>
 		<?php if(!isset($i)) $i = 1; else $i++; ?>
 		<?php if($i == 3) : ?>

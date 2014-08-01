@@ -5,14 +5,15 @@
   <!-- Parents -->
   <?php if( $this->etablissement['parents'] > 0 ) : ?>
       <?php foreach($this->etablissement['parents'] as $key => $etablissement) : ?>
-          <?php echo "<a href='/etablissement/index/id/" . $etablissement["ID_ETABLISSEMENT"] . "'>" . $etablissement["LIBELLE_ETABLISSEMENTINFORMATIONS"] . "</a>"; ?>
+          <?php echo "<a href='" . $this->url(array('id' => $etablissement["ID_ETABLISSEMENT"]), 'ets', true) . "'>" . $etablissement["LIBELLE_ETABLISSEMENTINFORMATIONS"] . "</a>"; ?>
           <?php if(true || $key != count($this->etablissement['parents']) - 1) : ?>
             <?php echo "<span class='muted'> &gt; </span>"; ?>
           <?php endif ?>
       <?php endforeach ?>
   <?php endif ?>
-
-  <?php echo file_exists(APPLICATION_PATH . DS . '..' . DS . 'public' . DS . 'img' . DS . 'types' . DS . 'b' . DS . 'icone-type-' . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . '.png') ? "<img src='/img/types/b/icone-type-" . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . ".png' title='" . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . "' />" : ''; ?>
+  <?php if($this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL']) : ?>
+      <?php echo "<img src='/assets/img/types/b/icone-type-" . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . ".png' title='" . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . "' />" ?>
+  <?php endif ?>
   <?php echo $this->etablissement['informations']["LIBELLE_ETABLISSEMENTINFORMATIONS"]." " ?>
 </h1>
 

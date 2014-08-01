@@ -1,9 +1,9 @@
 <?php echo $this->render('etablissement/partials/header.phtml') ?>
 
-<h3>Historique</h3>
+<h2>Historique</h2>
 
 <?php if(array_key_exists('avis', $this->historique)) : ?>
-<h4>Historique des avis d'exploitation</h4>
+<h3>Historique des avis d'exploitation</h3>
 <?php
     if(isset($this->historique["avis"]))
     echo $this->partial("etablissement/partials/partial-historique.phtml", array(
@@ -14,7 +14,7 @@
 ?>
 <?php endif ?>
 
-<h4>Historique du libellé</h4>
+<h3>Historique du libellé</h3>
 <?php
     if(isset($this->historique["LIBELLE_ETABLISSEMENTINFORMATIONS"]))
     echo $this->partial("etablissement/partials/partial-historique.phtml", array(
@@ -24,21 +24,21 @@
     echo "Pas d'historique disponible.";
 ?>
 
-<h4>Historique du statut</h4>
+<h3>Historique du statut</h3>
 <?php
     echo $this->partial("etablissement/partials/partial-historique.phtml", array(
         "array" => $this->historique["ID_STATUT"]
     ));
 ?>
 
-<h4>Historique de la catégorie</h4>
+<h3>Historique de la catégorie</h3>
 <?php
     echo $this->partial("etablissement/partials/partial-historique.phtml",array(
         "array" => $this->historique["ID_CATEGORIE"]
     ));
 ?>
 
-<h4>Historique de la classe</h4>
+<h3>Historique de la classe</h3>
 <?php
     echo $this->partial("etablissement/partials/partial-historique.phtml", array(
         "array" => $this->historique["ID_CLASSE"]
@@ -46,14 +46,14 @@
 ?>
 
 
-<h4>Historique de la famille</h4>
+<h3>Historique de la famille</h3>
 <?php
     echo $this->partial("etablissement/partials/partial-historique.phtml", array(
         "array" => $this->historique["ID_FAMILLE"]
     ));
 ?>
 
-<h4>Historique du type d'activité</h4>
+<h3>Historique du type d'activité</h3>
 <?php
     echo $this->partial("etablissement/partials/partial-historique.phtml", array(
         "array" => $this->historique["ID_TYPE"]

@@ -1,7 +1,7 @@
 <?php echo $this->render('etablissement/partials/header.phtml') ?>
 
 <div class='pull-right' >
-    <a class='btn btn-default' href="<?php echo $this->url(array('action' => 'edit-pieces-jointes')) ?>">Gestion des pièces jointes</a>
+    <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_pieces_jointes_edit', true) ?>">Gestion des pièces jointes</a>
 </div>
 
 <h2>Pièces jointes</h2>
@@ -10,7 +10,7 @@
 
     <div class='well well-large text-center'>
         <p class='lead'>Il n'y a pas de pièce jointe.</p>
-        <p><a href='<?php echo $this->url(array('action' => 'edit-pieces-jointes')) ?>' class='btn btn-default btn-large'>Ajouter une pièce jointe</a></p>
+        <p><a href='<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_pieces_jointes_edit', true) ?>' class='btn btn-default btn-large'>Ajouter une pièce jointe</a></p>
     </div>
 
 <?php else : ?>
@@ -67,10 +67,10 @@
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
 		$('a[href$=png], a[href$=jpg], a[href$=jpeg]').fancybox({
-        'transitionIn'	:	'elastic',
-        'transitionOut'	:	'elastic',
-        'speedIn'		:	600,
-        'speedOut'		:	200,
-    });
+            'transitionIn'	:	'elastic',
+            'transitionOut'	:	'elastic',
+            'speedIn'		:	600,
+            'speedOut'		:	200,
+        });
 	});
 </script>

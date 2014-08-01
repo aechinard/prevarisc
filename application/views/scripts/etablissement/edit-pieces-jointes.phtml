@@ -1,9 +1,9 @@
 <?php echo $this->render('etablissement/partials/header.phtml') ?>
 
 <div class='pull-right' >
-  <a class='btn btn-default' href="<?php echo $this->url(array('action' => 'pieces-jointes')) ?>">Revenir sur l'affichage des contacts</a>
+  <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_pieces_jointes', true) ?>">Revenir sur l'affichage des contacts</a>
   <div class='btn-group'>
-    <a href='<?php echo $this->url(array('action' => 'add-piece-jointe')) ?>' class="btn btn-primary" data-toggle="modal" data-target="#reponse-modal" >Ajouter une pièce jointe</a>
+    <a href='<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_pieces_jointes_add', true) ?>' class="btn btn-primary" data-toggle="modal" data-target="#reponse-modal" >Ajouter une pièce jointe</a>
   </div>
 </div>
 

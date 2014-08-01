@@ -1,7 +1,7 @@
 <?php echo $this->render('etablissement/partials/header.phtml') ?>
 
 <div class='pull-right' >
-    <a class='btn btn-default' href="<?php echo $this->url(array('action' => 'edit-descriptif')) ?>">Modifier les descriptifs</a>
+    <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_descriptifs_edit', true) ?>">Modifier les descriptifs</a>
 </div>
 
 <h2>Descriptifs</h2>

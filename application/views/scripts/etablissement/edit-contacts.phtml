@@ -1,10 +1,10 @@
 <?php echo $this->render('etablissement/partials/header.phtml') ?>
 
 <div class='pull-right' >
-	<a class='btn btn-default' href="<?php echo $this->url(array('action' => 'contacts')) ?>">Revenir sur l'affichage des contacts</a>
+	<a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_contacts', true) ?>">Revenir sur l'affichage des contacts</a>
 	<div class='btn-group'>
-		<a href='<?php echo $this->url(array('action' => 'add-contact')) ?>' class="btn btn-primary" data-toggle="modal" data-target="#reponse-modal" >Ajouter un nouveau contact</a>
-		<a href='<?php echo $this->url(array('action' => 'add-contact-existant')) ?>' class="btn btn-primary" data-toggle="modal" data-target="#reponse-modal" >Ajouter contact existant</a>
+		<a href='<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_contacts_add', true) ?>' class="btn btn-primary" data-toggle="modal" data-target="#reponse-modal" >Ajouter un nouveau contact</a>
+		<a href='<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_contacts_add_existant', true) ?>' class="btn btn-primary" data-toggle="modal" data-target="#reponse-modal" >Ajouter contact existant</a>
 	</div>
 </div>
 
@@ -31,7 +31,7 @@
 					<?php echo $contact['NOM_UTILISATEURINFORMATIONS'] . ' ' . $contact['PRENOM_UTILISATEURINFORMATIONS'] ?>
 				</td>
 				<td>
-					<a href='<?php echo $this->url(array('action' => 'delete-contact', 'id_contact' => $contact['ID_UTILISATEURINFORMATIONS'])) ?>'>Supprimer le contact</a>
+					<a href='<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT'], 'id_contact' => $contact['ID_UTILISATEURINFORMATIONS']), 'ets_contacts_delete', true) ?>'>Supprimer le contact</a>
 				</td>
 			</tr>
 		<?php endforeach ?>

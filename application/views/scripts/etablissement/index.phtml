@@ -3,7 +3,7 @@
 <div id='etablissement'>
 
     <div class='pull-right' >
-        <a class='btn btn-default' href="<?php echo $this->url(array('action' => 'edit')) ?>">Modifier la fiche</a>
+        <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), "ets_edit") ?>">Modifier la fiche</a>
     </div>
 
     <h2>Fiche d'informations générales</h2>
@@ -62,16 +62,14 @@
                     <ul class='list-unstyled'>
                         <li>
                             <strong>
-                                <?php
-                                    echo file_exists(APPLICATION_PATH . DS . '..' . DS . 'public' . DS . 'img' . DS . 'types' . DS . 'b' . DS . 'icone-type-' . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . '.png') ? "<img src='/img/types/b/icone-type-" . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . ".png' title='" . $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . "' />&nbsp;-&nbsp;" : $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . "&nbsp;-&nbsp;";
-                                ?>
-                                <?php echo $this->etablissement['informations']['LIBELLE_TYPEACTIVITE_PRINCIPAL'] ?>
+                                <img src='/assets/img/types/b/icone-type-<?php echo $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] ?>.png' title='<?php echo $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] ?>' />&nbsp;
+                                <?php echo $this->etablissement['informations']['LIBELLE_TYPE_PRINCIPAL'] . '&nbsp;-&nbsp;' . $this->etablissement['informations']['LIBELLE_TYPEACTIVITE_PRINCIPAL'] ?>
                             </strong>
                         </li>
                         <?php foreach($this->etablissement['types_activites_secondaires'] as $type_activite) : ?>
                             <li>
-                                <?php echo file_exists(APPLICATION_PATH . DS . '..' . DS . 'public' . DS . 'images' . DS . 'types' . DS . 'b' . DS . 'icone-type-' . $type_activite['LIBELLE_TYPE'] . '.png') ? "<img src='/images/types/b/icone-type-" . $type_activite['LIBELLE_TYPE'] . ".png' title='" . $type_activite['LIBELLE_TYPE'] . "' />&nbsp;-&nbsp;" : $type_activite['LIBELLE_TYPE'] . "&nbsp;-&nbsp;"; ?>
-                                <?php echo $type_activite['LIBELLE_ACTIVITE'] ?>
+                                <img src='/assets/img/types/b/icone-type-<?php echo $type_activite['LIBELLE_TYPE'] ?>.png' title='<?php echo $type_activite['LIBELLE_TYPE'] ?>' />&nbsp;
+                                <?php echo $type_activite['LIBELLE_TYPE'] . '&nbsp;-&nbsp;' . $type_activite['LIBELLE_ACTIVITE'] ?>
                             </li>
                        <?php endforeach ?>
                     </ul>
@@ -190,7 +188,7 @@
             <?php if(count($this->etablissement['etablissement_lies']) > 0) : ?>
             <h3>Établissements liés <small><?php echo count($this->etablissement['etablissement_lies']) > 0 ? "(" . count($this->etablissement['etablissement_lies']) . " établissements)" : "" ?></small></h3>
             <ul class='search-list'>
-                <?php echo $this->partialLoop('search/results/etablissement.phtml', $this->etablissement['etablissement_lies']); ?>
+                <?php echo $this->partialLoop('components/search_item_etablissement.phtml', $this->etablissement['etablissement_lies']); ?>
             </ul>
             <?php endif ?>
         </div>
@@ -250,11 +248,9 @@
 
                 <?php if( count($this->etablissement['adresses']) > 0 && $this->key_googlemap != null && $this->etablissement['adresses'][0]['LAT_ETABLISSEMENTADRESSE'] != null && $this->etablissement['adresses'][0]['LON_ETABLISSEMENTADRESSE'] != null) : ?>
                 <div id='googlemap' class="tab-pane in" style="height: 350px; max-height: 350px;">
-                    <div id='googlemap-container'  style="height: 100%; max-height: 100%;"></div>
-                    <script type="text/javascript"
-                        src="https://maps.googleapis.com/maps/api/js?key=<?php echo $this->key_googlemap ?>&sensor=false">
-                      </script>
-                      <script type="text/javascript">
+                <div id='googlemap-container'  style="height: 100%; max-height: 100%;"></div>
+                    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php echo $this->key_googlemap ?>&sensor=false"></script>
+                    <script type="text/javascript">
                         function initialize() {
                           var point = new google.maps.LatLng(<?php echo $this->etablissement['adresses'][0]['LAT_ETABLISSEMENTADRESSE'] ?>, <?php echo $this->etablissement['adresses'][0]['LON_ETABLISSEMENTADRESSE'] ?>);
                           var map = new google.maps.Map(document.getElementById("googlemap-container"), {
@@ -278,7 +274,7 @@
                           };
 
                           google.maps.event.addDomListener(window, 'load', initialize);
-                      </script>
+                    </script>
                 </div>
                 <?php endif ?>
 
@@ -410,7 +406,11 @@
                 <?php if(in_array($this->etablissement['informations']['ID_GENRE'], array(2, 5))) : ?>
                 <dt>Commission</dt>
                 <dd>
-                    <p><?php echo $this->etablissement['informations']['LIBELLE_COMMISSION'] ?></p>
+                    <p>
+                        <a href="<?php echo $this->url(array('id' => $this->etablissement['informations']['ID_COMMISSION']), 'comm', true) ?>">
+                            <?php echo $this->etablissement['informations']['LIBELLE_COMMISSION'] ?>
+                        </a>
+                    </p>
                 </dd>
                 <?php endif ?>
 
@@ -420,7 +420,9 @@
                     <?php if(count($this->etablissement['preventionnistes']) == 0) : ?>
                         <p class='muted'>Aucun préventionniste lié.</p>
                     <?php else : ?>
-                        <?php echo $this->partialLoop('users/embedded/user.phtml', $this->etablissement['preventionnistes'] ) ?>
+                        <?php foreach($this->etablissement['preventionnistes'] as $prev) : ?>
+                        <?php echo $this->partial('components/user.phtml', array('width' => '25px', 'nom' => $prev['NOM_UTILISATEURINFORMATIONS'], 'prenom' => $prev['PRENOM_UTILISATEURINFORMATIONS'])) ?><br>
+                    <?php endforeach ?>
                         <div style='clear: both; margin-bottom: 10px;'></div>
                     <?php endif ?>
                 </dd>
@@ -469,23 +471,5 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Par défaut, on montre le premier onglet disponible (carte, diapo, ou plans) sinon rien
         $('#menu_nav a:last').tab('show');
-
-        // Slide des établissements enfants contenant d'autres établissements
-        $("ul.recherche_liste li.slide").on("click", function() {
-            var container = this;
-            if( $(this).hasClass("active") ) {
-                $(this).next().slideUp(400, function() {$(container).next().remove()});
-                $(this).toggleClass("active");
-            }
-            else {
-                $(container).find(".load").show();
-                $.getJSON("/api/1.0/search/etablissements", {parent: $(this).attr("id"), count: 100}, function(data) {
-                    $(container).toggleClass("active").find(".load").hide();
-                    $.post("/search/display-ajax-search", {items: 'etablissement', data: data.response.results}, function(html) {
-                        $(container).after("<li class='hide' >" + html + "</li>").next().slideDown();
-                    });
-                });
-            }
-        });
     });
 </script>

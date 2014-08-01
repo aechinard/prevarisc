@@ -1,18 +1,16 @@
 <?php echo $this->render('etablissement/partials/header.phtml') ?>
 
-<form action='<?php echo $this->url(array('action' => 'edit-textes-applicables')) ?>' method='post'>
+<form method='post'>
 
     <div class='pull-right' >
-        <div class="btn-group">
-            <a class='btn btn-default' href="<?php echo $this->url(array('action' => 'textes-applicables')) ?>">Annuler la modification</a>
-            <input type='submit' class="btn btn-success" value='Sauvegarder'>
-        </div>
+        <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_textes_applicables', true) ?>">Annuler la modification</a>
+        <input type='submit' class="btn btn-success" value='Sauvegarder'>
     </div>
 
     <h2>Modification des Textes applicables</h2>
 
     <?php foreach($this->textes_applicables as $titre => $textes_applicables) : ?>
-        <h4><?php echo $titre ?></h4>
+        <h3><?php echo $titre ?></h3>
         <?php foreach($textes_applicables as $texte_applicable) : ?>
             <p>
                 <input type="hidden" name="textes_applicables[<?php echo $texte_applicable['ID_TEXTESAPPL'] ?>]" value='0' />
