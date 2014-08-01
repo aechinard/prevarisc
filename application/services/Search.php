@@ -27,7 +27,7 @@ class Service_Search
     public function etablissements($label = null, $identifiant = null, $genres = null, $categories = null, $classes = null, $familles = null, $types = null, $avis_favorable = null, $statuts = null, $local_sommeil = null, $lon = null, $lat = null, $parent = null, $city = null, $street_id = null, $count = 10, $page = 1)
     {
         // Récupération de la ressource cache à partir du bootstrap
-        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cacheSearch');
+        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
 
         // Identifiant de la recherche
         $search_id = 'search_etablissements_' . md5(serialize(func_get_args()));
@@ -148,7 +148,7 @@ class Service_Search
                     $this->setCriteria($select, "LIBELLE_COMMUNE_ADRESSE_DEFAULT", $city, true, "orHaving");
 
                     if ($street_id !== null) {
-                        $this->setCriteria($select, "etablissementadresse.ID_RUE", $street_id);
+                        $select->where("(etablissementadresse.ID_RUE = ? OR etablissementadressecell.ID_RUE = ? OR etablissementadressesite.ID_RUE = ?)", $street_id, $street_id, $street_id);
                     }
                 }
             }
@@ -211,14 +211,15 @@ class Service_Search
      * @param  string $num_doc_urba
      * @param  int    $parent       Id d'un dossier parent
      * @param  bool   $avis_differe Avis différé
+     * @param  bool   $reponse_envoyee Si une réponse a été envoyée
      * @param  int    $count        Par défaut 10, max 100
      * @param  int    $page         par défaut = 1
      * @return array
      */
-    public function dossiers($types = null, $objet = null, $num_doc_urba = null, $parent = null, $avis_differe = null, $count = 10, $page = 1)
+    public function dossiers($types = null, $objet = null, $num_doc_urba = null, $parent = null, $avis_differe = null, $reponse_envoyee = null, $count = 10, $page = 1)
     {
         // Récupération de la ressource cache à partir du bootstrap
-        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cacheSearch');
+        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
 
         // Identifiant de la recherche
         $search_id = 'search_dossiers_' . md5(serialize(func_get_args()));
@@ -283,6 +284,11 @@ class Service_Search
                $this->setCriteria($select, "d.DIFFEREAVIS_DOSSIER", $avis_differe);
             }
 
+            // Critères : reponse envoyée
+            if ($reponse_envoyee !== null) {
+               $select->where($reponse_envoyee ? "d.DATEREP_DOSSIER IS NOT NULL" : "d.DATEREP_DOSSIER IS NULL");
+            }
+
             // Gestion des pages et du count
             $select->limitPage($page, $count > 100 ? 100 : $count);
 
@@ -317,7 +323,7 @@ class Service_Search
     public function courriers($objet = null, $num_doc_urba = null, $parent = null, $count = 10, $page = 1)
     {
         // Récupération de la ressource cache à partir du bootstrap
-        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cacheSearch');
+        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
 
         // Identifiant de la recherche
         $search_id = 'search_dossiers_' . md5(serialize(func_get_args()));
@@ -407,7 +413,7 @@ class Service_Search
     public function users($fonctions = null, $name = null, $groups = null, $actif = true, $count = 10, $page = 1)
     {
         // Récupération de la ressource cache à partir du bootstrap
-        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cacheSearch');
+        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
 
         // Identifiant de la recherche
         $search_id = 'search_users_' . md5(serialize(func_get_args()));
