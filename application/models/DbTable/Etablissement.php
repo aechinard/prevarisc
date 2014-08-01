@@ -314,6 +314,7 @@
                       AND ei.DATE_ETABLISSEMENTINFORMATIONS = ( SELECT MAX(DATE_ETABLISSEMENTINFORMATIONS) FROM etablissementinformations eii WHERE eii.ID_ETABLISSEMENT = ei.ID_ETABLISSEMENT )
                       AND ei.ID_STATUT = 2
                       GROUP BY ei.ID_ETABLISSEMENT
+                      HAVING DATECOM >= NOW() AND DATECOM <= DATE_ADD(NOW(), INTERVAL 3 MONTH)
                       ";
 
              return $this->getAdapter()->fetchAll($select);
