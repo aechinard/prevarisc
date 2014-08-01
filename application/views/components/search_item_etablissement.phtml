@@ -5,18 +5,16 @@
     <!-- Affichage du libellé du type -->
     <small style='display: inline-block; width: 65px'>
       <strong>
-      <?php
-        if($this->ID_TYPE) {
-          echo file_exists(APPLICATION_PATH . DS . '..' . DS . 'public' . DS . 'img' . DS . 'types' . DS . 'b' . DS . 'icone-type-' . $this->LIBELLE_TYPE . '.png') ? "<img src='/img/types/b/icone-type-" . $this->LIBELLE_TYPE . ".png' title='" . $this->LIBELLE_TYPE . "' />&nbsp;-&nbsp;" : $this->LIBELLE_TYPE . "&nbsp;-&nbsp;";
-        }
-        echo strtoupper(substr($this->LIBELLE_GENRE, 0 , 4));
-      ?>
+        <?php if($this->ID_TYPE) : ?>
+          <img src='/assets/img/types/b/icone-type-<?php echo $this->LIBELLE_TYPE ?>.png' title='<?php echo $this->LIBELLE_TYPE ?>' />&nbsp;-&nbsp;
+        <?php endif ?>
+        <?php echo strtoupper(substr($this->LIBELLE_GENRE, 0 , 4)); ?>
       </strong>
     </small>
 
     <!-- nom de l'établissement -->
     <span class="nom-etablissement">
-      <a href='<?php echo $this->url(array('id' => $this->ID_ETABLISSEMENT), 'ets') ?>'>
+      <a href='<?php echo $this->url(array('id' => $this->ID_ETABLISSEMENT), 'ets', true) ?>'>
         <?php echo empty($this->LIBELLE_ETABLISSEMENTINFORMATIONS) ? "<em class='muted'>Libellé non renseigné</em>" : $this->LIBELLE_ETABLISSEMENTINFORMATIONS ?>
         <small>
           <?php
@@ -45,7 +43,7 @@
 
     <!-- Icone de chargement des enfants (si il y'en a, et si on est en mode niveau -->
     <?php if($this->NB_ENFANTS > 0) : ?>
-      <span class='load hide' ><img src='/assets/img/load.gif' alt='Chargement ...' /></span>
+      <span class='load hide' ><img src='/assets/img/load.gif' /></span>
     <?php endif ?>
 
     <?php

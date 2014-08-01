@@ -1,5 +1,6 @@
-<!-- Onglets permettant de selectionner les entités à rechercher -->
-<h1 class="page-header">Etablissements</h1>
+<h1 class="page-header">Recherche</h1>
+
+<h2>Etablissements</h2>
 
 <form method='get'>
 
@@ -95,7 +96,7 @@
 
 					<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<h3>Définir la zone de recherche</h3>
+							<h4 class='modal-title'>Définir la zone de recherche</h4>
 					</div>
 
 					<div class="modal-body">
@@ -159,10 +160,10 @@
 <?php endif ?>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+	document.addEventListener('DOMContentLoaded', function() {
 
-  	// Si le champ de recherche est vide, on empêche l'envoi d'une recherche
-  	$("input[name='label']").focus().keyup(function() {$('input[type="submit"]').attr('disabled', $(this).val() == '')}).keyup();
+	  	// Si le champ de recherche est vide, on empêche l'envoi d'une recherche
+	  	$("input[name='label']").focus().keyup(function() {$('input[type="submit"]').attr('disabled', $(this).val() == '')}).keyup();
 
 		// Gestion des multiselects
 		$("select[name='statuts[]']").multiselect({nonSelectedText: "Tous les statuts"});
@@ -191,7 +192,7 @@
 		$("select[name='genres[]']").change(function() { display_criteres_by_genres(); });
 		display_criteres_by_genres();
 
-    // Auto complétion de la ville
+	    // Auto complétion de la ville
 		$("select.adresse_commune").selectize({
 			valueField: 'id',
 			labelField: 'name',
@@ -247,23 +248,23 @@
 			onDropdownClose: function() {$(".selectize-dropdown.adresse_voie").stop().hide();}
 		});
 
-    // Validation de la zone de recherche
-    $('#zone_de_recherche_modal a.submit').click(function() {
+	    // Validation de la zone de recherche
+	    $('#zone_de_recherche_modal a.submit').click(function() {
 
-    	var text = 'Département';
+	    	var text = 'Département';
 
-    	if($("select.adresse_commune option:selected").val() > 0) {
-    		var text = $("select.adresse_commune").next().find('.item').text();
-    		if($("select.adresse_voie option:selected").val() > 0) {
-    			var text = $("select.adresse_commune").next().find('.item').text() + ', ' + $("select.adresse_voie").next().find('.item').text();
-    		}
-    	}
+	    	if($("select.adresse_commune option:selected").val() > 0) {
+	    		var text = $("select.adresse_commune").next().find('.item').text();
+	    		if($("select.adresse_voie option:selected").val() > 0) {
+	    			var text = $("select.adresse_commune").next().find('.item').text() + ', ' + $("select.adresse_voie").next().find('.item').text();
+	    		}
+	    	}
 
 			$("input[name='zone_de_recherche_text']").val(text);
 			$(".zone_de_recherche_text").text(text);
 			$('#zone_de_recherche_modal').modal('hide');
 
-    });
+	    });
 
 	});
 </script>

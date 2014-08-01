@@ -5,9 +5,9 @@ class SearchController extends Zend_Controller_Action
     public function init()
     {
       $this->view->nav_side_items = array(
-        array("text" => "Etablissements", "icon" => "home", "link" => "/search/etablissement"),
-        array("text" => "Dossiers", "icon" => "folder-open", "link" => "/search/dossier"),
-        array("text" => "Courriers", "icon" => "envelope", "link" => "/search/courriers")
+        array("text" => "Etablissements", "icon" => "home", "link" => $this->view->url(array(), 'search_ets', true)),
+        array("text" => "Dossiers", "icon" => "folder-open", "link" => $this->view->url(array(), 'search_doss', true)),
+        array("text" => "Courriers", "icon" => "envelope", "link" => $this->view->url(array(), 'search_courriers', true))
       );
     }
 
@@ -49,13 +49,12 @@ class SearchController extends Zend_Controller_Action
 
                 $search = $service_search->etablissements($label, $identifiant, $genres, $categories, $classes, $familles, $types, $avis_favorable, $statuts, $local_sommeil, null, null, null, $city, $street, 50, $parameters['page']);
 
-                require 'helpers/SearchPaginatorAdapter.php';
-                $paginator = new Zend_Paginator(new Application_Controller_Helper_SearchPaginatorAdapter($search['results'], $search['search_metadata']['count']));
+                $paginator = new Zend_Paginator(new SDIS62_Paginator_Adapter_Array($search['results'], $search['search_metadata']['count']));
                 $paginator->setItemCountPerPage(50)->setCurrentPageNumber($parameters['page'])->setDefaultScrollingStyle('Elastic');
 
                 $this->view->results = $paginator;
             } catch (Exception $e) {
-                $this->_helper->flashMessenger(array('context' => 'error','title' => 'Problème de recherche','message' => 'La recherche n\'a pas été effectué correctement. Veuillez rééssayez. (' . $e->getMessage() . ')'));
+                $this->_helper->flashMessenger(array('context' => 'danger','title' => 'Problème de recherche','message' => 'La recherche n\'a pas été effectué correctement. Veuillez rééssayez. (' . $e->getMessage() . ')'));
             }
         }
     }
@@ -74,15 +73,14 @@ class SearchController extends Zend_Controller_Action
                 $objet = array_key_exists('objet', $parameters) && $parameters['objet'] != ''  && (string) $parameters['objet'][0] != '#'? $parameters['objet'] : null;
                 $types = array_key_exists('types', $parameters) ? $parameters['types'] : null;
 
-                $search = $service_search->dossiers($types, $objet, $num_doc_urba, null, null, 50, $parameters['page']);
+                $search = $service_search->dossiers($types, $objet, $num_doc_urba, null, null, null, 50, $parameters['page']);
 
-                require 'helpers/SearchPaginatorAdapter.php';
-                $paginator = new Zend_Paginator(new Application_Controller_Helper_SearchPaginatorAdapter($search['results'], $search['search_metadata']['count']));
+                $paginator = new Zend_Paginator(new SDIS62_Paginator_Adapter_Array($search['results'], $search['search_metadata']['count']));
                 $paginator->setItemCountPerPage(50)->setCurrentPageNumber($parameters['page'])->setDefaultScrollingStyle('Elastic');
 
                 $this->view->results = $paginator;
             } catch (Exception $e) {
-                $this->_helper->flashMessenger(array('context' => 'error','title' => 'Problème de recherche','message' => 'La recherche n\'a pas été effectué correctement. Veuillez rééssayez. (' . $e->getMessage() . ')'));
+                $this->_helper->flashMessenger(array('context' => 'danger','title' => 'Problème de recherche','message' => 'La recherche n\'a pas été effectué correctement. Veuillez rééssayez. (' . $e->getMessage() . ')'));
             }
         }
     }
@@ -100,15 +98,14 @@ class SearchController extends Zend_Controller_Action
                 $num_doc_urba = array_key_exists('num_doc_urba', $parameters) ? $parameters['num_doc_urba'] : null;
                 $objet = array_key_exists('objet', $parameters) && $parameters['objet'] != '' ? $parameters['objet'] : null;
 
-                $search = $service_search->dossiers(5, $objet, $num_doc_urba, null, null, 50, $parameters['page']);
+                $search = $service_search->dossiers(5, $objet, $num_doc_urba, null, null, null, 50, $parameters['page']);
 
-                require 'helpers/SearchPaginatorAdapter.php';
-                $paginator = new Zend_Paginator(new Application_Controller_Helper_SearchPaginatorAdapter($search['results'], $search['search_metadata']['count']));
+                $paginator = new Zend_Paginator(new SDIS62_Paginator_Adapter_Array($search['results'], $search['search_metadata']['count']));
                 $paginator->setItemCountPerPage(50)->setCurrentPageNumber($parameters['page'])->setDefaultScrollingStyle('Elastic');
 
                 $this->view->results = $paginator;
             } catch (Exception $e) {
-                $this->_helper->flashMessenger(array('context' => 'error','title' => 'Problème de recherche','message' => 'La recherche n\'a pas été effectué correctement. Veuillez rééssayez. (' . $e->getMessage() . ')'));
+                $this->_helper->flashMessenger(array('context' => 'danger','title' => 'Problème de recherche','message' => 'La recherche n\'a pas été effectué correctement. Veuillez rééssayez. (' . $e->getMessage() . ')'));
             }
         }
     }
@@ -119,7 +116,7 @@ class SearchController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $html = "<ul class='search-list'>";
-        $html .= Zend_Layout::getMvcInstance()->getView()->partialLoop('search/results/' . $this->_request->items . '.phtml', (array) $this->_request->data );
+        $html .= Zend_Layout::getMvcInstance()->getView()->partialLoop('components/search_item_' . $this->_request->items . '.phtml', (array) $this->_request->data );
         $html .= "</ul>";
 
         echo $html;

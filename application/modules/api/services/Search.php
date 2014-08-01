@@ -38,14 +38,15 @@ class Api_Service_Search
      * @param  string $num_doc_urba
      * @param  int    $parent       Id d'un dossier parent
      * @param  bool   $avis_differe Avis différé
+     * @param  bool   $reponse_envoyee Reponse envoyée
      * @param  int    $count        Par défaut 10, max 100
      * @param  int    $page         par défaut = 1
      * @return array
      */
-    public function dossiers($types = null, $objet = null, $num_doc_urba = null, $parent = null, $avis_differe = null, $count = 10, $page = 1)
+    public function dossiers($types = null, $objet = null, $num_doc_urba = null, $parent = null, $avis_differe = null, $reponse_envoyee = null, $count = 10, $page = 1)
     {
         $service_search = new Service_Search;
-        $results = $service_search->dossiers($types, $objet, $num_doc_urba, $parent, $avis_differe, $count, $page);
+        $results = $service_search->dossiers($types, $objet, $num_doc_urba, $parent, $avis_differe, $reponse_envoyee, $count, $page);
 
         return $results;
     }

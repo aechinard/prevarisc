@@ -4,7 +4,7 @@
 
     <!-- Nom du courrier -->
     <span class="doss-nom">
-        <a href='<?php echo $this->url(array('id' => $this->ID_DOSSIER), 'doss') ?>' title='<?php echo htmlspecialchars($this->LIBELLE_DOSSIERTYPE . " - " . $this->LIBELLE_DOSSIERNATURE . (!empty($this->OBJET_DOSSIER) ? " - " . $this->OBJET_DOSSIER : ""), ENT_QUOTES) ?>'>
+        <a href='<?php echo $this->url(array('id' => $this->ID_DOSSIER), 'doss', true) ?>' title='<?php echo htmlspecialchars($this->LIBELLE_DOSSIERTYPE . " - " . $this->LIBELLE_DOSSIERNATURE . (!empty($this->OBJET_DOSSIER) ? " - " . $this->OBJET_DOSSIER : ""), ENT_QUOTES) ?>'>
             <?php echo $this->LIBELLE_DOSSIERTYPE . " - " . $this->LIBELLE_DOSSIERNATURE . (!empty($this->OBJET_DOSSIER) ? " - " . substr($this->OBJET_DOSSIER, 0, 70) . ( strlen($this->OBJET_DOSSIER) > 70 ? "(...)" : "" ) : "") . ( $this->NB_URBA != '' ? " - " . $this->NB_URBA : '') ?>
         </a>
     </span>
@@ -49,7 +49,7 @@
 
     <!-- Icone de chargement des enfants (si il y'en a, et si on est en mode niveau -->
     <?php if($this->NB_DOSS_LIES > 0) : ?>
-        <span class='load hide' ><img src='/assets/img/load.gif' alt='Chargement ...' /></span>
+        <span class='load hide' ><img src='/assets/img/load.gif' /></span>
     <?php endif ?>
 
   </div>
