@@ -1,128 +1,128 @@
-<?php $this->placeholder('lateral_navigation')->captureStart(); // Capture du 'lateral_navigation' ?>
-<ul class="nav nav-tabs nav-stacked menu_dashboard" >
-    <li class="nav-header">Actions</li>
-    <li>
-    <a href="#" id="voir" style="display: none;"><i class="icon-search"></i>  Générer</a>
-    </li>
-    <li>
-    <a href="#" id="export" style="display: none;"><i class="icon-align-center"></i>  Exporter vers XML</a>
-    </li>
-</ul>
-<?php $this->placeholder('lateral_navigation')->captureEnd(); ?>
-<?php $this->placeholder('page_header')->captureStart();  ?>
-    <h2 class="page-header">
-    Statistiques et extractions
-    </h2>
-<?php $this->placeholder('page_header')->captureEnd(); ?>
-<?php $this->placeholder('before_content')->captureStart() // Capture du 'before_content' ?>
-<?php $this->placeholder('before_content')->captureEnd() ?>
+<h1 class="page-header">Statistiques et extractions</h1>
 
-<form id="formulaire_stats" class="form-inline well">
+<form id="formulaire_stats" class="well form-horizontal">
 
-	<select id="demande">
+	<select id="demande" class='form-control'>
 		<option href="">Choisir des données à générer ...</option>
-		<?php foreach($this->liste as $url => $titre) : ?>
-		<option href="/statistiques/<?php echo $url ?>"><?php echo $titre ?></option>
-		<?php endforeach ?>
+        <?php foreach($this->liste as $url => $titre) : ?>
+            <option href="/statistiques/<?php echo $url ?>"><?php echo $titre ?></option>
+        <?php endforeach ?>
 	</select>
-	
-	<span id="champssupps"></span>
-	
-	
-	
+
+    <br>
+
+    <div class='row-fluid'>
+
+    	<div id="champssupps"></div>
+
+        <div id="export-buttons" class="form-group form-group-sm hide">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="dropdown">
+                    <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                        Exporter ... <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li><a id="voir" href="#">Sous forme d'une liste</a></li>
+                        <li><a id="export" href="#">Dans un fichier XML</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </form>
 
-<p id="loading" class="ui-helper-hidden" style="font-size: 3em; color: silver; text-align: center; margin-top: 100px;">Génération en cours ...</p>
+<p id="loading" class="hide" style="font-size: 3em; color: silver; text-align: center; margin-top: 100px;">
+    Génération en cours ...<br>
+    <img src="/assets/img/load.gif" />
+</p>
 
 <div id="results"></div>
 
 <script>
 
-	$("#demande").change(function() {
-	
-		$("#champssupps").html(""); // on vide les champs supplémentaires
-		$("#voir, #export").show(); // On disable les boutons
-		
-		var href = $(this).find("option:selected").attr("href");
-	
-                // On charge les champs supplémentaires
-		if(href != "") {
-			$.getJSON(href + "?format=json", function(data) {
-			        
-				// Si il n'y a pas de champs supplémentaire, on annule
-				if(data.result == undefined)
-					return;
-			
-				$.each(data.result, function(key, val) {
-				
-					// Création du label
-					var label = "<label>" + val.label + "</label>";
-				
-					// Création du champ en fonction du type
-					var champ = "";
-					switch(val.type) {
-						case "select" :
-							champ += "<select name='" + key + "'>";
-							for(var labelOption in val.data) {
-								champ += "<option value='" + val.data[labelOption] + "'>" + labelOption + "</option>";
-							}
-							champ += "</select>";
-							break;
-							
-						case "date" :
-							champ = "<input type='text' class='date' name='" + key + "' value='" + val.data + "' size=7 style='text-align: center' />";
-							break;
-                                                case "datefin" :
-                                                        champ = "<input type='text' class='date' name='" + key + "' value='" + val.data + "' size=7 style='text-align: center' />";
-							break;
-                                                case "id" :
-                                                        break;
-                                                default :
-							alert("Type inconnu : " + val.type);
-							return;
-							break;
-					}
-					
-					// On ajoute le champ
-					var oldhtml = $("#champssupps").html();
-					$("#champssupps").html( oldhtml + label + champ);
-				});
-			});
-		}
-                else
-                {
-                
-			$("#voir, #export").hide(); // On disable les liens
-                }
-	});
-	
-	$("#voir").click(function() {
-	
-		$.ajax({
-			url: $("#demande").find("option:selected").attr("href") + "?" + $("#formulaire_stats").serialize(),
-			beforeSend: function() {
-				$("#results").html("");
-				$("#loading").show();
-			},
-			success: function(data) {
-			$('.result').html(data);
-				$("#results").html(data);
-				$("#loading").hide();
-			}
-		});
-		
-		return false;
-	});
-	
-	$("#export").click(function() {
-	
-		window.location.href = $("#demande").find("option:selected").attr("href") + "?" + "format=xml&" + $("#formulaire_stats").serialize();
-	
-		return false;
-	});
-	
-	$('.date').live('click', function() {
-		$(this).datepicker({showOn:'focus', dateFormat: 'dd/mm/yy', firstDay: 1}).focus();
-	});
-	
+    document.addEventListener('DOMContentLoaded', function() {
+
+        $("#demande").change(function() {
+            $("#champssupps").html(""); // on vide les champs supplémentaires
+            $("#export-buttons").show(); // On disable les boutons
+
+            var href = $(this).find("option:selected").attr("href");
+
+            // On charge les champs supplémentaires
+            if(href != "") {
+
+                $.getJSON(href + "?format=json", function(data) {
+
+                    // Si il n'y a pas de champs supplémentaire, on annule
+                    if(data.result == undefined)
+                        return;
+
+                    $.each(data.result, function(key, val) {
+
+                        // Création du label
+                        var champ = "<div class='form-group'><label class='col-sm-2 control-label'>" + val.label + "</label><div class='col-sm-10'>";
+
+                        // Création du champ en fonction du type
+                        switch(val.type) {
+                            case "select" :
+                                champ += "<select class='form-control' name='" + key + "'>";
+                                for(var labelOption in val.data) {
+                                    champ += "<option value='" + val.data[labelOption] + "'>" + labelOption + "</option>";
+                                }
+                                champ += "</select>";
+                                break;
+
+                            case "date" :
+                            case "datefin" :
+                                champ += "<div style='width: 170px'><input class='form-control' type='date' name='" + key + "' value='" + val.data + "'  /></div>";
+                                break;
+
+                            case "id" :
+                                break;
+
+                            default :
+                                alert("Type inconnu : " + val.type);
+                                return;
+                        }
+
+                        champ += "<div></div>";
+
+                        // On ajoute le champ
+                        var oldhtml = $("#champssupps").html();
+                        $("#champssupps").html( oldhtml + champ);
+
+                    });
+
+                });
+            }
+            else {
+                $("#export-buttons").hide();
+            }
+        });
+
+    	$("#voir").click(function() {
+    		$.ajax({
+    			url: $("#demande").find("option:selected").attr("href") + "?" + $("#formulaire_stats").serialize(),
+    			beforeSend: function() {
+    				$("#results").html("");
+    				$("#loading").show();
+    			},
+    			success: function(data) {
+    			$('.result').html(data);
+    				$("#results").html(data);
+    				$("#loading").hide();
+    			}
+    		});
+    		return false;
+    	});
+
+    	$("#export").click(function() {
+    		window.location.href = $("#demande").find("option:selected").attr("href") + "?" + "format=xml&" + $("#formulaire_stats").serialize();
+    		return false;
+    	});
+
+    });
+
 </script>

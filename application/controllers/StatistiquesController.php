@@ -13,7 +13,7 @@
         public function init()
         {
             ob_end_clean();
-            $this->_helper->layout->setLayout('dashboard');
+
             // On prépare me XML pour l'extraction et la génération
             while (list($key, $val) = each($this->liste)) {
                 $this->_helper->contextSwitch()->addActionContext($key, array('json', 'xml'));
@@ -53,7 +53,8 @@
         {
             $model_stat = new Model_DbTable_Statistiques;
 
-            if ($this->_getParam("format") != "json") {
+            if ($this->_getParam("format") != "json")
+            {
                 $date = new Zend_Date($this->_getParam("date"), Zend_Date::DATES);
                 $this->view->resume = "Liste ERP en exploitation connus soumis à contrôle à la date du " . $date->get( Zend_Date::WEEKDAY." ".Zend_Date::DAY_SHORT." ".Zend_Date::MONTH_NAME_SHORT." ".Zend_Date::YEAR );
             }
@@ -74,7 +75,8 @@
                     "Commission"=> "LIBELLE_COMMISSION"
                 ), $model_stat->listeDesERP($this->_getParam("date"))->enExploitation()->sousmisAControle()
             );
-            if ($this->_getParam("format") != "json") {
+            if ($this->_getParam("format") != "json")
+            {
                 $this->render("extraction");
             }
         }
@@ -83,7 +85,8 @@
         {
             $model_stat = new Model_DbTable_Statistiques;
 
-            if ($this->_getParam("format") != "json") {
+            if ($this->_getParam("format") != "json")
+            {
                 $date = new Zend_Date($this->_getParam("date"), Zend_Date::DATES);
                 $this->view->resume = "Liste ERP en exploitation sous avis défavorable à la date du " . $date->get( Zend_Date::WEEKDAY." ".Zend_Date::DAY_SHORT." ".Zend_Date::MONTH_NAME_SHORT." ".Zend_Date::YEAR );
             }
@@ -230,29 +233,39 @@
 
             );
 
-            if ($this->_getParam("format") != "json") {
+            if ($this->_getParam("format") != "json")
+            {
                 $results = $this->view->results;
-                foreach ($results as $key => $row) {
-                    if ($row['DATEVISITE_DOSSIER'] == null) {
+                foreach($results as $key => $row)
+                {
+                    if($row['DATEVISITE_DOSSIER'] == null)
+                    {
                         $results[$key]['DATEVISITE_DOSSIER'] = "<a href='/dossier/add/id_etablissement/".$row['ID_ETABLISSEMENT']."'>Programmer une visite</a>";
                     }
-                    if ($row['NOM_UTILISATEURINFORMATIONS'] == null) {
+                    if($row['NOM_UTILISATEURINFORMATIONS'] == null)
+                    {
                         $results[$key]['NOM_UTILISATEURINFORMATIONS'] =  "<a href='/etablissement/edit/id/".$row['ID_ETABLISSEMENT']."'>Ajouter un préventionniste</a>";
                     }
 
-                    if ($row['PERIODICITE_ETABLISSEMENTINFORMATIONS']!=0) {
+                    if($row['PERIODICITE_ETABLISSEMENTINFORMATIONS']!=0)
+                    {
 
-                        if ($row['DATEVISITE_DOSSIER'] != null) {
+                        if($row['DATEVISITE_DOSSIER'] != null)
+                        {
                             $date = $row['DATEVISITE_DOSSIER'];
                             $d = new DateTime($date);
                             $i=new DateInterval('P'.$row['PERIODICITE_ETABLISSEMENTINFORMATIONS'].'M');
                             $d->add($i);
                             $results[$key]['PERIODICITE_ETABLISSEMENTINFORMATIONS'] = $d->format('Y-m-d');
-                        } else {
+                        }
+                        else
+                        {
                             $results[$key]['PERIODICITE_ETABLISSEMENTINFORMATIONS'] = "";
                         }
 
-                    } else {
+                    }
+                    else
+                    {
                        $results[$key]['PERIODICITE_ETABLISSEMENTINFORMATIONS'] = "<a href='/etablissement/edit/id/".$row['ID_ETABLISSEMENT']."'>Modifier la periodicité</a>";
                     }
                 }

@@ -1,9 +1,9 @@
 <p>
-	<strong><?php echo $this->resume ?></strong> ; 
-	Nombre total d'établissements concernés : <?php echo count($this->results) ?> ; 
+	<strong><?php echo $this->resume ?></strong> ;
+	Nombre total d'établissements concernés : <?php echo count($this->results) ?> ;
 	Requête effectuée le : <?php echo date("d/m/Y", time()) ?>
 </p>
-<table class="table" >
+<table class="table tablesorter" >
 	<thead>
 		<tr>
 			<?php foreach($this->columns as $column => $db) : ?>
@@ -19,7 +19,7 @@
 				<?php
 				if(is_array($db)) {
 					while (list($key, $val) = each($db)) {
-						
+
 						echo $row[$val] . " ";
 					}
 				}
@@ -35,3 +35,7 @@
 		<?php endforeach ?>
 	</tbody>
 </table>
+
+<script>
+	$('.tablesorter').tablesorter();
+</script>

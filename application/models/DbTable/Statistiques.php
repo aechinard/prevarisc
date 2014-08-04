@@ -197,13 +197,7 @@
 
         private function getDate($input)
         {
-            $array_date = explode("/", $input);
-            if (!is_array($array_date) || count($array_date) != 3) {
-
-                throw new Exception('Erreur dans la date', 500);
-            }
-
-            return $array_date[2]."-".$array_date[1]."-".$array_date[0]." 00:00:00";
+            return $input ." 00:00:00";
         }
 
         public function go()
