@@ -38,4 +38,38 @@
     return fullCalendar.apply(this, arguments);
   };
 
+  /*
+  # MonkeyPatch pour traduire multiselect en français
+  */
+  var multiselect;
+  multiselect = $.fn.multiselect;
+  $.fn.multiselect = function(options) {
+
+    var self = this;
+
+    options.selectAllText = options.selectAllText || "Tout sélectionner";
+    options.nSelectedText = options.nSelectedText || "sélectionné";
+
+    options.buttonText = options.buttonText || function(options, select) {
+        if (options.length == 0) {
+            return this.nonSelectedText + ' <b class="caret"></b>';
+        }
+        else {
+            if (options.length > this.numberDisplayed) {
+                return options.length + ' ' + this.nSelectedText + (options.length > 1 ? 's' : '') + ' <b class="caret"></b>';
+            }
+            else {
+                var selected = '';
+                options.each(function() {
+                    var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).html();
+                    selected += label + ', ';
+                });
+                return selected.substr(0, selected.length - 2) + ' <b class="caret"></b>';
+            }
+        }
+    };
+
+    return multiselect.apply(this, arguments);
+  };
+
 })(jQuery);
