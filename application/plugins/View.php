@@ -13,6 +13,11 @@ class Plugin_View extends Zend_Controller_Plugin_Abstract
             $view->setScriptPath(APPLICATION_PATH . DS . 'views' . DS . 'scripts');
             $view->addScriptPath(APPLICATION_PATH . DS . 'views');
 
+            // Chargement des aides de vue
+            $view->registerHelper(new View_Helper_MinifyHeadLink, 'headLink');
+            $view->registerHelper(new View_Helper_MinifyInlineScript, 'inlineScript');
+            $view->registerHelper(new SDIS62_View_Helper_FlashMessenger, 'flashMessenger');
+
             // JS
             $view->inlineScript()->appendFile("/assets/bower_components/jquery/dist/jquery.min.js");
             $view->inlineScript()->appendFile("/assets/bower_components/bootstrap/dist/js/bootstrap.min.js");
@@ -44,9 +49,7 @@ class Plugin_View extends Zend_Controller_Plugin_Abstract
             $view->headLink()->appendStylesheet('/assets/css/components/muted.css', 'all');
             $view->headLink()->appendStylesheet('/assets/css/components/etablissement.css', 'all');
             $view->headLink()->appendStylesheet('/assets/css/components/contact.css', 'all');
-
-            // Chargement des aides de vue
-            $view->registerHelper(new SDIS62_View_Helper_FlashMessenger, 'flashMessenger');
+            $view->headLink()->appendStylesheet('/assets/css/components/calendrier-event.css', 'all');
 
             // Définition du partial de vue à utiliser pour le rendu d'une recherche
             Zend_View_Helper_PaginationControl::setDefaultViewPartial('search' . DIRECTORY_SEPARATOR . 'pagination_control.phtml');
