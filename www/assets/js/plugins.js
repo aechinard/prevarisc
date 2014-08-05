@@ -47,6 +47,10 @@
 
     var self = this;
 
+    if(options == undefined) {
+        options = {};
+    }
+
     options.selectAllText = options.selectAllText || "Tout sélectionner";
     options.nSelectedText = options.nSelectedText || "sélectionné";
 
