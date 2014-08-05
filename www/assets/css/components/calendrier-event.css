@@ -1,0 +1,20 @@
+a.calendrier-event {
+    border-color: #f5f5f5;
+    padding: 2px;
+}
+
+a.calendrier-event:hover {
+    color: white;
+}
+
+a.calendrier-event.calendrier-event-1 {
+    background-color: #3a87ad;
+}
+
+a.calendrier-event.calendrier-event-2 {
+    background-color: rgb(70, 136, 71);
+}
+
+a.calendrier-event.calendrier-event-3 {
+    background-color: rgb(248, 148, 6);
+}

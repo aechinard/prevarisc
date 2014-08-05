@@ -31,6 +31,9 @@
     options.dayNames = options.dayNames || ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
     options.dayNamesShort = options.dayNamesShort || ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
     options.weekMode = options.weekMode || 'liquid';
+    options.timeFormat = options.timeFormat || 'H:mm{ - H:mm}';
+    options.aspectRatio = options.aspectRatio || 2;
+    options.axisFormat = options.axisFormat || 'H(:mm)';
 
     return fullCalendar.apply(this, arguments);
   };
