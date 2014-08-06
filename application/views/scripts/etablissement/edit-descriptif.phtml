@@ -3,10 +3,8 @@
 <form method='post'>
 
     <div class='pull-right' >
-        <div class="btn-group">
-            <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_descriptifs', true) ?>">Annuler la modification</a>
-            <input type='submit' class="btn btn-success" value='Sauvegarder'>
-        </div>
+        <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets_descriptifs', true) ?>">Annuler la modification</a>
+        <input type='submit' class="btn btn-success" value='Sauvegarder'>
     </div>
 
     <h2>Modification des descriptifs</h2>
