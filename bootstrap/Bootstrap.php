@@ -76,10 +76,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initAutoLoader()
     {
-        $autoloader = new Zend_Application_Module_Autoloader(array(
-            'basePath'    => APPLICATION_PATH,
-            'namespace'  => '',
-        ));
+        $autoloader = Zend_Loader_Autoloader::getInstance();
+
+        $autoloader_application = new Zend_Application_Module_Autoloader(array('basePath' => APPLICATION_PATH, 'namespace'  => null));
+
+        $autoloader->pushAutoloader($autoloader_application);
 
         return $autoloader;
     }
