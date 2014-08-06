@@ -5,160 +5,195 @@
 
   <div id="reponse-modal" class="modal fade" ></div>
 
-  <!-- Alerte : Etablissements sous avis défavorables -->
-  <?php if( count($this->etablissementAvisDefavorable) > 0 ) : ?>
+  <!-- Calendrier -->
   <div class="panel panel-default">
     <div class="panel-heading">
-      Alerte : Etablissements sous avis défavorable
+      Calendrier
     </div>
-    <div class="panel-body panel-body-heightlimit">
-      <ul class='search-list'>
-      <?php echo $this->partialLoop('search/results/etablissement.phtml', $this->etablissementAvisDefavorable ) ?>
-      </ul>
-      <div style='clear: both'></div>
+    <div class="panel-body">
+      <div id="calendrier"></div>
     </div>
   </div>
-  <?php endif ?>
-
-  <!-- Alerte : Etablissements sous avis défavorables -->
-  <?php if( count($this->erpSansPreventionniste) > 0 ) : ?>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      Alerte : Etablissements sans préventionnistes
-    </div>
-    <div class="panel-body panel-body-heightlimit">
-      <ul class='search-list'>
-      <?php echo $this->partialLoop('search/results/etablissement.phtml', $this->erpSansPreventionniste ) ?>
-      </ul>
-      <div style='clear: both'></div>
-    </div>
-  </div>
-  <?php endif ?>
-
-  <!-- Courrier sans réponse -->
-  <?php if( count($this->CourrierSansReponse) > 0 ) : ?>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      Alerte : Courriers sans réponse
-    </div>
-    <div class="panel-body panel-body-heightlimit">
-      <ul class='search-list'>
-      <?php echo $this->partialLoop('search/results/dossier.phtml', $this->CourrierSansReponse ) ?>
-      </ul>
-      <div style='clear: both'></div>
-    </div>
-  </div>
-  <?php endif ?>
-
-  <!-- Alerte : Dossiers sans avis de la commission échue -->
-  <?php if( count($this->dossierCommissionEchu) > 0 ) : ?>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      Alerte : Dossiers sans avis de la commission échue
-    </div>
-    <div class="panel-body panel-body-heightlimit">
-      <ul class='search-list'>
-      <?php echo $this->partialLoop('search/results/dossier.phtml', $this->dossierCommissionEchu ) ?>
-      </ul>
-      <div style='clear: both'></div>
-    </div>
-  </div>
-  <?php endif ?>
-
-  <!-- Alerte : Etablissements sans prochaine visite périodique programmée (sous 3 mois) -->
-  <?php if( count($this->ErpSansProchaineVisitePeriodeOuvert) > 0 ) : ?>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      Alerte : Etablissements sans prochaine visite périodique programmée (sous 3 mois)
-    </div>
-    <div class="panel-body panel-body-heightlimit">
-      <ul class='search-list'>
-      <?php echo $this->partialLoop('search/results/etablissement.phtml', $this->ErpSansProchaineVisitePeriodeOuvert ) ?>
-      </ul>
-      <div style='clear: both'></div>
-    </div>
-  </div>
-  <?php endif ?>
 
   <!-- Messages -->
   <div class="panel panel-default">
     <div class="panel-heading">
       Messages
-      <a class='btn btn-default btn-sm pull-right' style='margin-top: -4px;' data-toggle="modal" data-target="#reponse-modal" href='<?php echo $this->url(array('controller' => 'news', 'action' => 'add')) ?>'>Ajouter un message</a>
+      <a class='btn btn-primary btn-sm pull-right' style='margin-top: -4px;' data-toggle="modal" data-target="#reponse-modal" href='<?php echo $this->url(array(), 'message_add', true) ?>'>Ajouter un message</a>
     </div>
     <div class="panel-body panel-body-heightlimit">
       <?php if( count($this->flux) == 0 ) : ?>
           <p class='muted'><small>Aucun message disponible.</small></p>
       <?php else : ?>
           <table class='table table-condensed'>
-           <?php echo $this->partialLoop('news/partials/partial-display.phtml', $this->flux); ?>
+           <?php echo $this->partialLoop('news/partials/message.phtml', $this->flux); ?>
           </table>
       <?php endif ?>
     </div>
   </div>
 
+  <!-- Alerte : Etablissements sous avis défavorables -->
+  <?php if( is_array($this->listeErpAvisDef) && count($this->listeErpAvisDef) > 0 ) : ?>
+      <div class="panel panel-default panel-danger">
+        <div class="panel-heading">
+          Alerte : Etablissements sous avis défavorable
+          <small>(<?php echo count($this->listeErpAvisDef) ?> établissements)</small>
+        </div>
+        <div class="panel-body panel-body-heightlimit">
+          <ul class='search-list'>
+          <?php echo $this->partialLoop('components/search_item_etablissement.phtml', $this->listeErpAvisDef ) ?>
+          </ul>
+          <div style='clear: both'></div>
+        </div>
+      </div>
+  <?php endif ?>
+
+  <!-- Alerte : Etablissements Sans préventionnistes -->
+  <?php if( is_array($this->listeERPSansPrev) && count($this->listeERPSansPrev) > 0 ) : ?>
+      <div class="panel panel-default panel-danger">
+        <div class="panel-heading">
+          Alerte : Etablissements sans préventionnistes
+          <small>(<?php echo count($this->listeERPSansPrev) ?> dossiers)</small>
+        </div>
+          <ul class=" list-unstyled list-group" style='max-height: 300px; overflow-y: scroll;'>
+            <?php foreach($this->listeERPSansPrev as $erpsansprev) : ?>
+              <li class="list-group-item">
+                  L'établissement <a href='<?php echo $this->url(array('id' => $erpsansprev['ID_ETABLISSEMENT']), 'ets', true) ?>'><?php echo $erpsansprev['LIBELLE_ETABLISSEMENTINFORMATIONS'] != null ? $erpsansprev['LIBELLE_ETABLISSEMENTINFORMATIONS'] : 'Sans libellé' ?></a> est sans préventionniste
+              <li>
+            <?php endforeach ?>
+          </ul>
+      </div>
+  <?php endif ?>
+
+  <!-- Courrier sans réponse -->
+  <?php if( is_array($this->listeCourriersSansRep) && count($this->listeCourriersSansRep) > 0 ) : ?>
+      <div class="panel panel-default panel-warning">
+        <div class="panel-heading">
+          Alerte : Courriers sans réponse
+          <small>(<?php echo count($this->listeCourriersSansRep) ?> courriers)</small>
+        </div>
+        <div class="panel-body panel-body-heightlimit">
+          <ul class='search-list'>
+          <?php echo $this->partialLoop('components/search_item_courrier.phtml', $this->listeCourriersSansRep ) ?>
+          </ul>
+          <div style='clear: both'></div>
+        </div>
+      </div>
+  <?php endif ?>
+
+  <!-- Alerte : Dossiers sans avis de la commission échue -->
+  <?php if( is_array($this->listeDossiersDateEchue) && count($this->listeDossiersDateEchue) > 0 ) : ?>
+      <div class="panel panel-default panel-danger">
+        <div class="panel-heading">
+          Alerte : Dossiers sans avis d'une commission échue
+          <small>(<?php echo count($this->listeDossiersDateEchue) ?> dossiers)</small>
+        </div>
+          <ul class=" list-unstyled list-group" style='max-height: 300px; overflow-y: scroll;'>
+            <?php foreach($this->listeDossiersDateEchue as $dossier) : ?>
+              <li class="list-group-item">
+                  Le dossier <a href='<?php echo $this->url(array('id' => $dossier['ID_DOSSIER']), 'doss', true) ?>'><?php echo $dossier['OBJET_DOSSIER'] != null ? $dossier['OBJET_DOSSIER'] : 'créé le ' . \Datetime::createFromFormat('Y-m-d H:i:s', $dossier['DATEINSERT_DOSSIER'])->format('d/m/y') ?></a> de la commission échue <a href='#'><?php echo $dossier['LIBELLE_DATECOMMISSION'] ?></a> est sans avis de la commission.
+              <li>
+            <?php endforeach ?>
+          </ul>
+      </div>
+  <?php endif ?>
+
+  <!-- Alerte : Etablissements sans prochaine visite périodique programmée (sous 3 mois) -->
+  <?php if( is_array($this->listeErpSansVP) && count($this->listeErpSansVP) > 0 ) : ?>
+      <div class="panel panel-default panel-danger">
+        <div class="panel-heading">
+          Alerte : Etablissements sans prochaine visite périodique programmée (sous 3 mois)
+          <small>(<?php echo count($this->listeErpSansVP) ?> dossiers)</small>
+        </div>
+          <ul class=" list-unstyled list-group" style='max-height: 300px; overflow-y: scroll;'>
+            <?php foreach($this->listeErpSansVP as $esp) : ?>
+              <li class="list-group-item">
+                La prochaine visite périodique l'établissement <a href='<?php echo $this->url(array('id' => $esp['ID_ETABLISSEMENT']), 'ets', true) ?>'><?php echo $esp['LIBELLE_ETABLISSEMENTINFORMATIONS'] != null ? $esp['LIBELLE_ETABLISSEMENTINFORMATIONS'] : 'Sans libellé' ?></a> doit etre programmée <?php if($esp['DATECOM'] != null) : ?> avant le <?php echo \Datetime::createFromFormat('Y-m-d', $esp['DATECOM'])->format('d/m/y') ?><?php endif ?> :
+                <a class='btn btn-sm btn-default' href='<?php echo $this->url(array('id_etablissement' => $esp['ID_ETABLISSEMENT']), 'doss_add', true) ?>'> Programmer une visite</a>
+              <li>
+            <?php endforeach ?>
+          </ul>
+      </div>
+  <?php endif ?>
+
   <!-- Etablissements suivis -->
-  <?php if( count($this->etablissements) > 0 ) : ?>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      Etablissements suivis
-    </div>
-    <div class="panel-body panel-body-heightlimit">
-        <ul class='search-list'>
-        <?php echo $this->partialLoop('search/results/etablissement.phtml', $this->etablissements ) ?>
-        </ul>
-        <div style='clear: both'></div>
-    </div>
-  </div>
+  <?php if( is_array($this->listeERPSuivis) && count($this->listeERPSuivis) > 0 ) : ?>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Etablissements suivis
+          <small>(<?php echo count($this->listeERPSuivis) ?> établissements)</small>
+        </div>
+        <div class="panel-body panel-body-heightlimit">
+            <ul class='search-list'>
+            <?php echo $this->partialLoop('components/search_item_etablissement.phtml', $this->listeERPSuivis ) ?>
+            </ul>
+            <div style='clear: both'></div>
+        </div>
+      </div>
+  <?php endif ?>
+
+  <!-- Dossiers suivis -->
+  <?php if( is_array($this->listeDossiersSuivis) && count($this->listeDossiersSuivis) > 0 ) : ?>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Dossiers suivis
+          <small>(<?php echo count($this->listeDossiersSuivis) ?> dossiers)</small>
+        </div>
+        <div class="panel-body panel-body-heightlimit">
+            <ul class='search-list'>
+            <?php echo $this->partialLoop('components/search_item_dossiers.phtml', $this->listeDossiersSuivis ) ?>
+            </ul>
+            <div style='clear: both'></div>
+        </div>
+      </div>
   <?php endif ?>
 
   <!-- Dossiers avec un avis différé -->
-  <?php if( count($this->dossiers) > 0 ) : ?>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      Dossiers avec un avis différé
-    </div>
-    <div class="panel-body panel-body-heightlimit">
-        <ul class='search-list'>
-        <?php echo $this->partialLoop('search/results/dossier.phtml', $this->dossiers ) ?>
-        </ul>
-        <div style='clear: both'></div>
-    </div>
-  </div>
-  <?php endif ?>
-
-  <!-- Ordre du jour -->
-  <?php if( count($this->commissions) > 0 ) : ?>
-  <div class="panel panel-default w2">
-    <div class="panel-heading">
-      Ordre du jour
-    </div>
-    <div class="panel-body panel-body-heightlimit">
-      <?php foreach($this->commissions as $commission) : ?>
-        <p><?php echo strtoupper($commission["name"]) . " du " . $commission["date"] . " (" . $commission["heure"] . ")" ?></p>
-        <?php if(count($commission["odj"]) == 0 ) : ?>
-          <p class="muted">Pas de dossier affecté.</p>
-        <?php else : ?>
-          <ul class='search-list'>
-            <?php echo $this->partialLoop('search/results/dossier.phtml', $commission["odj"] ) ?>
-          </ul>
-        <?php endif ?>
-      <?php endforeach ?>
-      <div style='clear: both'></div>
-  </div>
+  <?php if( is_array($this->listeDossiersAvisDiff) && count($this->listeDossiersAvisDiff) > 0 ) : ?>
+      <div class="panel panel-default">
+        <div class="panel-heading  panel-info">
+          Dossiers avec un avis différé
+          <small>(<?php echo count($this->listeDossiersAvisDiff) ?> dossiers)</small>
+        </div>
+        <div class="panel-body panel-body-heightlimit">
+            <ul class='search-list'>
+            <?php echo $this->partialLoop('components/search_item_dossier.phtml', $this->listeDossiersAvisDiff ) ?>
+            </ul>
+            <div style='clear: both'></div>
+        </div>
+      </div>
   <?php endif ?>
 
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-      // Grid !
-      var $container = $('.dashboard');
 
-      $container.packery({
+      <?php
+      $user = Zend_Auth::getInstance()->getIdentity();
+      $commissions = count($user['commissions']) == 0 ? array() : call_user_func(function() use ($user) {
+          foreach($user['commissions'] as $commission)
+              $commissions[] = $commission["ID_COMMISSION"];
+          return $commissions;
+      });
+      ?>
+
+      $('#calendrier').fullCalendar({
+          header: {left: 'prev,next today', center: 'title', right: ''},
+          events: function(start, end, callback) {
+              var data = {ids: <?php echo Zend_Json::Encode($commissions) ?>, start: Math.round(start.getTime() / 1000), end: Math.round(end.getTime() / 1000)};
+              $.getJSON('<?php echo $this->url(array('method' => 'calendrier'), 'api_commission') ?>', data, function(response) {
+                  callback(response['response']);
+                  $('.dashboard').packery();
+              })
+          }
+      });
+
+      $('.dashboard').packery({
         itemSelector: '.panel',
         columnWidth: '.grid-sizer',
         gutter: '.grid-gutter'
       });
+
   });
 </script>
