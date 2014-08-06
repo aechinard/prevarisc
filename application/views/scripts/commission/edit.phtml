@@ -1,0 +1,40 @@
+<?php echo $this->render('commission/partials/header.phtml') ?>
+
+<form id='commission' class='form-horizontal' method='post' >
+
+    <?php if($this->add) : ?>
+    <div class='pull-right' >
+        <input type='submit' class="btn btn-success" value="Ajouter la commission">
+    </div>
+    <h1 class='page-header'>Ajout d'une commission</h1>
+    <?php else : ?>
+    <div class='pull-right' >
+        <a class='btn btn-default' href="<?php echo $this->url(array("id" => $this->commission['ID_COMMISSION']), 'comm', true) ?>">Annuler la modification</a>
+        <input type='submit' class="btn btn-success" value='Sauvegarder'>
+    </div>
+    <h2>Modification de la commission</h2>
+    <?php endif ?>
+
+    <h3>Général</h3>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Libellé</label>
+      <div class="col-sm-9">
+        <input class='form-control' type='text' name='' value='<?php echo $this->commission["LIBELLE_COMMISSION"]?>' />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Type</label>
+      <div class="col-sm-9">
+        <select class='form-control' name='ID_COMMISSIONTYPE'>
+            <?php foreach( $this->typesDesCommissions as $item ) : ?>
+                <option value='<?php echo $item["ID_COMMISSIONTYPE"] ?>' <?php if( $item["ID_COMMISSIONTYPE"] == $this->commission["ID_COMMISSIONTYPE"] ) echo "selected" ?> >
+                    <?php echo $item["LIBELLE_COMMISSIONTYPE"] ?>
+                </option>
+            <?php endforeach ?>
+        </select>
+      </div>
+    </div>
+
+</form>

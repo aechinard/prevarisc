@@ -1,0 +1,55 @@
+<?php echo $this->render('commission/partials/header.phtml') ?>
+
+<div id='commission'>
+    <div class='pull-right' >
+        <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), "comm_edit") ?>">Modifier la fiche</a>
+    </div>
+
+    <h2>Fiche d'informations</h2>
+
+    <div class='row'>
+
+        <div class='col-xs-5'>
+
+            <h3>Général</h3>
+
+            <dl class='dl-horizontal'>
+
+                <dt>Libellé</dt>
+                <dd>
+                    <p><?php echo $this->commission['LIBELLE_COMMISSION'] ?></p>
+                </dd>
+
+                <dt>Type</dt>
+                <dd>
+                    <p><?php echo $this->commission['LIBELLE_COMMISSIONTYPE'] ?></p>
+                </dd>
+
+            </dl>
+
+        </div>
+
+        <div class='col-xs-7'>
+
+            <h3>Calendrier du mois</h3>
+            <div id='calendrier'></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        $('#calendrier').fullCalendar({
+            header: {left: '', center: '', right: ''},
+            events: function(start, end, callback) {
+                var data = {ids: <?php echo $this->commission['ID_COMMISSION'] ?>, start: Math.round(start.getTime() / 1000), end: Math.round(end.getTime() / 1000)};
+                $.getJSON('<?php echo $this->url(array('method' => 'calendrier'), 'api_commission') ?>', data, function(response) {
+                    callback(response['response']);
+                })
+            }
+        });
+    });
+</script>

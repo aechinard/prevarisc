@@ -1,0 +1,50 @@
+<form class="form-horizontal" action="<?php echo $this->url(array(), 'comm_contacts_add_existant') ?>" method='post' >
+
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class='modal-title'>Ajouter un contact existant</h4>
+      </div>
+
+      <div class="modal-body">
+
+    	  <p class='text-center'>
+        	<select name='id_contact' placeholder='Nom du contact à ajouter ...' ></select>
+        </p>
+
+      </div>
+
+      <div class="modal-footer">
+          <a href="#" data-dismiss="modal" class="btn">Annuler</a>
+          <input type='submit' id='submit' value='Ajouter' class='btn btn-success' />
+      </div>
+
+    </div>
+
+  </div>
+
+</form>
+
+<script>
+	// Auto-complétion des contacts
+  $("select[name='id_contact']").selectize({
+    valueField: 'id',
+    labelField: 'name',
+    searchField: 'name',
+    load: function(query, callback) {
+      if (!query.length) return callback();
+      $.getJSON('/api/1.0/contacts', {name: query}, function(data) {
+        matches = [];
+        $.map(data.response, function(item) {
+          matches.push({ name: item.NOM_UTILISATEURINFORMATIONS + ' ' + item.PRENOM_UTILISATEURINFORMATIONS, id: item.ID_UTILISATEURINFORMATIONS });
+        });
+        callback(matches);
+      });
+    },
+    onDropdownOpen: function() {$(".selectize-dropdown").stop().show();},
+    onDropdownClose: function() {$(".selectize-dropdown").stop().hide();}
+  });
+</script>

@@ -1,0 +1,25 @@
+<?php echo $this->render('commission/partials/header.phtml') ?>
+
+<div class='pull-right' >
+    <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_documents_edit', true) ?>">Modifier les documents types</a>
+</div>
+
+<h2>Documents types</h2>
+
+<h3>Documents types de la commission</h3>
+<div class='row-fluid'>
+    <?php echo $this->partial("commission/partials/document.phtml", array('document' => $this->documents['commission']['DOCUMENT_CR'], 'libelle' => 'Compte-rendu')) ?>
+</div>
+
+<div style='clear: both'></div>
+
+<h3>Courriers types par membre</h3>
+<?php foreach($this->documents['membres'] as $libelle => $courriers) : ?>
+    <h4><?php echo $libelle ?></h4>
+    <div class="row-fluid">
+        <?php echo $this->partial("commission/partials/document.phtml", array('document' => $courriers["COURRIER_CONVOCATIONVISITE"], 'libelle' => 'Convocation en visite')) ?>
+        <?php echo $this->partial("commission/partials/document.phtml", array('document' => $courriers["COURRIER_CONVOCATIONSALLE"], 'libelle' => 'Convocation en salle')) ?>
+        <?php echo $this->partial("commission/partials/document.phtml", array('document' => $courriers["COURRIER_ODJ"], 'libelle' => 'Ordre du jour')) ?>
+        <?php echo $this->partial("commission/partials/document.phtml", array('document' => $courriers["COURRIER_PV"], 'libelle' => 'PV')) ?>
+    </div>
+<?php endforeach ?>

@@ -45,9 +45,10 @@
             // Mod�le de la commission
             $model_commission = new Model_DbTable_Commission;
             $model_commune = new Model_DbTable_AdresseCommune;
+            $model_groupement = new Model_DbTable_Groupement;
 
             // On r�cup�re les r�gles de la commission
-            $rowset_reglesDeLaCommission = $this->fetchAll("ID_COMMISSION = " . $id_commission);
+            $rowset_reglesDeLaCommission = $this->fetchAll("ID_COMMISSION = " . $id_commission)->toArray();
 
             // On initialise le tableau qui contiendra l'ensemble des crit�res
             $array_regles = array();
@@ -56,18 +57,16 @@
             foreach ($rowset_reglesDeLaCommission as $row_regleDeLaCommission) {
                 $array_regles[] = array(
                     "id_regle" => $row_regleDeLaCommission["ID_REGLE"],
-                    "commune" => ($row_regleDeLaCommission["NUMINSEE_COMMUNE"]) ? $model_commune->fetchRow("NUMINSEE_COMMUNE = " . $row_regleDeLaCommission["NUMINSEE_COMMUNE"]) : null,
-                    "groupement" => $row_regleDeLaCommission["ID_GROUPEMENT"],
+                    "commune" => $row_regleDeLaCommission["NUMINSEE_COMMUNE"] == null ? null : $model_commune->fetchRow("NUMINSEE_COMMUNE = " . $row_regleDeLaCommission["NUMINSEE_COMMUNE"]),
+                    "groupement" => $row_regleDeLaCommission["ID_GROUPEMENT"] == null ? null : $model_groupement->get($row_regleDeLaCommission["ID_GROUPEMENT"])->toArray(),
                     "categories" => $this->fullJoinRegle("categorie", "commissionreglecategorie", "ID_CATEGORIE", $row_regleDeLaCommission["ID_REGLE"]),
                     "classes" => $this->fullJoinRegle("classe", "commissionregleclasse", "ID_CLASSE", $row_regleDeLaCommission["ID_REGLE"]),
                     "types" => $this->fullJoinRegle("type", "commissionregletype", "ID_TYPE", $row_regleDeLaCommission["ID_REGLE"]),
                     "local_sommeil" => $this->mapResult($this->fetchAll($this->select()->setIntegrityCheck(false)->from("commissionreglelocalsommeil")->where("ID_REGLE = " . $row_regleDeLaCommission["ID_REGLE"]))->toArray(), "LOCALSOMMEIL"),
-                    "etude_visite" => $this->mapResult($this->fetchAll($this->select()->setIntegrityCheck(false)->from("commissionregleetudevisite")->where("ID_REGLE = " . $row_regleDeLaCommission["ID_REGLE"]))->toArray(), "ETUDEVISITE"),
-                    "infos" => $model_commission->fetchRow("ID_COMMISSION = " . $id_commission)
+                    "etude_visite" => $this->mapResult($this->fetchAll($this->select()->setIntegrityCheck(false)->from("commissionregleetudevisite")->where("ID_REGLE = " . $row_regleDeLaCommission["ID_REGLE"]))->toArray(), "ETUDEVISITE")
                 );
             }
 
-            // Zend_Debug::Dump($this->fetchAll($this->select()->setIntegrityCheck(false)->from("commissionreglelocalsommeil", "LOCALSOMMEIL")->where("ID_REGLE = " . $row_regleDeLaCommission["ID_REGLE"]))->toArray());
             return $array_regles;
         }
 

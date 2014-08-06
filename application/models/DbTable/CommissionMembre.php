@@ -48,15 +48,13 @@
             $model_commission = new Model_DbTable_Commission;
             $model_commune = new Model_DbTable_AdresseCommune;
             $model_utilisateurInformations = new Model_DbTable_UtilisateurInformations;
+            $model_groupement = new Model_DbTable_Groupement;
 
             // On r�cup�re les membres de la commission
-            $rowset_membresDeLaCommission = $this->fetchAll("ID_COMMISSION = " . $id_commission);
+            $rowset_membresDeLaCommission = $this->fetchAll("ID_COMMISSION = " . $id_commission)->toArray();
 
             // On initialise le tableau qui contiendra l'ensemble des crit�res
             $array_membres = array();
-
-            // On récupère les informations de la commission
-            $infos_commission = $model_commission->fetchRow("ID_COMMISSION = " . $id_commission);
 
             // Pour chaques r�gles, on va chercher les crit�res
             foreach ($rowset_membresDeLaCommission as $row_membreDeLaCommission) {
@@ -64,7 +62,7 @@
                 $array_membres[] = array(
                     "id_membre" => $row_membreDeLaCommission["ID_COMMISSIONMEMBRE"],
                     "presence" => $row_membreDeLaCommission["PRESENCE_COMMISSIONMEMBRE"],
-                    "groupement" => $row_membreDeLaCommission["ID_GROUPEMENT"],
+                    "groupement" => $row_membreDeLaCommission["ID_GROUPEMENT"] == null ? null : $model_groupement->get($row_membreDeLaCommission["ID_GROUPEMENT"])->toArray(),
                     "contact" => $row_membreDeLaCommission["ID_UTILISATEURINFORMATIONS"],
                     "contacts" => $model_utilisateurInformations->getContact("commission", $id_commission),
                     "libelle" => $row_membreDeLaCommission["LIBELLE_COMMISSIONMEMBRE"],
@@ -73,7 +71,13 @@
                     "types" => $this->fullJoinRegle("typeactivite", "commissionmembretypeactivite", "ID_TYPEACTIVITE", $row_membreDeLaCommission["ID_COMMISSIONMEMBRE"]),
                     "dossiertypes" => $this->fullJoinRegle("dossiertype", "commissionmembredossiertype", "ID_DOSSIERTYPE", $row_membreDeLaCommission["ID_COMMISSIONMEMBRE"]),
                     "dossiernatures" => $this->fullJoinRegle("dossiernatureliste", "commissionmembredossiernature", "ID_DOSSIERNATURE", $row_membreDeLaCommission["ID_COMMISSIONMEMBRE"]),
-                    "infos" => $infos_commission
+                    "courriers" => array(
+                        "id_membre" => $row_membreDeLaCommission["ID_COMMISSIONMEMBRE"],
+                        "COURRIER_CONVOCATIONVISITE" => $row_membreDeLaCommission["COURRIER_CONVOCATIONVISITE"],
+                        "COURRIER_CONVOCATIONSALLE" => $row_membreDeLaCommission["COURRIER_CONVOCATIONSALLE"],
+                        "COURRIER_ODJ" => $row_membreDeLaCommission["COURRIER_ODJ"],
+                        "COURRIER_PV" => $row_membreDeLaCommission["COURRIER_PV"]
+                    )
                 );
             }
 

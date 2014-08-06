@@ -54,6 +54,10 @@ class Plugin_View extends Zend_Controller_Plugin_Abstract
             // Définition du partial de vue à utiliser pour le rendu d'une recherche
             Zend_View_Helper_PaginationControl::setDefaultViewPartial('search' . DIRECTORY_SEPARATOR . 'pagination_control.phtml');
 
+            // Assignation des commissions à la vue
+            $service_commission = new Service_Commission;
+            $view->commissions = $service_commission->getAll();
+
             // On charge la vue correctement configurée dans le viewRenderer
             $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
             $viewRenderer->setView($view);

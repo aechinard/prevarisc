@@ -1,0 +1,59 @@
+<?php echo $this->render('commission/partials/header.phtml') ?>
+
+<form method="post" enctype='multipart/form-data'>
+
+    <div class='pull-right' >
+        <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_documents', true) ?>">Revenir sur l'affichage des documents</a>
+        <input type='submit' class="btn btn-success" value='Sauvegarder'>
+    </div>
+
+    <h2>Modification des documents et courriers types</h2>
+
+    <h3>Documents types de la commission</h3>
+    <table class='table table-condensed table-bordered'>
+        <thead>
+            <tr>
+                <th style='width: 250px'>Type de document</th>
+                <th>Fichier</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Compte-rendu</td>
+                <td><input type='file' name='documents[DOCUMENT_CR]' /> <small class='muted'>Fichier actuel : (<?php echo $this->documents['commission']['DOCUMENT_CR'] ?>)</small></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Courriers types par membre</h3>
+    <?php foreach($this->documents['membres'] as $libelle => $courriers) : ?>
+        <h4><?php echo $libelle ?></h4>
+        <table class='table table-condensed table-bordered'>
+            <thead>
+                <tr>
+                    <th style='width: 250px'>Type de document</th>
+                    <th>Fichier</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Convocation en visite</td>
+                    <td><input type='file' name='courriers[<?php echo $courriers['id_membre'] ?>][COURRIER_CONVOCATIONVISITE]' /> <small class='muted'>Fichier actuel : (<?php echo $courriers["COURRIER_CONVOCATIONVISITE"] ?>)</small></td>
+                </tr>
+                <tr>
+                    <td>Convocation en salle</td>
+                    <td><input type='file' name='courriers[<?php echo $courriers['id_membre'] ?>][COURRIER_CONVOCATIONSALLE]' /> <small class='muted'>Fichier actuel : (<?php echo $courriers["COURRIER_CONVOCATIONSALLE"] ?>)</small></td>
+                </tr>
+                <tr>
+                    <td>Ordre du jour</td>
+                    <td><input type='file' name='courriers[<?php echo $courriers['id_membre'] ?>][COURRIER_ODJ]' /> <small class='muted'>Fichier actuel : (<?php echo $courriers["COURRIER_ODJ"] ?>)</small></td>
+                </tr>
+                <tr>
+                    <td>PV</td>
+                    <td><input type='file' name='courriers[<?php echo $courriers['id_membre'] ?>][COURRIER_PV]' /> <small class='muted'>Fichier actuel : (<?php echo $courriers["COURRIER_PV"] ?>)</small></td>
+                </tr>
+            </tbody>
+        </table>
+    <?php endforeach ?>
+
+</form>

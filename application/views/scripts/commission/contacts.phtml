@@ -1,0 +1,30 @@
+<?php echo $this->render('commission/partials/header.phtml') ?>
+
+<div class='pull-right' >
+    <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_contacts_edit', true) ?>">Gestion des contacts</a>
+</div>
+
+<h2>Contacts</h2>
+
+<?php if(count($this->contacts) == 0) : ?>
+
+    <div class='well well-large text-center'>
+        <p class='lead'>Il n'y a pas de contact.</p>
+        <p><a href='<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_contacts_edit', true) ?>' class='btn btn-default btn-large'>Ajouter un contact</a></p>
+    </div>
+
+<?php else : ?>
+
+	<div class='row'>
+	<?php foreach($this->contacts as $contact) : ?>
+		<div class='col-sm-4'>
+			<?php echo $this->partial('components/contact.phtml', $contact) ?>
+		</div>
+		<?php if(!isset($i)) $i = 1; else $i++; ?>
+		<?php if($i == 3) : ?>
+			</div> <div class='row'>
+		<?php endif ?>
+	<?php endforeach ?>
+	</div>
+
+<?php endif ?>

@@ -28,7 +28,7 @@ class Model_DbTable_Groupement extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
                         ->setIntegrityCheck(false)
-                        ->from("groupement", "LIBELLE_GROUPEMENT")
+                        ->from("groupement")
                         ->joinInner("groupementtype", "groupement.ID_GROUPEMENTTYPE = groupementtype.ID_GROUPEMENTTYPE", "LIBELLE_GROUPEMENTTYPE")
                         ->joinLeft("utilisateurinformations", "utilisateurinformations.ID_UTILISATEURINFORMATIONS = groupement.ID_UTILISATEURINFORMATIONS");
 

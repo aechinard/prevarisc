@@ -1,0 +1,119 @@
+<?php echo $this->render('commission/partials/header.phtml') ?>
+
+<div class='pull-right' >
+    <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_competences_edit', true) ?>">Modifier les compétences</a>
+</div>
+
+<h2>Compétences</h2>
+
+<?php if(count($this->competences) == 0) : ?>
+
+    <div class='well well-large text-center'>
+        <p class='lead'>Il n'y a pas de compétence.</p>
+        <p><a href='<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_competences_edit', true) ?>' class='btn btn-default btn-large'>Gérer les compétences</a></p>
+    </div>
+
+<?php else : ?>
+
+<table class='table table-bordered table-hover'>
+    <thead>
+        <tr>
+            <th rowspan="2">Zone de compétence</th>
+            <th colspan="3">Compétences sur les ERP</th>
+            <th>Compétences sur les IGH</th>
+            <th>Compétences sur les dossiers</th>
+        </tr>
+        <tr>
+            <th>Catégorie</th>
+            <th>Type d'activité</th>
+            <th>Local à sommeil</th>
+            <th>Classe</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach($this->competences as $competence) : ?>
+        <tr>
+            <td>
+                <?php if($competence['commune'] != null) : ?>
+                    <?php echo $competence['commune']['LIBELLE_COMMUNE'] ?>
+                <?php elseif($competence['groupement'] != null) : ?>
+                    <?php echo $competence['groupement']['LIBELLE_GROUPEMENT'] . ' (' . $competence['groupement']['LIBELLE_GROUPEMENTTYPE'] . ')' ?>
+                <?php endif ?>
+            </td>
+            <td>
+                <ul class='list-inline'>
+                <?php foreach($competence['categories'] as $categorie) : ?>
+                    <?php if($categorie['ID_REGLE'] == $competence['id_regle']) : ?>
+                        <li><?php echo $categorie['LIBELLE_CATEGORIE'] ?></li>
+                    <?php endif ?>
+                <?php endforeach ?>
+                </ul>
+            </td>
+            <td>
+                <ul class='list-inline'>
+                <?php foreach($competence['types'] as $type) : ?>
+                    <?php if($type['ID_REGLE'] == $competence['id_regle']) : ?>
+                        <li><?php echo $type['LIBELLE_TYPE'] ?></li>
+                    <?php endif ?>
+                <?php endforeach ?>
+                </ul>
+            </td>
+            <td>
+                <ul class='list-inline'>
+                <?php foreach($competence['local_sommeil'] as $local_sommeil) : ?>
+                        <li><?php echo $local_sommeil == 1 ? "Avec" : "Sans" ?></li>
+                <?php endforeach ?>
+                </ul>
+            </td>
+            <td>
+                <ul class='list-inline'>
+                <?php foreach($competence['classes'] as $classe) : ?>
+                    <?php if($classe['ID_REGLE'] == $competence['id_regle']) : ?>
+                        <li><?php echo $classe['LIBELLE_CLASSE'] ?></li>
+                    <?php endif ?>
+                <?php endforeach ?>
+                </ul>
+            </td>
+            <td>
+                <ul class='list-inline'>
+                <?php foreach($competence['etude_visite'] as $etude_visite) : ?>
+                        <li><?php echo $etude_visite == 1 ? "Etude" : "Visite" ?></li>
+                <?php endforeach ?>
+                </ul>
+            </td>
+        </tr>
+    <?php endforeach ?>
+    </tbody>
+</table>
+
+<?php endif ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Juste une amélioration visuelle o/
+        $('table tbody tr').each(function(tr_key) {
+
+            $(this).find('td').each(function(td_key) {
+
+                switch(td_key) {
+                    case 1: if($(this).find('li').length == 5) $(this).text('Toutes les catégories'); break;
+                    case 2: if($(this).find('li').length == 27) $(this).text('Tous les types d\'activité'); break;
+                    case 4: if($(this).find('li').length == 10) $(this).text('Toutes les classes IGH'); break;
+                }
+
+                if($(this).find('ul.list-inline').length == 1) {
+                    if($(this).find('ul.list-inline').find('li').length == 0) {
+                        $(this).css('background-color', '#f5f5f5');
+                    }
+                }
+                else if($(this).text().trim() == "") {
+                    $(this).css('background-color', '#f5f5f5');
+                }
+            });
+
+        });
+
+    });
+</script>

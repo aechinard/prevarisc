@@ -7,7 +7,7 @@
         <input type='submit' class="btn btn-success" value="Ajouter l'établissement">
         <input type="hidden" name="date" value='<?php echo date("Y-m-d H:i:s") ?>'>
     </div>
-    <h2>Ajout d'un établissement</h2>
+    <h1 class='page-header'>Ajout d'un établissement</h1>
     <?php else : ?>
     <div class='pull-right' >
         <a class='btn btn-default' href="<?php echo $this->url(array("id" => $this->etablissement['general']['ID_ETABLISSEMENT']), 'ets', true) ?>">Annuler la modification</a>

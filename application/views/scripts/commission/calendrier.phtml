@@ -1,0 +1,26 @@
+<?php echo $this->render('commission/partials/header.phtml') ?>
+
+<div class='pull-right' >
+    <a class='btn btn-default' href="<?php echo $this->url(array('id_commission' => $this->commission['ID_COMMISSION']), 'datecomm_add', true) ?>">Ajouter une date de commission</a>
+</div>
+
+<h2>Calendrier</h2>
+
+<br>
+
+<div id='calendrier'></div>
+
+<br>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        $('#calendrier').fullCalendar({
+            events: function(start, end, callback) {
+                var data = {ids: <?php echo $this->commission['ID_COMMISSION'] ?>, start: Math.round(start.getTime() / 1000), end: Math.round(end.getTime() / 1000)};
+                $.getJSON('<?php echo $this->url(array('method' => 'calendrier'), 'api_commission') ?>', data, function(response) {
+                    callback(response['response']);
+                })
+            }
+        });
+    });
+</script>

@@ -1,0 +1,42 @@
+<?php echo $this->render('commission/partials/header.phtml') ?>
+
+<div class='pull-right' >
+	<a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_contacts', true) ?>">Revenir sur l'affichage des contacts</a>
+	<div class='btn-group'>
+		<a href='<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_contacts_add', true) ?>' class="btn btn-primary" data-toggle="modal" data-target="#reponse-modal" >Ajouter un nouveau contact</a>
+		<a href='<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_contacts_add_existant', true) ?>' class="btn btn-primary" data-toggle="modal" data-target="#reponse-modal" >Ajouter contact existant</a>
+	</div>
+</div>
+
+<h2>Gestion des contacts</h2>
+
+<?php if(count($this->contacts) == 0) : ?>
+    <p class='muted'>Il n'y a pas de contact.</p>
+<?php else : ?>
+<table class='table table-bordered table-condensed table-hover'>
+	<thead>
+		<tr>
+			<th>Fonction</th>
+			<th>Nom</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($this->contacts as $contact) : ?>
+			<tr>
+				<td>
+					<?php echo $contact['LIBELLE_FONCTION'] ?>
+				</td>
+				<td>
+					<?php echo $contact['NOM_UTILISATEURINFORMATIONS'] . ' ' . $contact['PRENOM_UTILISATEURINFORMATIONS'] ?>
+				</td>
+				<td>
+					<a href='<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION'], 'id_contact' => $contact['ID_UTILISATEURINFORMATIONS']), 'comm_contacts_delete', true) ?>'>Supprimer le contact</a>
+				</td>
+			</tr>
+		<?php endforeach ?>
+	</tbody>
+</table>
+<?php endif ?>
+
+<div id="reponse-modal" class="modal fade" ></div>

@@ -1,0 +1,176 @@
+<?php echo $this->render('commission/partials/header.phtml') ?>
+
+<form id="membres" method='post'>
+
+    <div class='pull-right' >
+        <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_membres', true) ?>">Revenir sur l'affichage des membres types</a>
+        <a href='<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_membres_add', true) ?>' class="btn btn-primary" >Ajouter un membre</a>
+        <input type='submit' class="btn btn-success" value='Sauvegarder'>
+    </div>
+
+    <h2>Gestion des membres types</h2>
+
+    <?php if(count($this->membres) == 0) : ?>
+
+        <p class='lead'>Il n'y a pas de membre.</p>
+
+    <?php else : ?>
+
+    <table class='table table-bordered table-hover'>
+        <thead>
+            <tr>
+                <th rowspan="2">Libellé du membre</th>
+                <th rowspan="2">Zone de compétence</th>
+                <th colspan="2">Compétences sur les ERP</th>
+                <th>Compétences sur les IGH</th>
+                <th>Compétences sur les dossiers</th>
+                <th rowspan="2"></th>
+            </tr>
+            <tr>
+                <th>Catégorie</th>
+                <th>Type d'activité</th>
+                <th>Classe</th>
+                <th>Nature</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach($this->membres as $membre) : ?>
+
+            <input type='hidden' name='ID_COMMISSIONMEMBRE[]' value='<?php echo $membre['id_membre'] ?>' />
+
+            <tr>
+                <td>
+                    <input type='text' name='<?php echo $membre['id_membre'] ?>_LIBELLE_COMMISSIONMEMBRE' value='<?php echo $membre['libelle'] ?>' class='form-control' />
+
+                    <select name='<?php echo $membre['id_membre'] ?>_PRESENCE_COMMISSIONMEMBRE' class='form-control' >
+                        <option value='0' >Membre Obligatoire</option>
+                        <option value='1' <?php if($membre['presence'] == 1) echo "selected" ?>>Membre Facultatif</option>
+                        <option value='2' <?php if($membre['presence'] == 2) echo "selected" ?>>Membre Pour information</option>
+                    </select>
+                </td>
+                <td>
+                    <p>
+                        <select name='<?php echo $membre['id_membre'] ?>_typemembre' class='form-control'>
+                            <option value='1' >Groupement de commune</option>
+                            <?php if(count($membre['contacts']) > 0 ) : ?>
+                                <option value='2' <?php if($membre['contact'] != null) echo "selected" ?> >Contact de la commission</option>
+                            <?php endif ?>
+                            <option value='3' <?php if($membre['groupement'] == null && $membre['contact'] == null) echo "selected" ?> >Commune du dossier</option>
+                        </select>
+
+                        <!-- Groupement de commune -->
+                        <span class='<?php echo $membre['id_membre'] ?>_type-membre <?php echo $membre['id_membre'] ?>_type-membre-groupement <?php if($membre['groupement'] == null) echo "hide" ?>' >
+                            <select name='<?php echo $membre['id_membre'] ?>_ID_GROUPEMENT' class='form-control'>
+                                <?php foreach($this->groupements as $groupement) : ?>
+                                    <option value="<?php echo $groupement['ID_GROUPEMENT'] ?>" <?php if( $groupement['ID_GROUPEMENT'] == $membre['groupement']['ID_GROUPEMENT'] ) echo "selected" ?>><?php echo $groupement['LIBELLE_GROUPEMENTTYPE'] . ' - ' . $groupement['LIBELLE_GROUPEMENT'] ?></option>
+                                <?php endforeach ?>
+                            </select>
+                        </span>
+
+                        <!-- Liste des contacts -->
+                        <?php if(count($membre['contacts']) > 0 ) : ?>
+                            <span class='<?php echo $membre['id_membre'] ?>_type-membre <?php echo $membre['id_membre'] ?>_type-membre-contact <?php if($membre['contact']["ID_UTILISATEURINFORMATIONS"] == null) echo "hide" ?>' >
+                                <select name='<?php echo $membre['id_membre'] . "_ID_UTILISATEURINFORMATIONS" ?>' >
+                                    <?php foreach( $membre['contacts'] as $row_contact ) : ?>
+                                        <option value='<?php echo $row_contact["ID_UTILISATEURINFORMATIONS"] ?>' <?php if($membre['contact'] == $row_contact["ID_UTILISATEURINFORMATIONS"]) echo "selected" ?> ><?php echo $row_contact["NOM_UTILISATEURINFORMATIONS"] . " " . $row_contact["PRENOM_UTILISATEURINFORMATIONS"] ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </span>
+                        <?php endif ?>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                $("select[name=<?php echo $membre['id_membre'] ?>_typemembre]").change(function() {
+                                    $(".<?php echo $membre['id_membre'] ?>_type-membre").hide();
+                                    switch( $(this).val() ) {
+                                        case "1":
+                                            $(".<?php echo $membre['id_membre'] ?>_type-membre-groupement").show();
+                                            break;
+                                        case "2":
+                                            $(".<?php echo $membre['id_membre'] ?>_type-membre-contact").show();
+                                            break;
+                                    }
+                                }).change();
+                            });
+                        </script>
+                    </p>
+                </td>
+                <td>
+                    <select name='<?php echo $membre['id_membre'] ?>_ID_CATEGORIE[]' class='select_categories' multiple>
+                    <?php foreach($membre['categories'] as $categorie) : ?>
+                        <option value='<?php echo $categorie['ID_CATEGORIE'] ?>' <?php if($categorie['ID_COMMISSIONMEMBRE'] == $membre['id_membre']) echo "selected" ?>>
+                            <?php echo $categorie['LIBELLE_CATEGORIE'] ?>
+                        </option>
+                    <?php endforeach ?>
+                    </select>
+                </td>
+                <td>
+                    <select name='<?php echo $membre['id_membre'] ?>_ID_TYPEACTIVITE[]' class='select_types' multiple>
+                        <?php foreach($membre['types'] as $type => $activites) : ?>
+                            <optgroup label="<?php echo $type ?>">
+                                <?php foreach($activites as $activite) : ?>
+                                    <option value="<?php echo $activite['ID_TYPEACTIVITE'] ?>" <?php if($activite['ID_COMMISSIONMEMBRE'] == $membre['id_membre']) echo "selected" ?>>
+                                        <?php echo $activite['LIBELLE_ACTIVITE'] ?>
+                                    </option>
+                                <?php endforeach ?>
+                            </optgroup>
+                        <?php endforeach ?>
+                    </select>
+                </td>
+                <td>
+                    <select name='<?php echo $membre['id_membre'] ?>_ID_CLASSE[]' class='select_classes' multiple>
+                    <?php foreach($membre['classes'] as $classe) : ?>
+                        <option value='<?php echo $classe['ID_CLASSE'] ?>' <?php if($classe['ID_COMMISSIONMEMBRE'] == $membre['id_membre']) echo "selected" ?>>
+                            <?php echo $classe['LIBELLE_CLASSE'] ?>
+                        </option>
+                    <?php endforeach ?>
+                    </select>
+                </td>
+                <td>
+                    <select name='<?php echo $membre['id_membre'] ?>_ID_DOSSIERNATURE[]' class='select_types_dossiers' multiple>
+                        <?php foreach($membre['dossiertypes'] as $type) : ?>
+                            <optgroup label="<?php echo $type['LIBELLE_DOSSIERTYPE'] ?>">
+                                <?php foreach($membre['dossiernatures'] as $nature) : ?>
+                                    <?php if($type['ID_DOSSIERTYPE'] == $nature['ID_DOSSIERTYPE']) : ?>
+                                        <option value="<?php echo $nature['ID_DOSSIERNATURE'] ?>" <?php if($nature['ID_COMMISSIONMEMBRE'] == $membre['id_membre']) echo "selected" ?>>
+                                            <?php echo $nature['LIBELLE_DOSSIERNATURE'] ?>
+                                        </option>
+                                    <?php endif ?>
+                                <?php endforeach ?>
+                            </optgroup>
+                        <?php endforeach ?>
+                    </select>
+                </td>
+                <td>
+                    <a class="btn btn-danger" href="<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION'], 'id_membre' => $membre['id_membre']), 'comm_membres_delete', true)?>">Supprimer</a>
+                </td>
+            </tr>
+        <?php endforeach ?>
+        </tbody>
+    </table>
+
+    <?php endif ?>
+
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Gestion des multiselects
+        $("select.select_categories").multiselect({nonSelectedText: "Aucune catégorie", includeSelectAllOption: true, numberDisplayed: 0});
+        $("select.select_types").multiselect({nonSelectedText: "Aucun type d'activité", includeSelectAllOption: true, numberDisplayed: 0});
+        $("select.select_classes").multiselect({nonSelectedText: "Aucune classe", includeSelectAllOption: true, numberDisplayed: 0});
+        $("select.select_types_dossiers").multiselect({nonSelectedText: "Aucun type de dossier", includeSelectAllOption: true, numberDisplayed: 0});
+
+        // S'affranchir du post-limit
+        $('form#membres').submit(function() {
+            $('input[name="multiselect"]').remove();
+            $(this).find("input[type='submit']").attr('disabled', true);
+            $.post( "<?php echo $this->url() ?>", $(this).serialize(), function() {
+                window.location = "<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_membres', true) ?>";
+            });
+            return false;
+        });
+
+    });
+</script>

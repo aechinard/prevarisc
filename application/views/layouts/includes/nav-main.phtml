@@ -1,66 +1,90 @@
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top">
 
   <div class="container-fluid">
 
     <div class="navbar-header">
-      <a class="navbar-brand" href="/"><img src='/favicon.ico' style="width: 32px;" /></a>
+        <a class="navbar-brand" href="<?php echo $this->url(array(), 'home', true) ?>"><img src='/favicon.ico' style="width: 32px;" /></a>
     </div>
 
-    <form class="navbar-form navbar-left" method="get" action="/search/etablissement">
-      <div class="form-group">
-        <div class='input-group'>
-          <input name="label" class="form-control" type="text" placeholder="Rechercher ..." />
-          <input name="page" type="hidden" value="1" />
-          <span class="input-group-btn">
-            <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
-            <a class="btn btn-default" href="/search" >Avancée »</a>
-          </span>
+    <form class="navbar-form navbar-left" style="position: absolute; left: 62px;" method="get" action="<?php echo $this->url(array(), 'search_ets', true) ?>">
+        <div class="form-group">
+            <div class='input-group'>
+                <input name="label" class="form-control" type="text" placeholder="Rechercher ..." style="width: 150px" />
+                <input name="page" type="hidden" value="1" />
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+                    <a class="btn btn-default" href="<?php echo $this->url(array(), 'search_ets', true) ?>?label=&page=1" >Avancée »</a>
+                </span>
+            </div>
         </div>
-      </div>
     </form>
 
-    <ul class="nav navbar-nav navbar-left">
+    <ul class="nav navbar-nav navbar-left" style="margin-left: 310px">
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Établissements <span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li><a href='/search/etablissement?label=&page=1'><i class="glyphicon glyphicon-th-list"></i> Lister</a></li>
-          <li><a href='/etablissement/add'><i class="glyphicon glyphicon-plus"></i> Ajouter</a></li>
+            <li><a href='<?php echo $this->url(array(), 'search_ets', true) ?>?label=&page=1'><i class="glyphicon glyphicon-th-list"></i> Lister</a></li>
+            <li class="divider"></li>
+            <li><a href='<?php echo $this->url(array(), 'ets_add', true) ?>'><i class="glyphicon glyphicon-plus"></i> Ajouter</a></li>
         </ul>
       </li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dossiers <span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li><a href='/search/dossier?objet=&page=1'><i class="glyphicon glyphicon-th-list"></i> Lister</a></li>
-          <li><a href='/dossier/add'><i class="glyphicon glyphicon-plus"></i> Ajouter</a></li>
+            <li><a href='<?php echo $this->url(array(), 'search_doss', true) ?>?objet=&page=1'><i class="glyphicon glyphicon-th-list"></i> Lister</a></li>
+            <li class="divider"></li>
+            <li><a href='<?php echo $this->url(array(), 'doss_add', true) ?>'><i class="glyphicon glyphicon-plus"></i> Ajouter</a></li>
         </ul>
       </li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Courriers <span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li><a href='/search/courriers?objet=&page=1'><i class="glyphicon glyphicon-th-list"></i> Lister</a></li>
-          <li><a href='/dossier/add'><i class="glyphicon glyphicon-plus"></i> Ajouter</a></li>
+            <li><a href='<?php echo $this->url(array(), 'search_courriers', true) ?>?objet=&page=1'><i class="glyphicon glyphicon-th-list"></i> Lister</a></li>
+            <li class="divider"></li>
+            <li><a href='<?php echo $this->url(array(), 'doss_add', true) ?>'><i class="glyphicon glyphicon-plus"></i> Ajouter</a></li>
         </ul>
       </li>
-      <li>
-        <a href='/calendrier-des-commissions'>Calendrier des commissions</a>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Commissions <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <?php if(count($this->commissions) > 0): ?>
+                <?php foreach($this->commissions as $commission): ?>
+                    <?php if (isset($commission["ARRAY"]) && count($commission["ARRAY"]) > 0): ?>
+                        <li class="dropdown-header">
+                            <?php echo htmlspecialchars($commission["LIBELLE"], ENT_QUOTES) ?>
+                        </li>
+                        <?php foreach($commission["ARRAY"] as $item) : ?>
+                            <?php if(is_array(Zend_Auth::getInstance()->getIdentity()["commissions"]) && in_array($item, Zend_Auth::getInstance()->getIdentity()["commissions"]))  : ?>
+                                <li>
+                                    <a href="<?php echo $this->url(array('id' => $item["ID_COMMISSION"]), 'comm', true) ?>" >
+                                        <?php echo htmlspecialchars($item["LIBELLE_COMMISSION"], ENT_QUOTES) ?>
+                                    </a>
+                                </li>
+                            <?php endif ?>
+                        <?php endforeach ?>
+                    <?php endif ?>
+                <?php endforeach ?>
+                <li class="divider"></li>
+            <?php endif ?>
+            <li><a href='<?php echo $this->url(array(), 'comm_add', true) ?>'><i class="glyphicon glyphicon-plus"></i> Ajouter</a></li>
+        </ul>
       </li>
     </ul>
 
     <ul class="nav navbar-nav pull-right">
       <li>
         <a href="#">
-          <img style="width: 19px; border: 1px solid #dfdfdf; border-radius: 25%;" src="/data/uploads/avatars/medium/default.jpg" />&nbsp;
-          <?php echo Zend_Auth::getInstance()->getIdentity()['infos']['PRENOM_UTILISATEURINFORMATIONS'] ?>
+            <?php echo $this->partial('components/user.phtml', array('width' => '19px', 'nom' => Zend_Auth::getInstance()->getIdentity()['infos']['PRENOM_UTILISATEURINFORMATIONS'], 'prenom' => '')) ?>
         </a>
       </li>
       <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-plus" ></i> <span class="caret"></span></a>
         <ul class="dropdown-menu dropdown-menu-right">
-          <li><a href='/statistiques'><i class="glyphicon glyphicon-th"></i> Statistiques</a></li>
-          <li><a href='/admin'><i class="glyphicon glyphicon-cog"></i> Administration</a></li>
+            <li><a href='<?php echo $this->url(array(), 'stats', true) ?>'><i class="glyphicon glyphicon-th"></i> Statistiques</a></li>
+            <li><a href='<?php echo $this->url(array(), 'admin', true) ?>'><i class="glyphicon glyphicon-cog"></i> Administration</a></li>
         </ul>
       </li>
       <li>
-        <a href="/session/logout"><i class="glyphicon glyphicon-log-out"></i></a>
+          <a href="<?php echo $this->url(array(), 'logout', true) ?>"><i class="glyphicon glyphicon-log-out"></i></a>
       </li>
     </ul>
 
