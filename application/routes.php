@@ -26,8 +26,8 @@ $routes = array(
     | Gestion du flux de messages
     |--------------------------------------------------------------------------
     */
-    'message_add' => new RouteStatic('message/add', array('controller' => 'news', 'action' => 'add')),
-    'message_delete' => new Route('message/delete/:id', array('controller' => 'news', 'action' => 'delete')),
+    'message_add' => new RouteStatic('message/add', array('controller' => 'index', 'action' => 'add-message')),
+    'message_delete' => new Route('message/delete/:id', array('controller' => 'index', 'action' => 'delete-message')),
 
     /*
     |--------------------------------------------------------------------------
@@ -151,21 +151,15 @@ $routes = array(
     'admin_users_group_edit' => new Route('admin/users/group/:id/edit', array('module' => 'admin', 'controller' => 'users', 'action' => 'edit-group')),
     'admin_users_group_add' => new RouteStatic('admin/users/group/add', array('module' => 'admin', 'controller' => 'users', 'action' => 'add-group')),
     'admin_users_group_delete' => new Route('admin/users/group/delete/:id', array('module' => 'admin', 'controller' => 'users', 'action' => 'delete-group')),
-
     'admin_users_acl' => new RouteStatic('admin/users/matrice-des-droits', array('module' => 'admin', 'controller' => 'users', 'action' => 'matrice-des-droits')),
-
     'admin_users_res' => new RouteStatic('admin/users/ressources-specialisees', array('module' => 'admin', 'controller' => 'users', 'action' => 'ressources-specialisees')),
     'admin_users_res_add' => new RouteStatic('admin/users/ressources-specialisees/add', array('module' => 'admin', 'controller' => 'users', 'action' => 'add-ressources-specialisees')),
     'admin_users_res_delete' => new Route('admin/users/ressources-specialisees/delete/:id_resource', array('module' => 'admin', 'controller' => 'users', 'action' => 'delete-ressources-specialisees')),
-
-
-
     'admin_geo' => new RouteStatic('admin/cartographie-geographie', array('module' => 'admin', 'controller' => 'couches-cartographiques', 'action' => 'index')),
     'admin_geo_couches_edit' => new Route('admin/cartographie-geographie/couches-cartographiques/edit/:id', array('module' => 'admin', 'controller' => 'couches-cartographiques', 'action' => 'edit')),
     'admin_geo_couches_delete' => new Route('admin/cartographie-geographie/couches-cartographiques/delete/:id', array('module' => 'admin', 'controller' => 'couches-cartographiques', 'action' => 'delete')),
     'admin_geo_couches_add' => new RouteStatic('admin/cartographie-geographie/couches-cartographiques/add', array('module' => 'admin', 'controller' => 'couches-cartographiques', 'action' => 'add')),
     'admin_geo_groupements' => new RouteStatic('admin/cartographie-geographie', array('module' => 'admin', 'controller' => 'couches-cartographiques', 'action' => 'index')),
-
     'admin_prevention' => new RouteStatic('admin/prevention', array('module' => 'admin', 'controller' => 'tableau-des-periodicites', 'action' => 'index')),
     'admin_prevention_textes_applicables' => new RouteStatic('admin/textes-applicables', array('module' => 'admin', 'controller' => 'tableau-des-periodicites', 'action' => 'index')),
 
