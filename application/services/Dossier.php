@@ -1,6 +1,6 @@
 <?php
 
-class Service_Dossier
+class Service_Dossier extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des types

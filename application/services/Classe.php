@@ -1,6 +1,6 @@
 <?php
 
-class Service_Classe
+class Service_Classe extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des classes

@@ -1,6 +1,6 @@
 <?php
 
-class Service_TypeActivite
+class Service_TypeActivite extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des activités

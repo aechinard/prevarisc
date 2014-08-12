@@ -1,6 +1,6 @@
 <?php
 
-class Service_GroupementCommunes
+class Service_GroupementCommunes extends Service_Abstract
 {
     /**
      * Récupération de tous les groupements

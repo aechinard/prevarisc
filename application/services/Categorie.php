@@ -1,6 +1,6 @@
 <?php
 
-class Service_Categorie
+class Service_Categorie extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des catégories

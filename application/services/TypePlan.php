@@ -1,6 +1,6 @@
 <?php
 
-class Service_TypePlan
+class Service_TypePlan extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des types de plan

@@ -1,6 +1,6 @@
 <?php
 
-class Service_Type
+class Service_Type extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des types d'activités

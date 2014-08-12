@@ -1,6 +1,6 @@
 <?php
 
-class Service_TextesApplicables
+class Service_TextesApplicables extends Service_Abstract
 {
     public function getAll()
     {

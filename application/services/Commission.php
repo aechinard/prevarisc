@@ -1,6 +1,6 @@
 <?php
 
-class Service_Commission implements Service_Interface_Commission
+class Service_Commission extends Service_Abstract implements Service_Interface_Commission
 {
     /**
      * Récupération de l'ensemble des commissions
@@ -315,9 +315,9 @@ class Service_Commission implements Service_Interface_Commission
 
         // On supprime les courriers
         $row_membre = $model_membres->find($id_membre)->current();
-        //unlink("./data/uploads/courriers/" . $this->_request->id_membre . "ODJ" . $row_membre->COURRIER_ODJ);
-        //unlink("./data/uploads/courriers/" . $this->_request->id_membre . "CONVOCATIONVISITE" . $row_membre->COURRIER_CONVOCATIONVISITE);
-        //unlink("./data/uploads/courriers/" . $this->_request->id_membre . "CONVOCATIONSALLE" . $row_membre->COURRIER_CONVOCATIONSALLE);
+        //unlink("./data/uploads/courriers/" . Service_Commission::_request->id_membre . "ODJ" . $row_membre->COURRIER_ODJ);
+        //unlink("./data/uploads/courriers/" . Service_Commission::_request->id_membre . "CONVOCATIONVISITE" . $row_membre->COURRIER_CONVOCATIONVISITE);
+        //unlink("./data/uploads/courriers/" . Service_Commission::_request->id_membre . "CONVOCATIONSALLE" . $row_membre->COURRIER_CONVOCATIONSALLE);
 
         // On supprime la règle
         $model_membresTypes->delete("ID_COMMISSIONMEMBRE = " .  $id_membre);
@@ -434,11 +434,11 @@ class Service_Commission implements Service_Interface_Commission
      */
     public function getDocumentsTypes($id_commission)
     {
-        $self = $this;
         return array(
-            'commission' => $this->get($id_commission),
-            'membres' => call_user_func(function() use ($self, $id_commission) {
-                foreach($self->getMembres($id_commission) as $membre)
+            'commission' => Service_Commission::get($id_commission),
+            'membres' => call_user_func(function() use ($id_commission) {
+                foreach(Service_Commission::getMembres($id_commission) as $membre)
+                    $courriers = array();
                     if($membre["libelle"] != null)
                         $courriers[$membre["libelle"]] = $membre["courriers"];
                 return $courriers;
@@ -507,7 +507,7 @@ class Service_Commission implements Service_Interface_Commission
             'ID_FONCTION' => (string) $id_fonction
         ))->save();
 
-        $this->addContactExistant($id_commission, $id_contact);
+        Service_Commission::addContactExistant($id_commission, $id_contact);
     }
 
     /**
@@ -541,7 +541,7 @@ class Service_Commission implements Service_Interface_Commission
             new Model_DbTable_DossierContact,
             new Model_DbTable_GroupementContact,
             new Model_DbTable_CommissionContact
-        ());
+        );
 
         // Appartient à d'autre ets ?
         $exist = false;
@@ -571,9 +571,8 @@ class Service_Commission implements Service_Interface_Commission
     public function getCalendrier($id_commission, $start = null, $end = null)
     {
         if($start == null && $end == null) {
-            $start = \Datetime::createFromFormat('Y-m-d H:i:s', date('Y') . '-' . date('m') . '01' . '00:00:00')->format('Y-m-d H:i:s');
-            $start->add(DateInterval::createFromDateString('1 month'))->format('Y-m-d H:i:s');
-            $end = $start;
+            $start = \Datetime::createFromFormat('Y-m-d H:i:s', date('Y') . '-' . date('m') . '-01 ' . '00:00:00')->format('U');
+            $end = \Datetime::createFromFormat('Y-m-d H:i:s', date('Y') . '-' . date('m') . '-01 ' . '00:00:00')->add(\DateInterval::createFromDateString('1 month'))->format('U');
         }
 
         $start = \Datetime::createFromFormat('U', $start)->format('Y-m-d H:i:s');

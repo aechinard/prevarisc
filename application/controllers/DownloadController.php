@@ -2,10 +2,9 @@
 
 class DownloadController extends Zend_Controller_Action
 {
-
     public function indexAction()
     {
-        $filesystem = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('filesystem');
+        $filesystem = $this->getInvokeArg('bootstrap')->getResource('filesystem');
 
         if (!array_key_exists('file', $_GET)) {
             header("HTTP/1.0 500 Internal Server Error");
@@ -34,7 +33,7 @@ class DownloadController extends Zend_Controller_Action
 
     public function viewAction()
     {
-        $filesystem = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('filesystem');
+        $filesystem = $this->getInvokeArg('bootstrap')->getResource('filesystem');
 
         if (!array_key_exists('file', $_GET)) {
             header("HTTP/1.0 500 Internal Server Error");
@@ -61,5 +60,4 @@ class DownloadController extends Zend_Controller_Action
 
         exit;
     }
-
 }

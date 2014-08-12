@@ -1,6 +1,6 @@
 <?php
 
-class Service_User
+class Service_User extends Service_Abstract
 {
     /**
      * Récupération d'un utilisateur
@@ -10,18 +10,26 @@ class Service_User
      */
     public function find($id_user)
     {
-        $model_user = new Model_DbTable_Utilisateur;
-        $model_userinformations = new Model_DbTable_UtilisateurInformations;
-        $model_groupe = new Model_DbTable_Groupe;
-        $model_fonction = new Model_DbTable_Fonction;
+        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
 
-        $user = $model_user->find($id_user)->current()->toArray();
-        $user = array_merge($user, array('uid' => $user['ID_UTILISATEUR']));
-        $user = array_merge($user, array('infos' => $model_userinformations->find($user['ID_UTILISATEURINFORMATIONS'])->current()->toArray()));
-        $user = array_merge($user, array('group' => $model_groupe->find($user['ID_GROUPE'])->current()->toArray()));
-        $user = array_merge($user, array('groupements' => $model_user->getGroupements($user['ID_UTILISATEUR']) == null ? null : $model_user->getGroupements($user['ID_UTILISATEUR'])->toArray()));
-        $user = array_merge($user, array('commissions' => $model_user->getCommissions($user['ID_UTILISATEUR']) == null ? null : $model_user->getCommissions($user['ID_UTILISATEUR'])->toArray()));
-        $user['infos'] = array_merge($user['infos'], array('LIBELLE_FONCTION' => $model_fonction->find($user['infos']['ID_FONCTION'])->current()->toArray()['LIBELLE_FONCTION']));
+        if (($user = unserialize($cache->load('user' . $id_user))) === false) {
+
+            $model_user = new Model_DbTable_Utilisateur;
+            $model_userinformations = new Model_DbTable_UtilisateurInformations;
+            $model_groupe = new Model_DbTable_Groupe;
+            $model_fonction = new Model_DbTable_Fonction;
+
+            $user = $model_user->find($id_user)->current()->toArray();
+            $user = array_merge($user, array('uid' => $user['ID_UTILISATEUR']));
+            $user = array_merge($user, array('infos' => $model_userinformations->find($user['ID_UTILISATEURINFORMATIONS'])->current()->toArray()));
+            $user = array_merge($user, array('group' => $model_groupe->find($user['ID_GROUPE'])->current()->toArray()));
+            $user = array_merge($user, array('groupements' => $model_user->getGroupements($user['ID_UTILISATEUR']) == null ? null : $model_user->getGroupements($user['ID_UTILISATEUR'])->toArray()));
+            $user = array_merge($user, array('commissions' => $model_user->getCommissions($user['ID_UTILISATEUR']) == null ? null : $model_user->getCommissions($user['ID_UTILISATEUR'])->toArray()));
+            $user['infos'] = array_merge($user['infos'], array('LIBELLE_FONCTION' => $model_fonction->find($user['infos']['ID_FONCTION'])->current()->toArray()['LIBELLE_FONCTION']));
+
+            $cache->save(serialize($user));
+
+        }
 
         return $user;
     }
@@ -44,7 +52,7 @@ class Service_User
             $db_doss = new Model_DbTable_Dossier;
 
             // Récupération de l'utilisateur & son profil
-            $user = $this->find($id_user);
+            $user = Service_User::find($id_user);
             $profil = $user['infos']['LIBELLE_FONCTION'];
             $ville = $user["NUMINSEE_COMMUNE"] == null ? null : $user["NUMINSEE_COMMUNE"];
             $commissions = count($user['commissions']) == 0 ? array() : call_user_func(function() use ($user) {
@@ -142,8 +150,7 @@ class Service_User
     {
         $model_user = new Model_DbTable_Utilisateur;
         $user = $model_user->fetchRow($model_user->select()->where('USERNAME_UTILISATEUR = ?', $username));
-
-        return $user !== null ? $this->find($user->ID_UTILISATEUR) : null;
+        return $user !== null ? Service_User::find($user->ID_UTILISATEUR) : null;
     }
 
     /**

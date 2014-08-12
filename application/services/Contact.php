@@ -1,6 +1,6 @@
 <?php
 
-class Service_Contact
+class Service_Contact extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des types de fonctions

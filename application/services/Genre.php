@@ -1,6 +1,6 @@
 <?php
 
-class Service_Genre
+class Service_Genre extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des genres

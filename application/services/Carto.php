@@ -1,17 +1,7 @@
 <?php
 
-class Service_Carto
+class Service_Carto extends Service_Abstract
 {
-    /**
-     * Initialisation des ressources exterieures
-     *
-     */
-    public function __construct()
-    {
-        $this->cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
-        $this->repository = $model_couchecarto = new Model_DbTable_CoucheCarto;
-    }
-
     /**
      * Récupération de toutes les couches cartographiques
      *
@@ -19,12 +9,15 @@ class Service_Carto
      */
     public function getAll()
     {
-        if (($couches_carto = unserialize($this->cache->load('couches_cartographiques'))) === false) {
+        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
+        $repository = $model_couchecarto = new Model_DbTable_CoucheCarto;
+
+        if (($couches_carto = unserialize($cache->load('couches_cartographiques'))) === false) {
             // On récupère l'ensemble des couches
-            $couches_carto = $this->repository->fetchAll()->toArray();
+            $couches_carto = $repository->fetchAll()->toArray();
 
             // On stocke en cache
-            $this->cache->save(serialize($couches_carto));
+            $cache->save(serialize($couches_carto));
         }
 
         return $couches_carto;
@@ -38,7 +31,10 @@ class Service_Carto
      */
     public function findById($id_couche_cartographique)
     {
-        return $this->repository->find($id_couche_cartographique)->current()->toArray();
+        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
+        $repository = $model_couchecarto = new Model_DbTable_CoucheCarto;
+
+        return $repository->find($id_couche_cartographique)->current()->toArray();
     }
 
     /**
@@ -50,9 +46,12 @@ class Service_Carto
      */
     public function save($data, $id_couche_cartographique = null)
     {
-        $couche_cartographique = $id_couche_cartographique == null ? $this->repository->createRow() : $this->repository->find($id_couche_cartographique)->current();
-        $couche_cartographique->setFromArray(array_intersect_key($data, $this->repository->info('metadata')))->save();
-        $this->cache->remove('couches_cartographiques');
+        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
+        $repository = $model_couchecarto = new Model_DbTable_CoucheCarto;
+
+        $couche_cartographique = $id_couche_cartographique == null ? $repository->createRow() : $repository->find($id_couche_cartographique)->current();
+        $couche_cartographique->setFromArray(array_intersect_key($data, $repository->info('metadata')))->save();
+        $cache->remove('couches_cartographiques');
     }
 
     /**
@@ -63,7 +62,10 @@ class Service_Carto
      */
     public function delete($id_couche_cartographique)
     {
-        $this->repository->delete("ID_COUCHECARTO = " . $id_couche_cartographique);
-        $this->cache->remove('couches_cartographiques');
+        $cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
+        $repository = $model_couchecarto = new Model_DbTable_CoucheCarto;
+
+        $repository->delete("ID_COUCHECARTO = " . $id_couche_cartographique);
+        $cache->remove('couches_cartographiques');
     }
 }

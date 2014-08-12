@@ -1,6 +1,6 @@
 <?php
 
-class Service_Statut
+class Service_Statut extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des statuts

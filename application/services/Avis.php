@@ -1,6 +1,6 @@
 <?php
 
-class Service_Avis
+class Service_Avis extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des avis

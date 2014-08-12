@@ -1,6 +1,6 @@
 <?php
 
-class Service_Etablissement implements Service_Interface_Etablissement
+class Service_Etablissement extends Service_Abstract implements Service_Interface_Etablissement
 {
     /**
      * Récupération d'un établissement
@@ -249,7 +249,7 @@ class Service_Etablissement implements Service_Interface_Etablissement
 
         // On traite le cas particulier des dossiers
         $key = "avis";
-        $dossiers = $this->getDossiers($id_etablissement);
+        $dossiers = Service_Etablissement::getDossiers($id_etablissement);
         $dossiers_merged = $dossiers['etudes'];
         $dossiers_merged = array_merge($dossiers_merged, $dossiers['visites']);
         $dossiers_merged = array_merge($dossiers_merged, $dossiers['autres']);
@@ -835,7 +835,7 @@ class Service_Etablissement implements Service_Interface_Etablissement
 
                 // Commission en fonction des compétences des commissions
                 if ($id_etablissement_pere !== null && $id_etablissement_pere != '') {
-                    $etablissement = $this->get($id_etablissement_pere);
+                    $etablissement = Service_Etablissement::get($id_etablissement_pere);
                     if ($etablissement['informations']['ID_COMMISSION'] != null || $etablissement['informations']['ID_COMMISSION'] != 0) {
                         $results['commission'] = $model_commission->find($etablissement['informations']['ID_COMMISSION'])->current()->toArray();
                     }
@@ -879,7 +879,7 @@ class Service_Etablissement implements Service_Interface_Etablissement
 
                 // Commission en fonction des compétences des commissions
                 if ($id_etablissement_pere !== null  && $id_etablissement_pere != '') {
-                    $etablissement = $this->get($id_etablissement_pere);
+                    $etablissement = Service_Etablissement::get($id_etablissement_pere);
                     if ($etablissement['informations']['ID_COMMISSION'] != null || $etablissement['informations']['ID_COMMISSION'] != 0) {
                         $results['commission'] = $model_commission->find($etablissement['informations']['ID_COMMISSION'])->current()->toArray();
                     }
@@ -984,7 +984,7 @@ class Service_Etablissement implements Service_Interface_Etablissement
         if ($DBitem != null) {
             if( file_exists($path . $pj->ID_PIECEJOINTE . $pj->EXTENSION_PIECEJOINTE) )                         unlink($path . $pj->ID_PIECEJOINTE . $pj->EXTENSION_PIECEJOINTE);
             if( file_exists($path . "miniatures" . DS . $pj->ID_PIECEJOINTE . $pj->EXTENSION_PIECEJOINTE) )     unlink($path . "miniatures" . DS . $pj->ID_PIECEJOINTE . $pj->EXTENSION_PIECEJOINTE);
-            $DBitem->delete("ID_PIECEJOINTE = " . (int) $this->_request->id_pj);
+            $DBitem->delete("ID_PIECEJOINTE = " . (int) $id_pj);
             $pj->delete();
         }
 
@@ -1037,7 +1037,7 @@ class Service_Etablissement implements Service_Interface_Etablissement
             'ID_FONCTION' => (string) $id_fonction
         ))->save();
 
-        $this->addContactExistant($id_etablissement, $id_contact);
+        Service_Etablissement::addContactExistant($id_etablissement, $id_contact);
     }
 
     /**

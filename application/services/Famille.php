@@ -1,6 +1,6 @@
 <?php
 
-class Service_Famille
+class Service_Famille extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des familles

@@ -1,6 +1,6 @@
 <?php
 
-class Service_Prescription
+class Service_Prescription extends Service_Abstract
 {
     public function find($article, $texte)
     {

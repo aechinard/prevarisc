@@ -1,6 +1,6 @@
 <?php
 
-class Service_Adresse
+class Service_Adresse extends Service_Abstract
 {
     /**
      * Récupération de l'ensemble des communes

@@ -1,6 +1,6 @@
 <?php
 
-class Service_Feed
+class Service_Feed extends Service_Abstract
 {
     /**
      * Récupération d'un flux de message pour un groupe d'utilisateurs

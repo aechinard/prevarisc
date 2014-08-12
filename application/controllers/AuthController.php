@@ -6,18 +6,15 @@ class AuthController extends Zend_Controller_Action
     {
         $this->_helper->layout->setLayout('login');
 
-        $service_user = new Service_User();
-
         if ($this->_request->isPost()) {
 
             try {
-
                 // Identifiants
                 $username = $this->_request->prevarisc_login_username;
                 $password = $this->_request->prevarisc_login_passwd;
 
                 // Récupération de l'utilisateur
-                $user = $service_user->findByUsername($username);
+                $user = Service_User::findByUsername($username);
 
                 // Si l'utilisateur n'est pas actif, on renvoie false
                 if ($user === null || ($user !== null && !$user['ACTIF_UTILISATEUR'])) {
@@ -39,7 +36,7 @@ class AuthController extends Zend_Controller_Action
                     } catch (Exception $e) {}
                 }
 
-                // On lance le process d'identification
+                // On lance le process d'identification avec les différents adaptateurs
                 foreach ($adapters as $key => $adapter) {
                     if ($adapter->authenticate()->isValid()) {
                         $storage = Zend_Auth::getInstance()->getStorage()->write($user);
@@ -57,12 +54,11 @@ class AuthController extends Zend_Controller_Action
 
     public function logoutAction()
     {
-        $this->_helper->viewRenderer->setNoRender();
+        $auth = Zend_Auth::getInstance();
 
-        $service_user = new Service_User();
-        $service_user->updateLastActionDate(Zend_Auth::getInstance()->getIdentity()['ID_UTILISATEUR'], null);
+        Service_User::updateLastActionDate($auth->getIdentity()['ID_UTILISATEUR'], null);
 
-        Zend_Auth::getInstance()->clearIdentity();
+        $auth->clearIdentity();
 
         $this->_helper->redirector->gotoRoute(array(), 'login', true);
     }

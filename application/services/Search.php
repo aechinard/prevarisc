@@ -1,6 +1,6 @@
 <?php
 
-class Service_Search
+class Service_Search extends Service_Abstract
 {
     /**
      * Recherche des établissements
@@ -69,52 +69,52 @@ class Service_Search
 
             // Critères : nom de l'établissement
             if ($label !== null) {
-               $this->setCriteria($select, "LIBELLE_ETABLISSEMENTINFORMATIONS", $label, false);
+               Service_Search::setCriteria($select, "LIBELLE_ETABLISSEMENTINFORMATIONS", $label, false);
             }
 
             // Critères : identifiant
             if ($identifiant !== null) {
-               $this->setCriteria($select, "NUMEROID_ETABLISSEMENT", $identifiant);
+               Service_Search::setCriteria($select, "NUMEROID_ETABLISSEMENT", $identifiant);
             }
 
             // Critères : genre
             if ($genres !== null) {
-               $this->setCriteria($select, "genre.ID_GENRE", $genres);
+               Service_Search::setCriteria($select, "genre.ID_GENRE", $genres);
             }
 
             // Critères : catégorie
             if ($categories !== null) {
-               $this->setCriteria($select, "ID_CATEGORIE", $categories);
+               Service_Search::setCriteria($select, "ID_CATEGORIE", $categories);
             }
 
             // Critères : classe
             if ($classes !== null) {
-               $this->setCriteria($select, "ID_CLASSE", $classes);
+               Service_Search::setCriteria($select, "ID_CLASSE", $classes);
             }
 
             // Critères : famille
             if ($familles !== null) {
-               $this->setCriteria($select, "ID_FAMILLE", $familles);
+               Service_Search::setCriteria($select, "ID_FAMILLE", $familles);
             }
 
             // Critères : type
             if ($types !== null) {
-               $this->setCriteria($select, "type.ID_TYPE", $types);
+               Service_Search::setCriteria($select, "type.ID_TYPE", $types);
             }
 
             // Critères : avis favorable
             if ($avis_favorable !== null) {
-               $this->setCriteria($select, "avis.ID_AVIS", $avis_favorable ? 1 : 2);
+               Service_Search::setCriteria($select, "avis.ID_AVIS", $avis_favorable ? 1 : 2);
             }
 
             // Critères : statuts
             if ($statuts !== null) {
-               $this->setCriteria($select, "ID_STATUT", $statuts);
+               Service_Search::setCriteria($select, "ID_STATUT", $statuts);
             }
 
             // Critères : statuts
             if ($local_sommeil !== null) {
-               $this->setCriteria($select, "LOCALSOMMEIL_ETABLISSEMENTINFORMATIONS", $local_sommeil);
+               Service_Search::setCriteria($select, "LOCALSOMMEIL_ETABLISSEMENTINFORMATIONS", $local_sommeil);
             }
 
             // Critère : commune et rue
@@ -123,29 +123,29 @@ class Service_Search
                     foreach ($genres as $genre) {
                         switch ($genre) {
                             case "1":
-                                $this->setCriteria($select, "adressecommunesite.LIBELLE_COMMUNE", $city);
+                                Service_Search::setCriteria($select, "adressecommunesite.LIBELLE_COMMUNE", $city);
                                 if ($street_id !== null) {
-                                    $this->setCriteria($select, "etablissementadressesite.ID_RUE", $street_id);
+                                    Service_Search::setCriteria($select, "etablissementadressesite.ID_RUE", $street_id);
                                 }
                                 break;
                             case "3":
-                                $this->setCriteria($select, "adressecommunecell.LIBELLE_COMMUNE", $city);
+                                Service_Search::setCriteria($select, "adressecommunecell.LIBELLE_COMMUNE", $city);
                                 if ($street_id !== null) {
-                                    $this->setCriteria($select, "etablissementadressecell.ID_RUE", $street_id);
+                                    Service_Search::setCriteria($select, "etablissementadressecell.ID_RUE", $street_id);
                                 }
                                 break;
 
                             default:
-                                $this->setCriteria($select, "adressecommune.LIBELLE_COMMUNE", $city);
+                                Service_Search::setCriteria($select, "adressecommune.LIBELLE_COMMUNE", $city);
                                 if ($street_id !== null) {
-                                    $this->setCriteria($select, "etablissementadresse.ID_RUE", $street_id);
+                                    Service_Search::setCriteria($select, "etablissementadresse.ID_RUE", $street_id);
                                 }
                         }
                     }
                 } else {
-                    $this->setCriteria($select, "LIBELLE_COMMUNE_ADRESSE_SITE", $city, true, "orHaving");
-                    $this->setCriteria($select, "LIBELLE_COMMUNE_ADRESSE_CELLULE", $city, true, "orHaving");
-                    $this->setCriteria($select, "LIBELLE_COMMUNE_ADRESSE_DEFAULT", $city, true, "orHaving");
+                    Service_Search::setCriteria($select, "LIBELLE_COMMUNE_ADRESSE_SITE", $city, true, "orHaving");
+                    Service_Search::setCriteria($select, "LIBELLE_COMMUNE_ADRESSE_CELLULE", $city, true, "orHaving");
+                    Service_Search::setCriteria($select, "LIBELLE_COMMUNE_ADRESSE_DEFAULT", $city, true, "orHaving");
 
                     if ($street_id !== null) {
                         $select->where("(etablissementadresse.ID_RUE = ? OR etablissementadressecell.ID_RUE = ? OR etablissementadressesite.ID_RUE = ?)", $street_id, $street_id, $street_id);
@@ -155,8 +155,8 @@ class Service_Search
 
             // Critères : géolocalisation
             if ($lon !== null && $lat !== null) {
-               $this->setCriteria($select, "LON_ETABLISSEMENTADRESSE", $lon);
-               $this->setCriteria($select, "LAT_ETABLISSEMENTADRESSE", $lat);
+               Service_Search::setCriteria($select, "LON_ETABLISSEMENTADRESSE", $lon);
+               Service_Search::setCriteria($select, "LAT_ETABLISSEMENTADRESSE", $lat);
             }
 
             // Critères : parent
@@ -266,7 +266,7 @@ class Service_Search
 
             // Critères : objet
             if ($objet !== null) {
-               $this->setCriteria($select, "OBJET_DOSSIER", $objet, false);
+               Service_Search::setCriteria($select, "OBJET_DOSSIER", $objet, false);
             }
 
             // Critères : parent
@@ -276,12 +276,12 @@ class Service_Search
 
             // Critères : type
             if ($types !== null) {
-               $this->setCriteria($select, "dossiertype.ID_DOSSIERTYPE", $types);
+               Service_Search::setCriteria($select, "dossiertype.ID_DOSSIERTYPE", $types);
             }
 
             // Critères : avis différé
             if ($avis_differe !== null) {
-               $this->setCriteria($select, "d.DIFFEREAVIS_DOSSIER", $avis_differe);
+               Service_Search::setCriteria($select, "d.DIFFEREAVIS_DOSSIER", $avis_differe);
             }
 
             // Critères : reponse envoyée
@@ -365,7 +365,7 @@ class Service_Search
 
             // Critères : numéro de doc urba
             if ($num_doc_urba !== null) {
-               $this->setCriteria($select, "NUM_DOCURBA", $num_doc_urba);
+               Service_Search::setCriteria($select, "NUM_DOCURBA", $num_doc_urba);
             }
 
             if (null !== $objet) {
@@ -378,7 +378,7 @@ class Service_Search
             }
 
             // Critères : type
-            $this->setCriteria($select, "dossiertype.ID_DOSSIERTYPE", 5);
+            Service_Search::setCriteria($select, "dossiertype.ID_DOSSIERTYPE", 5);
 
             // Gestion des pages et du count
             $select->limitPage($page, $count > 100 ? 100 : $count);
@@ -435,25 +435,25 @@ class Service_Search
 
             // Critères : activité
             if ($actif === true) {
-                $this->setCriteria($select, "u.ACTIF_UTILISATEUR", 1);
+                Service_Search::setCriteria($select, "u.ACTIF_UTILISATEUR", 1);
             } elseif ($actif === false) {
-              $this->setCriteria($select, "u.ACTIF_UTILISATEUR", 0);
+              Service_Search::setCriteria($select, "u.ACTIF_UTILISATEUR", 0);
             }
 
             // Critères : groupe
             if ($groups !== null) {
-               $this->setCriteria($select, "ID_GROUPE", $groups);
+               Service_Search::setCriteria($select, "ID_GROUPE", $groups);
             }
 
             // Critères : nom
             if ($name !== null) {
-               $this->setCriteria($select, "NOM_UTILISATEURINFORMATIONS", $name, false);
-                $this->setCriteria($select, "PRENOM_UTILISATEURINFORMATIONS", $name, false, "orWhere");
+               Service_Search::setCriteria($select, "NOM_UTILISATEURINFORMATIONS", $name, false);
+                Service_Search::setCriteria($select, "PRENOM_UTILISATEURINFORMATIONS", $name, false, "orWhere");
             }
 
             // Critères : fonctions
             if ($fonctions !== null) {
-               $this->setCriteria($select, "fonction.ID_FONCTION", $fonctions);
+               Service_Search::setCriteria($select, "fonction.ID_FONCTION", $fonctions);
             }
 
             // Gestion des pages et du count
