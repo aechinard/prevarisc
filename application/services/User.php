@@ -47,7 +47,6 @@ class Service_User extends Service_Abstract
         if (($data = unserialize($cache->load('dashboard_' . $id_user))) === false) {
 
             // Initialisation des services / models
-            $service_search = new Service_Search;
             $db_ets = new Model_DbTable_Etablissement;
             $db_doss = new Model_DbTable_Dossier;
 
@@ -71,28 +70,30 @@ class Service_User extends Service_Abstract
 
               case 'Secrétariat':
                 $data = array(
-                    'listeErpAvisDef' => @$service_search->etablissements(null, null, null, null, null, null, null, false)['results'],
+                    'listeErpAvisDef' => @Service_Search::etablissements(null, null, null, null, null, null, null, false)['results'],
                     'listeDossiersDateEchue' => $db_doss->listeDesDossierDateCommissionEchu(),
                     'listeErpSansVP' => $db_ets->listeErpOuvertSansProchainesVisitePeriodiques(),
-                    'listeDossiersAvisDiff' => @$service_search->dossiers(null, null, null, null, true, null, 1000)['results'],
-                    'listeCourriersSansRep' => @$service_search->dossiers(5, null, null, null, null, false)['results'],
+                    'listeDossiersAvisDiff' => @Service_Search::dossiers(null, null, null, null, true, null, 1000)['results'],
+                    'listeCourriersSansRep' => @Service_Search::dossiers(5, null, null, null, null, false)['results'],
                     'listeERPSansPrev' => $db_ets->listeERPSansPreventionniste()
                 );
                 break;
 
               case 'Préfet':
                   $data = array(
-                      'listeErpAvisDef' => @$service_search->etablissements(null, null, null, null, null, null, null, false, null, null, null, null, null, null, null, 1000, 1)['results']
+                      'listeErpAvisDef' => @Service_Search::etablissements(null, null, null, null, null, null, null, false, null, null, null, null, null, null, null, 1000, 1)['results']
                   );
                 break;
 
               case 'Maire':
                 $data = array(
-                    'listeErpAvisDef' => @$service_search->etablissements(null, null, null, null, null, null, null, false, null, null, null, null, null, $ville, null, 1000, 1)['results']
+                    'listeErpAvisDef' => @Service_Search::etablissements(null, null, null, null, null, null, null, false, null, null, null, null, null, $ville, null, 1000, 1)['results']
                 );
                 break;
 
               case 'Préventionniste':
+                $etablissements = array();
+
                 // Ets 1 - 4ème catégorie
                 $search = new Model_DbTable_Search;
                 $search->setItem("etablissement");
@@ -126,9 +127,16 @@ class Service_User extends Service_Abstract
                 $search->setCriteria("etablissementinformations.ID_GENRE", array("6","5","4"));
                 $etablissements = array_merge($search->run(false, null, false)->toArray(), $etablissements);
 
+                // Dossiers suivis
+                $search = new Model_DbTable_Search;
+                $search->setItem("dossier");
+                $search->setCriteria("utilisateur.ID_UTILISATEUR", $id_user);
+                $search->setCriteria("d.VERROU_DOSSIER", 0);
+                $dossiers = $search->run(false, null, false)->toArray();
+
                 $data = array(
-                    'listeDossiersAvisDiff' => @$service_search->dossiers(null, null, null, null, true, null, 1000),
-                    // 'listeDossiersSuivis' => true,
+                    'listeDossiersAvisDiff' => @Service_Search::dossiers(null, null, null, null, true, null, 1000)['results'],
+                    'listeDossiersSuivis' => $dossiers,
                     'listeERPSuivis' => array_unique($etablissements, SORT_REGULAR)
                 );
                 break;
