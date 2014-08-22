@@ -26,6 +26,16 @@ class EtablissementController extends Zend_Controller_Action
         $this->view->key_ign = getenv('PREVARISC_PLUGIN_IGNKEY');
         $this->view->key_googlemap = getenv('PREVARISC_PLUGIN_GOOGLEMAPKEY');
 
+        $contacts = Service_Etablissement::getAllContacts($this->_request->id);
+        $contacts_dus = array();
+
+        foreach($contacts as $contact) {
+            if($contact['ID_FONCTION'] == 8) {
+                $contacts_dus[] = $contact;
+            }
+        }
+
+        $this->view->presence_dus = count($contacts_dus) > 0;
         $this->view->etablissement = $etablissement;
         $this->view->groupements_de_communes = count($etablissement['adresses']) == 0 ? array() : Service_GroupementCommunes::findAll($etablissement['adresses'][0]["NUMINSEE_COMMUNE"]);
     }
