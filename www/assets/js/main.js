@@ -50,10 +50,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Marquee sur les listes de recherche
   $('.search-list li').each(function() {
-    var li_width = $(this).innerWidth();
-    var left_width = $(this).find('.pull-left').innerWidth();
-    var right_width = $(this).find('.pull-right').innerWidth();
-    if( (left_width + right_width) > li_width ) {
+    var li_width = $(this).width();
+    var left_width = $(this).find('.pull-left').width();
+    var right_width = $(this).find('.pull-right').width();
+    if( (left_width + right_width) > li_width) {
       var free_width = li_width - right_width - 20;
       $(this).find('.pull-left').css('width', free_width + 'px').css('overflow', 'hidden').marquee({
         duplicated: true,
