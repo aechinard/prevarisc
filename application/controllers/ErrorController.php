@@ -9,7 +9,7 @@ class ErrorController extends Zend_Controller_Action
 
         // Gestion du message de l'erreur
         if (!$errors || !$errors instanceof ArrayObject) {
-            $message = "L'application s'est arrêtée brutalement.";
+            $message = "L'application s'est arrêtée brutalement. Merci de l'avoir remarqué, nous allons corriger cela pour un retour à la normale le plus rapide possible.";
         } else {
             switch ($errors->type) {
                 case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE:
