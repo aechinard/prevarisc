@@ -140,9 +140,13 @@ class Service_User extends Service_Abstract
                     'listeERPSuivis' => array_unique($etablissements, SORT_REGULAR)
                 );
                 break;
+
+                default:
+                    $data = array();
+
             }
 
-            $cache->save(serialize($data));
+            $cache->save(serialize($data), 'dashboard_' . $id_user);
         }
 
         return $data;
