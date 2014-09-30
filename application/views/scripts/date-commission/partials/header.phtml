@@ -1,0 +1,32 @@
+<?php if($this->commission) : ?>
+    <h1>
+        <a href="<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), "comm") ?>"><?php echo $this->commission['LIBELLE_COMMISSION'] ?></a>
+        <small><?php echo $this->commission['LIBELLE_COMMISSIONTYPE'] ?></small>
+    </h1>
+<?php endif ?>
+
+<?php if($this->datecommission) : ?>
+
+    <h2>
+        <i class='glyphicon glyphicon-calendar'></i> <?php echo $this->datecommission['LIBELLE_DATECOMMISSION'] . ' du ' . date_format(new DateTime($this->datecommission['DATE_COMMISSION']), 'd/m/Y') ?>
+    </h2>
+
+    <hr>
+
+    <?php if(count($this->dates_liees) > 1) : ?>
+        <ul class="nav nav-tabs nav-justified" role="tablist">
+            <?php foreach($this->dates_liees as $datecommission) : ?>
+                <li <?php if($datecommission['ID_DATECOMMISSION'] == $this->datecommission['ID_DATECOMMISSION']) echo "class='active'" ?> >
+                    <a href="<?php echo $this->url(array('id_commission' => $this->commission['ID_COMMISSION'], 'id' => $datecommission['ID_DATECOMMISSION']), "datecomm") ?>">
+                        <?php echo $datecommission['LIBELLE_DATECOMMISSION'] . ' du ' . date_format(new DateTime($datecommission['DATE_COMMISSION']), 'd/m/Y') . ' de ' . $datecommission['HEUREDEB_COMMISSION'] .  ' à ' . $datecommission['HEUREFIN_COMMISSION'] ?>
+                    </a>
+                </li>
+            <?php endforeach ?>
+        <?php endif ?>
+    </ul>
+
+<?php else : ?>
+
+    <hr>
+    
+<?php endif ?>

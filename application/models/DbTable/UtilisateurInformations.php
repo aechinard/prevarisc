@@ -4,6 +4,19 @@
         protected $_name="utilisateurinformations"; // Nom de la base
         protected $_primary = "ID_UTILISATEURINFORMATIONS"; // Cl� primaire
 
+        public function get($id)
+        {
+            $select = $this->select()->setIntegrityCheck(false);
+
+            $select->from("utilisateurinformations")
+                 ->joinLeft("fonction", "utilisateurinformations.ID_FONCTION = fonction.ID_FONCTION", "LIBELLE_FONCTION")
+                 ->where("utilisateurinformations.ID_UTILISATEURINFORMATIONS = ?", $id);
+
+             $result = $this->fetchRow($select);
+
+             return $result == null ? null : $result->toArray();
+        }
+
         public function getContact($item, $id)
         {
             $select = $this->select()->setIntegrityCheck(false);

@@ -1,0 +1,77 @@
+<?php echo $this->render('date-commission/partials/header.phtml') ?>
+
+<form class='form-horizontal' method='post' >
+
+    <div class='pull-right' >
+        <a class='btn btn-default' href="<?php echo $this->url(array('id' => $this->commission['ID_COMMISSION']), 'comm_calendrier', true) ?>">Annuler l'ajout</a>
+        <input type='submit' class="btn btn-success" value="Ajouter">
+    </div>
+
+    <h2>Ajout d'une date de passage en commission</h2>
+
+    <h3>Informations générales</h3>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Libellé</label>
+        <div class="col-sm-9">
+            <input class='form-control' type='text' name='LIBELLE_DATECOMMISSION' required />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Type d'évènement</label>
+        <div class="col-sm-9">
+            <select class='form-control' name='ID_COMMISSIONTYPEEVENEMENT' required>
+                <?php foreach( $this->DB_typesevenements as $item ) : ?>
+                    <option value='<?php echo $item["ID_COMMISSIONTYPEEVENEMENT"] ?>' >
+                        <?php echo $item["LIBELLE_COMMISSIONTYPEEVENEMENT"] ?>
+                    </option>
+                <?php endforeach ?>
+            </select>
+        </div>
+    </div>
+
+    <h3>Dates de passages <a href='#' style='font-size: 14px; line-height: 24px; float: right; font-weight: normal;' onclick="time = Date.now(); $('table#dates tbody tr:last-child').clone().appendTo($('table#dates tbody')).find('input, select').each(function() {$(this).attr('name', $(this).attr('name').replace(/-1/gi, time));}); return false;">Ajouter une date de passage</a></h3>
+
+    <table id="dates" class="table table-condensed tabled-hover">
+        <thead>
+            <tr>
+                <th>Jour de passage</th>
+                <th>Heure du début</th>
+                <th>Heure de fin</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input name="dates[-1][jour]" type='date' class='form-control' required />
+                </td>
+                <td>
+                    <input name="dates[-1][heure_debut]" type='time' class='form-control' required />
+                </td>
+                <td>
+                    <input name="dates[-1][heure_fin]" type='time' class='form-control' required />
+                </td>
+                <td>
+                    <small><a href="#" onclick='$(this).parent().parent().parent().remove(); return false;' >Retirer</a></small>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Périodicité jusqu'au 31/12/<?php echo date('y') ?></label>
+        <div class="col-sm-9">
+            <select class='form-control' name='periodicite'>
+                <option>Une seule fois</option>
+                <option>Toutes les semaines (week-end exclu)</option>
+                <option>Toutes les 2 semaines (week-end exclu)</option>
+                <option>Toutes les 3 semaines (week-end exclu)</option>
+                <option>Toutes les 4 semaines (week-end exclu)</option>
+            </select>
+        </div>
+    </div>
+
+
+</form>

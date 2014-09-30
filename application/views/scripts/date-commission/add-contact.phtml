@@ -1,0 +1,88 @@
+<form class="form-horizontal" method='post' action="<?php echo $this->url(array(), 'ets_contacts_add') ?>">
+
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class='modal-title'>Ajouter un contact</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Nom</label>
+          <div class="col-sm-9">
+            <input class='form-control' type='text' name='lastname' placeholder='Nom' />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Prénom</label>
+          <div class="col-sm-9">
+            <input class='form-control' type='text' name='firstname' placeholder='Prénom' />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Société</label>
+          <div class="col-sm-9">
+            <input class='form-control' type='text' name='societe' />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Fonction</label>
+          <div class="col-sm-9">
+            <select class='form-control' name='id_fonction' >
+              <?php foreach($this->fonctions as $fonction) : ?>
+                <option value='<?php echo $fonction["ID_FONCTION"] ?>' <?php if(($fonction["ID_FONCTION"] == $this->contact["ID_FONCTION"])) echo "selected" ?> >
+                  <?php echo $fonction["LIBELLE_FONCTION"] ?>
+                </option>
+              <?php endforeach ?>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Téléphones</label>
+          <div class="col-sm-9">
+            <input class='form-control' type='text' name='fixe' placeholder='Téléphone fixe ...' /><br/>
+            <input class='form-control' type='text' name='mobile' placeholder='Portable ...' /><br/>
+            <input class='form-control' type='text' name='fax' placeholder='Fax ...' />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Courriel</label>
+          <div class="col-sm-9">
+            <input class='form-control' type='text' name='mail' />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Site web</label>
+          <div class="col-sm-9">
+            <input class='form-control' type='text' name='web' />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Adresse</label>
+          <div class="col-sm-9">
+            <textarea class='form-control' name='adresse' style="width: 100%"><?php if(isset($this->user_info["OBS_UTILISATEURINFORMATIONS"])) echo $this->user_info["OBS_UTILISATEURINFORMATIONS"] ?></textarea>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+          <a href="#" data-dismiss="modal" class="btn">Annuler</a>
+          <input type='submit' id='submit' value='Ajouter' class='btn btn-success' />
+      </div>
+
+    </div>
+
+  </div>
+
+</form>

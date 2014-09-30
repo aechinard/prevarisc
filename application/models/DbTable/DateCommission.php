@@ -130,4 +130,24 @@
             return $this->getAdapter()->fetchAll($select);
         }
 
+        public function informationsDossiers($id_datecommission)
+        {
+            $select = $this->select()
+                ->setIntegrityCheck(false)
+                ->from("dossieraffectation", null)
+                ->joinInner("dossier", 'dossieraffectation.ID_DOSSIER_AFFECT = dossier.ID_DOSSIER', 'ID_DOSSIER')
+                ->joinInner("dossiernature", "dossier.ID_DOSSIER = dossiernature.ID_DOSSIER", "ID_NATURE")
+                ->joinleft("etablissementdossier", "dossier.ID_DOSSIER = etablissementdossier.ID_DOSSIER", null)
+                ->joinleft("etablissementinformations", "etablissementdossier.ID_ETABLISSEMENT = etablissementinformations.ID_ETABLISSEMENT AND etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS = ( SELECT MAX(etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS) FROM etablissementinformations WHERE etablissementinformations.ID_ETABLISSEMENT = etablissementdossier.ID_ETABLISSEMENT )", array('ID_CATEGORIE', 'ID_CLASSE', 'ID_TYPEACTIVITE', 'ID_GENRE'))
+                ->joinLeft("etablissementadresse", "etablissementdossier.ID_ETABLISSEMENT = etablissementadresse.ID_ETABLISSEMENT", "NUMINSEE_COMMUNE AS NUMINSEE_COMMUNE_DEFAULT")
+                ->joinLeft(array("etablissementadressesite" => "etablissementadresse"), "etablissementadressesite.ID_ETABLISSEMENT = (SELECT ID_FILS_ETABLISSEMENT FROM etablissementlie WHERE ID_ETABLISSEMENT = etablissementdossier.ID_ETABLISSEMENT LIMIT 1)", "NUMINSEE_COMMUNE AS NUMINSEE_COMMUNE_SITE")
+                ->joinLeft(array("etablissementadressecell" => "etablissementadresse"), "etablissementadressecell.ID_ETABLISSEMENT = (SELECT ID_ETABLISSEMENT FROM etablissementlie WHERE ID_FILS_ETABLISSEMENT = etablissementdossier.ID_ETABLISSEMENT LIMIT 1)", "NUMINSEE_COMMUNE AS NUMINSEE_COMMUNE_CELL")
+                ->joinleft("groupementcommune", "groupementcommune.NUMINSEE_COMMUNE = etablissementadresse.NUMINSEE_COMMUNE", "groupementcommune.ID_GROUPEMENT AS ID_GROUPEMENT_DEFAULT")
+                ->joinleft(array("groupementcommunesite" => "groupementcommune"), "groupementcommunesite.NUMINSEE_COMMUNE = etablissementadressesite.NUMINSEE_COMMUNE", "groupementcommunesite.ID_GROUPEMENT AS ID_GROUPEMENT_SITE")
+                ->joinleft(array("groupementcommunecell" => "groupementcommune"), "groupementcommunecell.NUMINSEE_COMMUNE = etablissementadressecell.NUMINSEE_COMMUNE", "groupementcommunecell.ID_GROUPEMENT AS ID_GROUPEMENT_CELL")
+                ->where('dossieraffectation.ID_DATECOMMISSION_AFFECT = ?', $id_datecommission);
+
+            return $this->getAdapter()->fetchAll($select);
+        }
+
     }

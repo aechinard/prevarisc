@@ -1,0 +1,47 @@
+<?php echo $this->render('date-commission/partials/header.phtml') ?>
+
+<div class='pull-right' >
+  <a class='btn btn-default' href="<?php echo $this->url(array('id_commission' => $this->commission['ID_COMMISSION'], 'id' => $this->datecommission['ID_DATECOMMISSION']), 'datecomm_pieces_jointes', true) ?>">Revenir sur l'affichage des contacts</a>
+  <div class='btn-group'>
+    <a href='<?php echo $this->url(array('id_commission' => $this->commission['ID_COMMISSION'], 'id' => $this->datecommission['ID_DATECOMMISSION']), 'datecomm_pieces_jointes_add', true) ?>' class="btn btn-primary" data-toggle="modal" data-target="#reponse-modal" >Ajouter une pièce jointe</a>
+  </div>
+</div>
+
+<h2>Gestion des pièces jointes</h2>
+
+<?php if(count($this->pieces_jointes) == 0) : ?>
+    <p class='muted'>Il n'y a pas de pièce jointe.</p>
+<?php else : ?>
+<table id="table-pieces-jointes" class='table table-bordered table-condensed table-hover'>
+	<thead>
+		<tr>
+			<th>Nom</th>
+			<th>Description</th>
+			<th>Date d'ajout</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($this->pieces_jointes as $piecejointe) : ?>
+			<tr>
+				<td>
+					<a href='/download?file=<?php echo $piecejointe['ID_PIECEJOINTE'] . $piecejointe['EXTENSION_PIECEJOINTE'] ?>' target='_blank' >
+						<?php echo $piecejointe['NOM_PIECEJOINTE'] ?>
+					</a>
+				</td>
+				<td>
+					<?php echo empty($piecejointe['DESCRIPTION_PIECEJOINTE']) ? 'Aucune description.' : nl2br(str_replace("<br />", "" ,$piecejointe['DESCRIPTION_PIECEJOINTE'])) ?>
+				</td>
+				<td>
+					<?php echo date_format(new DateTime($piecejointe['DATE_PIECEJOINTE']), 'd/m/Y') ?>
+				</td>
+				<td>
+					<a href='<?php echo $this->url(array('action' => 'delete-piece-jointe', 'id_pj' => $piecejointe['ID_PIECEJOINTE'])) ?>'>Supprimer la pièce jointe</a>
+				</td>
+			</tr>
+		<?php endforeach ?>
+	</tbody>
+</table>
+<?php endif ?>
+
+<div id="reponse-modal" class="modal fade" ></div>

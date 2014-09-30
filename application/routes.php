@@ -107,6 +107,12 @@ $routes = array(
     |--------------------------------------------------------------------------
     */
     'datecomm' => new Route('commission/:id_commission/date/:id', array('controller' => 'date-commission', 'action' => 'index')),
+    'datecomm_edit' => new Route('commission/:id_commission/date/:id/edit', array('controller' => 'date-commission', 'action' => 'edit')),
+    'datecomm_edit_odj' => new Route('commission/:id_commission/date/:id/edit-odj', array('controller' => 'date-commission', 'action' => 'edit-odj')),
+    'datecomm_pieces_jointes' => new Route('commission/:id_commission/date/:id/pieces-jointes', array('controller' => 'date-commission', 'action' => 'pieces-jointes')),
+    'datecomm_pieces_jointes_edit' => new Route('commission/:id_commission/date/:id/pieces-jointes/edit', array('controller' => 'date-commission', 'action' => 'edit-pieces-jointes')),
+    'datecomm_pieces_jointes_add' => new Route('commission/:id_commission/date/:id/pieces-jointes/add', array('controller' => 'date-commission', 'action' => 'add-piece-jointe')),
+    'datecomm_pieces_jointes_delete' => new Route('commission/:id_commission/date/:id/pieces-jointes/delete/:id_pj', array('controller' => 'date-commission', 'action' => 'delete-piece-jointe')),
     'datecomm_add' => new Route('commission/:id_commission/date/add', array('controller' => 'date-commission', 'action' => 'add')),
 
     /*

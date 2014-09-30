@@ -5,7 +5,7 @@ class Model_DbTable_DossierAffectation extends Zend_Db_Table_Abstract
     protected $_name="dossieraffectation"; // Nom de la base
     protected $_primary = array("ID_DATECOMMISSION_AFFECT","ID_DOSSIER_AFFECT"); // Clé primaire
 
-    public function getDossierNonAffect($idDateCom)
+    public function getDossiers($idDateCom)
     {
         //retourne l'ensemble des dossiers programés à la date de comm passée en param et dont les horaires N'ONT PAS été précisés
         $select = $this->select()
@@ -15,10 +15,10 @@ class Model_DbTable_DossierAffectation extends Zend_Db_Table_Abstract
             ->join(array('dateComm' => 'datecommission'),'dossAffect.ID_DATECOMMISSION_AFFECT = dateComm.ID_DATECOMMISSION')
             ->join(array('dossNat' => 'dossiernature'),'dossNat.ID_DOSSIER = doss.ID_DOSSIER')
             ->join(array('dossNatListe' => 'dossiernatureliste'),'dossNat.ID_NATURE = dossNatListe.ID_DOSSIERNATURE')
-      ->join(array('dossType' => "dossiertype"), 'doss.TYPE_DOSSIER = dossType.ID_DOSSIERTYPE', 'LIBELLE_DOSSIERTYPE')
+            ->join(array('dossType' => "dossiertype"), 'doss.TYPE_DOSSIER = dossType.ID_DOSSIERTYPE', 'LIBELLE_DOSSIERTYPE')
+            ->joinleft("etablissementdossier", "doss.ID_DOSSIER = etablissementdossier.ID_DOSSIER", null)
+            ->joinleft("etablissementinformations", "etablissementdossier.ID_ETABLISSEMENT = etablissementinformations.ID_ETABLISSEMENT AND etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS = ( SELECT MAX(etablissementinformations.DATE_ETABLISSEMENTINFORMATIONS) FROM etablissementinformations WHERE etablissementinformations.ID_ETABLISSEMENT = etablissementdossier.ID_ETABLISSEMENT )")
             ->where('dateComm.ID_DATECOMMISSION = ?',$idDateCom)
-            ->where("dossAffect.HEURE_DEB_AFFECT IS NULL")
-            ->where("dossAffect.HEURE_FIN_AFFECT IS NULL")
             ->group('doss.ID_DOSSIER');
 
         return $this->getAdapter()->fetchAll($select);
