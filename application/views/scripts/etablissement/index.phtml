@@ -50,10 +50,19 @@
                 <?php endif ?>
 
 
-                <?php if(in_array($this->etablissement['informations']['ID_GENRE'], array(2, 3, 5))) : ?>
+                <?php if(in_array($this->etablissement['informations']['ID_GENRE'], array(1, 2, 3, 5)) && $this->etablissement['informations']['PERIODICITE_ETABLISSEMENTINFORMATIONS'] !== null) : ?>
                 <dt>Périodicité</dt>
                 <dd>
-                    <p><?php echo $this->etablissement['informations']['ID_GENRE'] == 3 ? end($this->etablissement['parents'])['PERIODICITE_ETABLISSEMENTINFORMATIONS'] : $this->etablissement['informations']['PERIODICITE_ETABLISSEMENTINFORMATIONS'] ?> mois</p>
+                    <p>
+                        <?php if ($this->etablissement['informations']['ID_GENRE'] == 1): ?>
+                            <i class="icon-info-sign" title="Périodicité la plus contraignante des fils ERP"></i>
+                        <?php endif ?>
+                        <?php if (in_array($this->etablissement['informations']['ID_GENRE'], array(2, 5)) && $this->etablissement['informations']['PERIODICITE_ETABLISSEMENTINFORMATIONS'] <> $this->default_periodicite): ?>
+                            <i class="icon-exclamation-sign" title="Periodicite non standard"></i>
+                        <?php endif ?>
+                        <?php echo $this->etablissement['informations']['PERIODICITE_ETABLISSEMENTINFORMATIONS'] ?> mois
+                    </p>
+
                 </dd>
                 <?php endif ?>
             </dl>
@@ -199,7 +208,23 @@
 
             <!-- Etablissement lié -->
             <?php if(count($this->etablissement['etablissement_lies']) > 0) : ?>
-            <h4 class='h4_subtitle'>Établissements liés <small><?php echo count($this->etablissement['etablissement_lies']) > 0 ? "(" . count($this->etablissement['etablissement_lies']) . " établissements)" : "" ?></small></h4>
+            <h4 class='h4_subtitle'>Établissements liés <small><?php echo count($this->etablissement['etablissement_lies']) > 0 ? "(" . count($this->etablissement['etablissement_lies']) . ")" : "" ?></small>
+                <input type="text" class="pull-right input-medium" id="filterLinkedEts" placeholder="Filtrer les établissements" />
+                <script>
+                    $(document).ready(function(){
+                        $('#filterLinkedEts').keyup(function() {
+                            var searchString = $(this).val().toLowerCase();
+                            $(this).parent().next().find('li').each(function(i, elem) {
+                                if ($(elem).text().toLowerCase().indexOf(searchString) !== -1) {
+                                    $(elem).show();
+                                } else {
+                                    $(elem).hide();
+                                }
+                            });
+                        });
+                    });
+                </script>
+            </h4>
             <ul class='recherche_liste unstyled no_slide' style='max-height: 500px; overflow-y: scroll;'>
                 <?php echo $this->partialLoop('search/results/etablissement.phtml', $this->etablissement['etablissement_lies']); ?>
             </ul>
@@ -223,77 +248,141 @@
                     <li class='tabs-right' ><a href='#googlemap' data-toggle="tab">Carte Google</a></li>
                 <?php endif ?>
             </ul>
-            <div class="tab-content">
-                <?php if( count($this->etablissement['adresses']) > 0 && $this->key_ign != null && $this->etablissement['adresses'][0]['LAT_ETABLISSEMENTADRESSE'] != null && $this->etablissement['adresses'][0]['LON_ETABLISSEMENTADRESSE'] != null) : ?>
-                <div id='geoportail' class="tab-pane in" style="height: 350px; max-height: 350px;">
-                    <div id='geoportail-container'  style="height: 100%; max-height: 100%;"></div>
-                    <script type="text/javascript" src="//api.ign.fr/geoportail/api/js/2.0.3/GeoportalExtended.js"></script>
-                    <script>
-                        $(document).ready(function() {
-                            viewer = Geoportal.load("geoportail-container", "<?php echo $this->key_ign ?>", {
-                                lat: <?php echo $this->etablissement['adresses'][0]['LAT_ETABLISSEMENTADRESSE'] ?>,
-                                lon: <?php echo $this->etablissement['adresses'][0]['LON_ETABLISSEMENTADRESSE'] ?>
-                            }, 17, OpenLayers.Util.extend({
-                                controls: [new OpenLayers.Control.NavToolbar(), new OpenLayers.Control.LayerSwitcher(), new Geoportal.Control.GraphicScale()],
-                                onView: function() {
-                                    <?php foreach($this->couches_cartographiques as $couche_cartographique) : ?>
-                                        viewer.getViewer().getMap().addLayer(
-                                            "<?php echo $couche_cartographique['TYPE_COUCHECARTO'] ?>",
-                                            "<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>",
-                                            "<?php echo $couche_cartographique['URL_COUCHECARTO'] ?>", {
-                                                layers: "<?php echo $couche_cartographique['LAYERS_COUCHECARTO'] ?>",
-                                                format: "<?php echo $couche_cartographique['FORMAT_COUCHECARTO'] ?>",
-                                                transparent: "<?php echo $couche_cartographique['TRANSPARENT_COUCHECARTO'] ? 'true' : 'false' ?>"
-                                            }, {
-                                                projection: 'EPSG:4326',
-                                                singleTile: false,
-                                                opacity: 1,
-                                                visibility: true
-                                            }
-                                        );
-                                    <?php endforeach ?>
-                                },
-                                proxyUrl: '/proxy'
-                            }));
-                        });
-                    </script>
-                </div>
-                <?php endif ?>
+			<div id="reponse-modal" class="modal hide fade"></div>
+			<div class="tab-content">
+            <!-- Carte IGN -->
+			<?php if( count($this->etablissement['adresses']) > 0 && $this->key_ign != null && $this->etablissement['adresses'][0]['LAT_ETABLISSEMENTADRESSE'] != null && $this->etablissement['adresses'][0]['LON_ETABLISSEMENTADRESSE'] != null) : ?>
+				<div id="geoportail" class="tab-pane active" style="height: 350px; max-height: 350px;">
+				<div id="geoportail-container" style="height: 100%; max-height: 100%;"></div>
+				<!-- SDK Géoportail -->
+				<script src="/js/sdk-ol/GpOL3Itowns.js"></script>
+				<link rel="stylesheet" href="/js/sdk-ol/GpOL3Itowns.css" />
+				<!-- FIN SDK -->
+				<script type="text/javascript">
+					var map2 = Gp.Map.load("geoportail-container", {
+						configUrl : "/js/sdk-ol/autoconf-https.json",
+						//apiKey: "<?php echo $this->key_ign ?>",
+						library: "ol3",
+						zoom : 16,
+						center : {
+							x : <?php echo $this->etablissement['adresses'][0]['LON_ETABLISSEMENTADRESSE'] ?>,
+							y : <?php echo $this->etablissement['adresses'][0]['LAT_ETABLISSEMENTADRESSE'] ?>,
+							projection : "CRS:84"},
+						layersOptions : {
+							// COUCHE DE BASE
+							"GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD" : {},
+							// AUTRES COUCHES
+							<?php foreach($this->couches_cartographiques as $couche_cartographique) : ?>
+								<?php if ($couche_cartographique['URL_COUCHECARTO'] != null) : ?>
+									<?php if ($couche_cartographique['TYPE_COUCHECARTO'] == 'WMS') : ?>
+										"<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>" : {
+												title : "<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>",
+												format : "<?php echo $couche_cartographique['TYPE_COUCHECARTO'] ?>",
+												version : "1.3.0",
+												url : "<?php echo $couche_cartographique['URL_COUCHECARTO'] ?>",
+												layers : ["<?php echo $couche_cartographique['LAYERS_COUCHECARTO'] ?>"],
+												outputFormat : "<?php echo $couche_cartographique['FORMAT_COUCHECARTO'] ?>",
+												tiled : true,
+												visibility : <?php if ($couche_cartographique['TRANSPARENT_COUCHECARTO'] == 0) : ?>false<?php else : ?>true<?php endif ?>,
+												queryable : true,
+												gfiFormat : "text/html",
+												},
+									<?php elseif ($couche_cartographique['TYPE_COUCHECARTO'] == 'WFS') : ?>
+										"<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>" : {
+												title : "<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>",
+												format : "<?php echo $couche_cartographique['TYPE_COUCHECARTO'] ?>",
+												url : "<?php echo $couche_cartographique['URL_COUCHECARTO'] ?>",
+												typeNames : "<?php echo $couche_cartographique['LAYERS_COUCHECARTO'] ?>",
+												version : "2.0.0",
+												//maxFeatures : 200,
+												visibility : <?php if ($couche_cartographique['TRANSPARENT_COUCHECARTO'] == 0) : ?>false<?php else : ?>true<?php endif ?>,
+												queryable : true,
+												},
+									<?php endif ?>
+								<?php else : ?>
+									"<?php echo $couche_cartographique['LAYERS_COUCHECARTO'] ?>" : {
+									visibility : <?php if ($couche_cartographique['TRANSPARENT_COUCHECARTO'] == 0) : ?>false<?php else : ?>true<?php endif ?>
+									},
+								<?php endif ?>
+							<?php endforeach ?>
+							},
+							// additional tools to display on the map
+							controlsOptions : {
+								"layerSwitcher" : {},
+								"search" : {
+									//maximised : true
+								},
+								"orientation" : {},
+								"graphicscale" : {},
+								"mouseposition" : {},
+								//"isocurve" : {},
+								"graticule" : {},
+								//"layerimport" : {},
+								"length" : {},
+								"area" : {},
+								"azimuth" : {},
+								"elevationpath" : {},
+								"getfeatureinfo" : {
+									layers : [
+										{
+											"GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD" : {},
+										}
+									],
+									options : {
+									auto : true,
+									active: true,
+									defaultInfoFormat: "text/html",
+									defaultEvent: "singleclick",
+									cursorStyle: "pointer",
+									},
+								},
+							},
+							markersOptions : [{
+								content : "<b><?php echo $this->etablissement['informations']['LIBELLE_ETABLISSEMENTINFORMATIONS'] ?></b><br/>"+
+								"<?php echo $this->etablissement['adresses'][0]['NUMERO_ADRESSE'] ?>, <?php echo $this->etablissement['adresses'][0]['LIBELLE_RUE'] ?><br/>"+
+								"<?php echo $this->etablissement['adresses'][0]['CODEPOSTAL_COMMUNE'] ?> <?php echo $this->etablissement['adresses'][0]['LIBELLE_COMMUNE'] ?><br/>"
+							}],
+						});
+					</script>
+				</div>
+			<?php endif ?>
 
+				<!-- Carte GoogleMap -->
                 <?php if( count($this->etablissement['adresses']) > 0 && $this->key_googlemap != null && $this->etablissement['adresses'][0]['LAT_ETABLISSEMENTADRESSE'] != null && $this->etablissement['adresses'][0]['LON_ETABLISSEMENTADRESSE'] != null) : ?>
                 <div id='googlemap' class="tab-pane in" style="height: 350px; max-height: 350px;">
-                    <div id='googlemap-container'  style="height: 100%; max-height: 100%;"></div>
+                    <div id='googlemap-container' style="height: 100%; max-height: 100%;"></div>
                     <script type="text/javascript"
-                        src="https://maps.googleapis.com/maps/api/js?key=<?php echo $this->key_googlemap ?>&sensor=false">
+                      src="https://maps.googleapis.com/maps/api/js?key=<?php echo $this->key_googlemap ?>&sensor=false">
                       </script>
                       <script type="text/javascript">
-                        function initialize() {
+						//désactivation fonction initialize qui temporise l'affichage de la carte google (affichage après IGN)
+                        //function initialize() {
                           var point = new google.maps.LatLng(<?php echo $this->etablissement['adresses'][0]['LAT_ETABLISSEMENTADRESSE'] ?>, <?php echo $this->etablissement['adresses'][0]['LON_ETABLISSEMENTADRESSE'] ?>);
                           var map = new google.maps.Map(document.getElementById("googlemap-container"), {
                             center: point,
-                            zoom: 12
+                            zoom: 16
                           });
                           var marker = new google.maps.Marker({
                                 position: point,
                                 map: map,
                                 title: "<?php echo $this->etablissement['informations']['LIBELLE_ETABLISSEMENTINFORMATIONS'] ?>"
-                            });
-
-                           var infowindow = new google.maps.InfoWindow({
+                          });
+                          var infowindow = new google.maps.InfoWindow({
                                 content:
+                                "<b><?php echo $this->etablissement['informations']['LIBELLE_ETABLISSEMENTINFORMATIONS'] ?></b> <br />"+
                                 "<?php echo $this->etablissement['adresses'][0]['NUMERO_ADRESSE'] ?>, "+
                                 "<?php echo $this->etablissement['adresses'][0]['LIBELLE_RUE'] ?> <br />"+
                                 "<?php echo $this->etablissement['adresses'][0]['CODEPOSTAL_COMMUNE'] ?> "+
                                 "<?php echo $this->etablissement['adresses'][0]['LIBELLE_COMMUNE'] ?> "
-                            });
+                          });
                             infowindow.open(map,marker);
-                          };
-
+                          //};
                           google.maps.event.addDomListener(window, 'load', initialize);
                       </script>
                 </div>
                 <?php endif ?>
 
+                <!-- Diaporama photo -->
                 <?php if( count($this->etablissement['diapo']) > 0 ) : ?>
                 <div id='diaporama-tab-pane' class='tab-pane'>
                     <div id='diaporama' class="carousel slide">
@@ -325,6 +414,7 @@
                 </div>
                 <?php endif ?>
 
+                <!-- Plans -->
                 <?php if( count($this->etablissement['diapo_plans']) > 0 ) : ?>
                 <div id='plans-tab-pane' class='tab-pane'>
                     <div id='plans' class="carousel slide">
@@ -372,7 +462,7 @@
                         <tbody>
                             <?php foreach( $this->etablissement['adresses'] as $adresse ) : ?>
                                 <tr>
-                                    <td><?php echo strtolower($adresse["NUMERO_ADRESSE"]." ".$adresse["LIBELLE_RUE"]." ".$adresse["CODEPOSTAL_COMMUNE"]). " " .$adresse["LIBELLE_COMMUNE"] ?></td>
+                                    <td><?php echo strtolower($adresse["NUMERO_ADRESSE"]." ".$adresse["LIBELLE_RUE"]." ".$adresse["COMPLEMENT_ADRESSE"]." ".$adresse["CODEPOSTAL_COMMUNE"])." ".$adresse["LIBELLE_COMMUNE"] ?></td>
                                     <td>Adresse postale</td>
                                 </tr>
                             <?php endforeach ?>
