@@ -258,6 +258,10 @@
 				<script src="/js/sdk-ol/GpOL3Itowns.js"></script>
 				<link rel="stylesheet" href="/js/sdk-ol/GpOL3Itowns.css" />
 				<!-- FIN SDK -->
+				<!-- Déplacement du bouton FullScreen (sinon supperposé avec gesionnaire de couches) -->
+				<style>
+				.ol-full-screen {right:9px; top:49px}
+				</style>
 				<script type="text/javascript">
 					var map2 = Gp.Map.load("geoportail-container", {
 						configUrl : "/js/sdk-ol/autoconf-https.json",
@@ -342,7 +346,16 @@
 								"<?php echo $this->etablissement['adresses'][0]['NUMERO_ADRESSE'] ?>, <?php echo $this->etablissement['adresses'][0]['LIBELLE_RUE'] ?><br/>"+
 								"<?php echo $this->etablissement['adresses'][0]['CODEPOSTAL_COMMUNE'] ?> <?php echo $this->etablissement['adresses'][0]['LIBELLE_COMMUNE'] ?><br/>"
 							}],
+							// Appel de la fonction après le chargement de la carte
+							mapEventsOptions : {
+								"mapLoaded" : afterInitMap
+							},
 						});
+						//
+						function afterInitMap () {
+							var fsControl = new ol.control.FullScreen({});
+							map2.getLibMap().addControl(fsControl);
+						};
 					</script>
 				</div>
 			<?php endif ?>
