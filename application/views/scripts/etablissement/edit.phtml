@@ -305,7 +305,7 @@
         <!-- Carte de l'emplacement de l'établissement / informations  -->
         <div class='span6'>
             <h4 class="champ_adresse champs h4_subtitle">Adresse <a style='font-size: 0.85em; float: right; font-weight: normal;' data-toggle="modal" data-backdrop="false" href="#adresse-modal">Ajouter une adresse</a></h4>
-            <table id='adresses' class='table table-condensed champ_adresse champs'>
+			<table id='adresses' class='table table-condensed champ_adresse champs'>
                 <thead>
                     <tr>
                         <th>Localisation</th>
@@ -322,7 +322,13 @@
                     <?php endif ?>
                 </tbody>
             </table>
-
+			<dl class='dl-horizontal'>
+				<!-- Parcelle cadastrale -->
+                <dt>Parcelle cadastrale</dt>
+                <dd>
+					<input style='width: 220px; box-sizing: border-box; height: 30px;' type='text' id='COMPLEMENT_ETABLISSEMENTINFORMATIONS' name='COMPLEMENT_ETABLISSEMENTINFORMATIONS' placeholder='Numéro de parcelle cadastrale' value='<?php echo $this->etablissement['informations']['COMPLEMENT_ETABLISSEMENTINFORMATIONS'] ?>' />
+				</dd>
+			</dl>
             <h4 class='h4_subtitle'>Coordonnées</h4>
             <dl class='dl-horizontal'>
                 <!-- Téléphone -->
@@ -332,7 +338,7 @@
                 </dd>
 
                 <!-- Fax -->
-                <dt>Fax</dt>
+                <dt>Exploitant</dt>
                 <dd>
                     <input type='text' name='FAX_ETABLISSEMENT' value='<?php echo $this->etablissement['general']["FAX_ETABLISSEMENT"] ?>' />
                 </dd>
@@ -399,110 +405,404 @@
                 </dd>
             </dl>
         </div>
-
     </div>
-
 </form>
+
+<!-- Style graphique des boites de dialogue -->
+<style type="text/css">
+	.modal-header{
+		height:30px;
+	}
+	.modal
+	{
+		overflow: hidden;
+		position: absolute;
+		top: 0%;
+		left: 40%;
+	}
+	.modal-dialog{
+		margin-right: auto;
+		margin-left: auto;
+	}
+	.modal-footer{
+		height:30px;
+	}
+</style>
 
 <!-- Boite de confirmation de l'édition (cachée par défaut) -->
 <div id="confirm-modal" class="modal hide fade" >
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Confirmation de l'édition</h3>
-    </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="height: 50px">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>Confirmation de l'édition</h3>
+			</div>
 
-    <div class="modal-body">
-        <dl>
-            <dt>Valeurs conseillées</dt>
-            <dd>
-                <ul>
-                    <li id='confirm-modal-commission'>Commission renseignée : <a href="#" class='label label-info confirm-modal-input'>Aucune</a>, la commission conseillée : <a href="#" class='label confirm-modal-advisable'></a></li>
-                    <li id='confirm-modal-periodicite'>Périodicité renseignée : <a href="#" class='label label-info confirm-modal-input'>Aucune</a>, la périodicité conseillée : <a href="#" class='label confirm-modal-advisable'></a></li>
-                    <li id='confirm-modal-localsommeil'>Présence de local à sommeil renseignée : <a href="#" class='label label-info confirm-modal-input'></a>, la présence conseillée : <a href="#" class='label confirm-modal-advisable'></a></li>
-                    <li id='confirm-modal-preventionnistes' >Préventionnistes affectés : <a href="#" class='label confirm-modal-input label-info'>Aucuns</a>, les préventionnistes conseillés : <a href="#" class='label confirm-modal-advisable'></a></li>
-                </ul>
-            </dd>
-        </dl>
-    </div>
+			<div class="modal-body">
+				<dl>
+					<dt>Valeurs conseillées</dt>
+					<dd>
+						<ul>
+							<li id='confirm-modal-commission'>Commission renseignée : <a href="#" class='label label-info confirm-modal-input'>Aucune</a>, la commission conseillée : <a href="#" class='label confirm-modal-advisable'></a></li>
+							<li id='confirm-modal-periodicite'>Périodicité renseignée : <a href="#" class='label label-info confirm-modal-input'>Aucune</a>, la périodicité conseillée : <a href="#" class='label confirm-modal-advisable'></a></li>
+							<li id='confirm-modal-localsommeil'>Présence de local à sommeil renseignée : <a href="#" class='label label-info confirm-modal-input'></a>, la présence conseillée : <a href="#" class='label confirm-modal-advisable'></a></li>
+							<li id='confirm-modal-preventionnistes' >Préventionnistes affectés : <a href="#" class='label confirm-modal-input label-info'>Aucuns</a>, les préventionnistes conseillés : <a href="#" class='label confirm-modal-advisable'></a></li>
+						</ul>
+					</dd>
+				</dl>
+			</div>
 
-    <div class="modal-footer">
-        <a href="#" data-dismiss="modal" class="btn">Annuler</a>
-        <input type='submit' value='Confirmer et sauvegarder les changements' class='btn btn-success' />
-    </div>
+			<div class="modal-footer" style="height: 60px">
+				<a href="#" data-dismiss="modal" class="btn">Annuler</a>
+				<input type='submit' value='Confirmer et sauvegarder les changements' class='btn btn-success' />
+			</div>
+		</div>
+	</div>
 </div>
 
 <!-- Boite de construction d'adresse-->
-<form id="adresse-modal" class="modal hide adresse fase" action='#' method='post'>
+<form style="width: 750px; top: 10px" id="adresse-modal" class="modal hide adresse fade" action='#' method='post'>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="height: 30px">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title">Ajouter une adresse</h3>
+			</div>
 
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Ajouter une adresse</h3>
-    </div>
+			<div class="modal-body">
+				<dl class='dl-horizontal'>
+					<dt>Ville</dt>
+					<dd>
+						<input style="width: 240px" name='commune_ac' type='text' placeholder='Nom de la commune ou code postal ...' />
+						<input name='code_insee' type='hidden' />
+						<input name='code_postal' type='hidden' />
+					</dd>
 
-    <div class="modal-body">
-        <dl class='dl-horizontal'>
-            <dt>Ville</dt>
-            <dd>
-                <input name='commune_ac' type='text' placeholder='Nom de la commune ou code postal ...' />
-                <input name='code_insee' type='hidden' />
-                <input name='code_postal' type='hidden' />
-            </dd>
+					<dt>Voie</dt>
+					<dd>
+						<input style="width: 240px" type='text' name='voie_ac' placeholder='Nom de la voie ...' disabled />
+						<input type='hidden' name='type_voie' />
+						<input type='hidden' name='voie' />
+					</dd>
 
-            <dt>Voie</dt>
-            <dd>
-                <input type='text' name='voie_ac' placeholder='Nom de la voie ...' disabled />
-                <input type='hidden' name='type_voie' />
-                <input type='hidden' name='voie' />
-            </dd>
+					<dt>Numéro</dt>
+					<dd>
+						<input class="input-small" type='text' name='numero' placeholder='Numéro ...' disabled />
+					</dd>
 
-            <dt>Numéro</dt>
-            <dd>
-                <input class="input-small" type='text' name='numero' placeholder='Numéro ...' disabled />
-            </dd>
+					<dt>Complément d'adresse</dt>
+					<dd>
+						<input style="width: 240px" type='text' name='complement' placeholder="Complément d'adresse" disabled />
+					</dd>
 
-            <dt>Complément d'adresse</dt>
-            <dd>
-                <input type='text' name='complement' placeholder="Complément d'adresse" disabled />
-            </dd>
+					<dt>Type de l'adresse</dt>
+					<dd>
+						<select  style="width: 255px">
+							<option>Adresse postale</option>
+						</select>
+					</dd>
 
-            <dt>Type de l'adresse</dt>
-            <dd>
-                <select>
-                    <option>Adresse postale</option>
-                </select>
-            </dd>
+					<dt>Géolocalisation</dt>
+					<dd>
+						<?php if($this->key_ign != null) : ?><button id="geolocme" class='btn btn-small' disabled><i class="icon-map-marker"></i> Géolocaliser cette adresse (Geoportail)</button><?php endif ?>
+						<?php if($this->geoconcept_url != null) : ?><button id="geolocme-geoconcept" class='btn btn-small' disabled><i class="icon-map-marker"></i> Géolocaliser cette adresse (Geoconcept)</button><?php endif ?>
+						<?php /*if($key_googlemap = getenv('PREVARISC_PLUGIN_GOOGLEMAPKEY') != null) : ?><button id="geolocme_google" class='btn btn-small' disabled><i class="icon-map-marker"></i> Géolocaliser cette adresse (Googlemap)</button><?php endif */?>
+						<button id="geolocme_nominatim" class='btn btn-small' disabled><i class="icon-map-marker"></i> Géolocaliser cette adresse (Nominatim)</button><br/>
+						<small>Résultat : <span class='result'>Inconnu</span></small>
+					</dd>
 
-            <dt>Géolocalisation</dt>
-            <dd>
-                <?php if($this->key_ign != null) : ?><button id="geolocme" class='btn btn-small'><i class="icon-map-marker"></i> Géolocaliser cette adresse (Geoportail)</button><?php endif ?>
-                <button id="geolocme_nominatim" class='btn btn-small'><i class="icon-map-marker"></i> Géolocaliser cette adresse (Nominatim)</button>
-                <br/>
-                <small>Résultat : <span class='result'>Inconnu</span></small>
-            </dd>
+					<dt>Coordonnées</dt>
+					<dd>
+						 <input id="addressLongitude" name='lon' style="width: 240px" type='text' placeholder='Longitude' />
+						 <input style="width: 240px" type='text' name='lat' id="addressLatitude" placeholder='Latitude' />
+					</dd>
+					
+				</dl>
+			</div>
+			
+			<div class="modal-body">
+				<!-- Onglets -->
+				<ul id='menu_nav' class="nav nav-pills" style="margin: 0; padding: 0; border-bottom: none;">
+					<?php if($key_googlemap = getenv('PREVARISC_PLUGIN_GOOGLEMAPKEY')) :?>
+						<li class="nav-item nav-link" ><a href="#googlemap" data-toggle="tab">Carte Google</a></li>
+					<?php endif ?>
+					<?php if($this->key_ign != null): ?>
+						<li class="nav-item nav-link" ><a href="#geoportail" data-toggle="tab">Carte IGN</a></li>
+					<?php endif ?>
+					<?php if($this->geoconcept_url != null) : ?>
+						<li class="nav-item nav-link" ><a href="#geoconcept" data-toggle="tab">Carte Geoconcept</a></li>
+					<?php endif ?>
+				</ul>
+				<div id="reponse-modal" class="modal hide fade"></div>
+				<div class="tab-content">
+					<!-- gestion des cartes -->
+				<?php if($this->key_ign != null) : ?>
+					<div class="tab-pane active" id="geoportail" style="height: 350px; max-height: 350px;">
+						<div id="geoportail-container" style="height: 100%; max-height: 100%;"></div>
+						<!-- SDK Géoportail -->
+						<script src="/js/sdk-ol/GpSDK3D.js"></script>
+						<link rel="stylesheet" href="/js/sdk-ol/GpSDK3D.css"/>
+						<!-- FIN SDK -->
+						<!-- Déplacement du bouton FullScreen (sinon supperposé avec le gestionnaire de couches) -->
+						<style>.ol-full-screen {right:9px; top:49px}</style>
+						<script type="text/javascript">
+						map2 = Gp.Map.load("geoportail-container", {
+								configUrl : "/js/sdk-ol/autoconf-https.json",
+								// chargement de la cartographie en 2D
+								viewMode : "2d",
+								// niveau de zoom de la carte (de 1 à 21)
+								zoom : 17,
+								center : {
+									geolocate : true
+								},
+								layersOptions : {
+									// COUCHE DE BASE
+									"GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD" : {},
+									// Autres couches à afficher rajoutées par l'utilisateur
+									<?php foreach($this->couches_cartographiques as $couche_cartographique) : ?>
+											<?php if ($couche_cartographique['URL_COUCHECARTO'] != null) : ?>
+											<?php if ($couche_cartographique['TYPE_COUCHECARTO'] == 'WMS') : ?>
+												"<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>" : {
+														title : "<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>",
+														format : "<?php echo $couche_cartographique['TYPE_COUCHECARTO'] ?>",
+														version : "1.3.0",
+														url : "<?php echo $couche_cartographique['URL_COUCHECARTO'] ?>",
+														layers : ["<?php echo $couche_cartographique['LAYERS_COUCHECARTO'] ?>"],
+														outputFormat : "<?php echo $couche_cartographique['FORMAT_COUCHECARTO'] ?>",
+														tiled : true,
+														visibility : <?php if ($couche_cartographique['TRANSPARENT_COUCHECARTO'] == 0) : ?>false<?php else : ?>true<?php endif ?>,
+														queryable : true,
+														gfiFormat : "text/html",
+														},
+											<?php elseif ($couche_cartographique['TYPE_COUCHECARTO'] == 'WFS') : ?>
+												"<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>" : {
+														title : "<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>",
+														format : "<?php echo $couche_cartographique['TYPE_COUCHECARTO'] ?>",
+														url : "<?php echo $couche_cartographique['URL_COUCHECARTO'] ?>",
+														typeNames : "<?php echo $couche_cartographique['LAYERS_COUCHECARTO'] ?>",
+														version : "2.0.0",
+														//maxFeatures : 200,
+														visibility : <?php if ($couche_cartographique['TRANSPARENT_COUCHECARTO'] == 0) : ?>false<?php else : ?>true<?php endif ?>,
+														queryable : true,
+														},
+											<?php endif ?>
+										<?php else : ?>
+											"<?php echo $couche_cartographique['LAYERS_COUCHECARTO'] ?>" : {
+											visibility : <?php if ($couche_cartographique['TRANSPARENT_COUCHECARTO'] == 0) : ?>false<?php else : ?>true<?php endif ?>
+											},
+										<?php endif ?>
+									<?php endforeach ?>
+									},
+									// Outils additionnels à proposer sur la carte
+									controlsOptions : {
+										"layerSwitcher" : {},
+										"search" : {
+											//maximised : true
+										},
+										//"overview" : {},
+										"orientation" : {},
+										"graphicscale" : {},
+										"mouseposition" : {},
+										//"isocurve" : {},
+										"graticule" : {},
+										//"layerimport" : {},
+										"length" : {},
+										"area" : {},
+										"azimuth" : {},
+										"elevationpath" : {},
+										"getfeatureinfo" : {
+											layers : [
+												{
+													"GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD" : {},
+												}
+											],
+											options : {
+											auto : true,
+											active: true,
+											defaultInfoFormat: "text/html",
+											defaultEvent: "singleclick",
+											cursorStyle: "pointer",
+											},
+										},
+									},
+									// Repères visuels
+									//markersOptions : [{
+									//	content : "<b><?php echo $this->etablissement['informations']['LIBELLE_ETABLISSEMENTINFORMATIONS'] ?></b><br/>"+
+									//	"<?php echo $this->etablissement['adresses'][0]['NUMERO_ADRESSE'] ?>, <?php echo $this->etablissement['adresses'][0]['LIBELLE_RUE'] ?><br/>"+
+									//	"<?php echo $this->etablissement['adresses'][0]['CODEPOSTAL_COMMUNE'] ?> <?php echo $this->etablissement['adresses'][0]['LIBELLE_COMMUNE'] ?><br/>"
+									//}],
+									// Appel de la fonction après le chargement de la carte
+									mapEventsOptions : {
+										"mapLoaded" : afterInitMap,
+										//"centerChanged" : afterCenterChanged
+									},
+								});
+								//
+								function afterInitMap () {
+									var fsControl = new ol.control.FullScreen({});
+									map2.getLibMap().addControl(fsControl);
+								};
+						</script>
+					</div>
+				<?php endif ?>
+				<?php if($key_googlemap != null) : ?>
+					<div class="tab-pane" id="googlemap" style="height: 350px; max-height: 350px;">
+						<div id="googlemap-container" style="height: 100%; width: 100%"></div>
+						<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php echo $key_googlemap?>"></script>
+					</div>
+				<?php endif ?>
+				<?php if($this->geoconcept_url != null) : ?>
+					<div class="tab-pane" id="geoconcept" style="height: 350px; max-height: 350px;">
+						<div id='geoconcept-container'  style="height: 100%; width: 100%"></div>
+						<script type="text/javascript" src="/js/geoconcept/OpenLayers.js"></script>
+						<script type="text/javascript" src="/js/geoconcept/proj4js.js"></script>
+						<script type="text/javascript" src="/js/geoconcept/htc-lite.js"></script>
+						<?php if ($projection = getenv('PREVARISC_PLUGIN_GEOCONCEPT_PROJECTION')): ?>
+							<script type="text/javascript" src="/js/geoconcept/defs/<?php echo $projection ?>.js"></script>
+						<?php endif ?>
+						<script type="text/javascript" src="/js/geoconcept/geoconcept.js"></script>
+						<link rel="stylesheet" href="/css/geoconcept/htc.css"/>
+					</div>
+				<?php endif ?>
+			</div>
+		</div>
 
-            <dt>Longitude</dt>
-            <dd>
-                 <input id="addressLongitude" type='text' name='lon' />
-            </dd>
-
-            <dt>Latitude</dt>
-            <dd>
-                 <input id="addressLatitude" type='text' name='lat' />
-            </dd>
-        </dl>
-        <?php if($this->key_ign != null): ?>
-            <script type="text/javascript" src="//api.ign.fr/geoportail/api/js/2.1.2/GeoportalExtended.js"></script>
-            <div id='geoportail-container' style="height: 400px"></div>
-        <?php endif ?>
-    </div>
-
-    <div class="modal-footer">
-        <a href="#" data-dismiss="modal" class="btn">Annuler</a>
-        <a href="#" data-dismiss="modal" class="btn btn-success" id='submit-adresse'>Sauvegarder</a>
-    </div>
+		<div class="modal-footer">
+			<a href="#" data-dismiss="modal" class="btn btn-cancel">Annuler</a>
+			<a href="#" data-dismiss="modal" class="btn btn-success" id="submit-adresse">Sauvegarder</a>
+		</div>
+		
+		</div>
+	</div>
 </form>
 
 <script type="text/javascript">
+		// Variables globales
+		var marker;
+		// map Google
+		var map;
+		// map Geoportail
+		var map2;
+		// Init Geoportail
+
+		function initGeoportailMap()
+		{
+			map2 = Gp.Map.load("geoportail-container", {
+				configUrl : "/js/sdk-ol/autoconf-https.json",
+				// chargement de la cartographie en 2D
+				viewMode : "2d",
+				// niveau de zoom de la carte (de 1 à 21)
+				zoom : 17,
+								center : {
+									geolocate : true
+								},
+								layersOptions : {
+									// COUCHE DE BASE
+									"GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD" : {},
+									// Autres couches à afficher rajoutées par l'utilisateur
+									<?php foreach($this->couches_cartographiques as $couche_cartographique) : ?>
+											<?php if ($couche_cartographique['URL_COUCHECARTO'] != null) : ?>
+											<?php if ($couche_cartographique['TYPE_COUCHECARTO'] == 'WMS') : ?>
+												"<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>" : {
+														title : "<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>",
+														format : "<?php echo $couche_cartographique['TYPE_COUCHECARTO'] ?>",
+														version : "1.3.0",
+														url : "<?php echo $couche_cartographique['URL_COUCHECARTO'] ?>",
+														layers : ["<?php echo $couche_cartographique['LAYERS_COUCHECARTO'] ?>"],
+														outputFormat : "<?php echo $couche_cartographique['FORMAT_COUCHECARTO'] ?>",
+														tiled : true,
+														visibility : <?php if ($couche_cartographique['TRANSPARENT_COUCHECARTO'] == 0) : ?>false<?php else : ?>true<?php endif ?>,
+														queryable : true,
+														gfiFormat : "text/html",
+														},
+											<?php elseif ($couche_cartographique['TYPE_COUCHECARTO'] == 'WFS') : ?>
+												"<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>" : {
+														title : "<?php echo $couche_cartographique['NOM_COUCHECARTO'] ?>",
+														format : "<?php echo $couche_cartographique['TYPE_COUCHECARTO'] ?>",
+														url : "<?php echo $couche_cartographique['URL_COUCHECARTO'] ?>",
+														typeNames : "<?php echo $couche_cartographique['LAYERS_COUCHECARTO'] ?>",
+														version : "2.0.0",
+														//maxFeatures : 200,
+														visibility : <?php if ($couche_cartographique['TRANSPARENT_COUCHECARTO'] == 0) : ?>false<?php else : ?>true<?php endif ?>,
+														queryable : true,
+														},
+											<?php endif ?>
+										<?php else : ?>
+											"<?php echo $couche_cartographique['LAYERS_COUCHECARTO'] ?>" : {
+											visibility : <?php if ($couche_cartographique['TRANSPARENT_COUCHECARTO'] == 0) : ?>false<?php else : ?>true<?php endif ?>
+											},
+										<?php endif ?>
+									<?php endforeach ?>
+									},
+									// Outils additionnels à proposer sur la carte
+									controlsOptions : {
+										"layerSwitcher" : {},
+										"search" : {
+											//maximised : true
+										},
+										//"overview" : {},
+										"orientation" : {},
+										"graphicscale" : {},
+										"mouseposition" : {},
+										//"isocurve" : {},
+										"graticule" : {},
+										//"layerimport" : {},
+										"length" : {},
+										"area" : {},
+										"azimuth" : {},
+										"elevationpath" : {},
+										"getfeatureinfo" : {
+											layers : [
+												{
+													"GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD" : {},
+												}
+											],
+											options : {
+											auto : true,
+											active: true,
+											defaultInfoFormat: "text/html",
+											defaultEvent: "singleclick",
+											cursorStyle: "pointer",
+											},
+										},
+									},
+									// Repères visuels
+									//markersOptions : [{
+									//	content : "<b><?php echo $this->etablissement['informations']['LIBELLE_ETABLISSEMENTINFORMATIONS'] ?></b><br/>"+
+									//	"<?php echo $this->etablissement['adresses'][0]['NUMERO_ADRESSE'] ?>, <?php echo $this->etablissement['adresses'][0]['LIBELLE_RUE'] ?><br/>"+
+									//	"<?php echo $this->etablissement['adresses'][0]['CODEPOSTAL_COMMUNE'] ?> <?php echo $this->etablissement['adresses'][0]['LIBELLE_COMMUNE'] ?><br/>"
+									//}],
+									// Appel de la fonction après le chargement de la carte
+									mapEventsOptions : {
+										"mapLoaded" : afterInitMap,
+										//"centerChanged" : afterCenterChanged
+									},
+								});
+								//
+								function afterInitMap () {
+									var fsControl = new ol.control.FullScreen({});
+									map2.getLibMap().addControl(fsControl);
+								};
+								function afterCenterChanged () {
+									//var lonlat = new ol.proj.LonLat(map2.getCenter().x, map2.getCenter().y);
+									//lonlat = lonlat.transform('EPSG:3857', 'ESPG:4326');
+									var lon = parseFloat(map2.getCenter().x);
+									var lat = parseFloat(map2.getCenter().y);
+									var coord = [parseFloat(map2.getCenter().x), parseFloat(map2.getCenter().y)];
+									var lonlat = ol.coordinate.toStringXY(coord, 1);
+									// wgs84-coordinates that need to be reprojected
+									//var lonlat2 = ol.proj.addCoordinateTranforms(lonlat, 'E
+									var lonlat2 = new ol.proj.transform(lonlat, "EPSG:3857","EPSG:4326");
+									console.log(lonlat2);
+									//var newlonLat = new ol.LonLat(lon, lat).transform(map2.getProjectionObject() , new ol.Projection('EPSG:4326'));
+									var center = map2.getCenter();
+									var newlonlat = new ol.proj.toLonLat(center, 'EPSG:4326');
+									alert(newlonlat);
+									$("input[name='lat']").val(map2.getCenter().x);
+									$("input[name='lon']").val(map2.getCenter().y);
+								};
+		};
+		
     $(document).ready(function() {
         // Action à la sauvegarde de l'établissement
         $("form#etablissement input[type='submit']").click(function() {
@@ -845,7 +1145,7 @@
             }
         });
 
-        // Auto-complétion des préventionnistes
+        // Auto-complétion des préventionnistes => 22
         $(".preventionnistes input[type='text']").typeahead({
             minLength: 3,
             source: function(query, process) {
@@ -854,7 +1154,7 @@
                     type: 'post',
                     data: {
                         name: query,
-                        fonctions: 13,
+                        fonctions: 22,
                         limit: 100,
                     },
                     success: function (result) {
@@ -916,129 +1216,177 @@
             $("#adresse-modal input[name='voie']").val( item.ID_RUE );
             $("#adresse-modal input[name='type_voie']").val( item.ID_RUETYPE );
             $("#adresse-modal input[name='numero'], #adresse-modal input[name='complement']").removeAttr("disabled");
+			$("#adresse-modal button[id='geolocme']").removeAttr("disabled");
+			$("#adresse-modal button[id='geolocme_nominatim']").removeAttr("disabled");
+			$("#adresse-modal button[id='geolocme_geoportail']").removeAttr("disabled");
         }).click(function() {
             $(this).val("");
             $("#adresse-modal input[name='numero'], #adresse-modal input[name='complement']").val("").attr("disabled", true).blur();
         });
+		
+		//<!-- Autoriser le déplacement de la fenêtre par le header -->
+		$("#adresse-modal").draggable({handle: ".modal-header"});
+		$("#confirm-modal").draggable({handle: ".modal-header"});
 
-        <?php if($this->key_ign != null): ?>
-            viewer = initViewer(
-                "geoportail-container", 
-                "<?php echo $this->key_ign ?>", 
-                [{lon: -1.638023, lat: 48.134198999999995, description: ""}], 
-                <?php echo json_encode($this->couches_cartographiques) ?>,
-                function() {
-                    
-                    // removes the marker
-                    var vectorLayers = viewer.getViewer().getMap().getLayersByClass('OpenLayers.Layer.Vector');
-                    if (vectorLayers !== null && vectorLayers.length > 0) {
-                        var vectorLayer = vectorLayers[0];
-                        if (vectorLayer.features !== null && vectorLayer.features.length > 0) {
-                            vectorLayer.features[0].destroy();
-                        }
-                    }
+		// PARTIE GEOLOCALISATION CARTOGRAPHIE
+		//Initialisation des cartes en fonction des clés
+		<?php if($this->key_ign != null) : ?>
+			//initGeoportailMap()
+		<?php endif ?>
+		<?php if($key_googlemap != null) :?>
+			initGoogleMap()
+		<?php endif ?>
 
-                    viewer.getViewer().getMap().events.register("moveend", viewer.getViewer().getMap(), function(e) {
-                        if (geolocalizing) {
-                            geolocalizing = false;
-                            var map = viewer.getViewer().getMap();
-                            var center = map.getCenter().transform(map.getProjection(), 'EPSG:4326');
-                            if(center && center.lon && center.lat) {
-                                $("span.result").text("Géolocalisée IGN");
-                                $("input[name='lon']").val(center.lon);
-                                $("input[name='lat']").val(center.lat);
-                                putMarkerAt(map, map.getCenter(), map.getProjection());
-                            }
-                            else {
-                                $("span.result").text("Introuvable");
-                                $("input[name='lon']").val(0);
-                                $("input[name='lat']").val(0);
-                            }
-                        }
-                    });
+		// Init Googlemap
+		function initGoogleMap()
+		{
+			var lat = 48.852969;
+			var lon = 4.59590009;
+			map = new google.maps.Map(document.getElementById("googlemap-container"), {
+				//Nous plaçons le centre de la carte avec les coordonnées ci-dessus
+				center: new google.maps.LatLng(lat, lon), 
+				// Nous définissons le zoom par défaut
+				zoom: 11,
+				// zoom sur double click désactv
+				disableDoubleClickZoom: true,
+				// Nous définissons le type de carte (ici carte routière)
+				mapTypeId: google.maps.MapTypeId.ROADMAP, 
+				// Nous activons les options de contrôle de la carte (plan, satellite...)
+				mapTypeControl: true,
+				scrollwheel: true, 
+				mapTypeControlOptions: {
+					// Cette option sert à définir comment les options se placent
+					style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR 
+				},
+				// Activation des options de navigation dans la carte (zoom...)
+				navigationControl: true, 
+				navigationControlOptions: {
+					// Comment ces options doivent-elles s'afficher
+					style: google.maps.NavigationControlStyle.ZOOM_PAN 
+				}
+			});
+		};
 
-                    OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
-                        defaultHandlerOptions:{
-                            'single': true,
-                            'double': false,
-                            'pixelTolerance': 0,
-                            'stopSingle': false,
-                            'stopDouble': false
-                        },
-
-                        /**
-                         * Constructor
-                         */
-                        initialize: function(options) {
-                            OpenLayers.Control.prototype.initialize.apply(this,arguments);
-                            this.handlerOptions= OpenLayers.Util.extend({},this.defaultHandlerOptions);
-                            this.handler= new OpenLayers.Handler.Click(
-                                this, {'click': this.trigger}, this.handlerOptions);
-                        },
-
-                        /**
-                         * APIMethod: trigger
-                         */
-                        trigger: function(e) {
-                            var lonlat = this.map.getLonLatFromViewPortPx(e.xy).transform(
-                                this.map.getProjection(), OpenLayers.Projection.CRS84
-                            );
-
-                            $("span.result").text("Manuel par clic sur la carte");
-                            $("input[name='lon']").val(lonlat.lon);
-                            $("input[name='lat']").val(lonlat.lat);
-
-                            // update map
-                            putMarkerAt(this.map, this.map.getLonLatFromViewPortPx(e.xy), this.map.getProjection());
-                        }
-                    });
-
-                    // création et insertion du nouveau contrôleur
-                    var monClic = new OpenLayers.Control.Click({
-                        autoActivate:true
-                    });
-                    viewer.getViewer().getMap().addControl(monClic);
-                }
-            );
-
-            geolocalizing = false;
-            $('#adresse-modal #geolocme').click(function(e) {
-                e.preventDefault();
-                var adresse = "";
-                var numero = $("input[name='numero']").val().trim();
-                var voie = $("input[name='voie_ac']").val().trim();
-                var codepostal = $("input[name='code_postal']").val();
-                var commune = $("input[name='commune_ac']").val().replace(/\(.*\)/g, '');
-                if (!commune) {
-                    $("span.result").text("Pas de commune renseignée");
-                    return false;
-                }
-                if (!voie) {
-                    $("span.result").text("Pas de voie renseignée");
-                    return false;
-                }
-                if (numero) {
-                    adresse += numero + ", ";
-                }
-                adresse += voie + ", " + codepostal +  " " + commune;
-                $("span.result").text("Géolocalisation en cours...");
-
-                geolocalizing = true;
-                console.log('Geolocalising : '+adresse);
-                viewer.setCenterAtLocation({
-                    address: adresse
-                });
-
-                return false;
-            });
-
-            
-
-        <?php endif ?>
-
-        // Géolocalisation de l'adresse
+		// Géolocalisation de l'adresse avec Géoportail
+        $('#adresse-modal #geolocme').click(function(e) {
+			e.preventDefault();
+			var adresse = "";
+			var numero = $("input[name='numero']").val().trim();
+			var voie = $("input[name='voie_ac']").val().trim();
+			var codepostal = $("input[name='code_postal']").val();
+			var commune = $("input[name='commune_ac']").val().replace(/\(.*\)/g, '');
+			if (!commune) {
+				$("span.result").text("Pas de commune renseignée");
+				return false;
+			}
+			if (!voie) {
+				$("span.result").text("Pas de voie renseignée");
+				return false;
+			}
+			if (numero) {
+				adresse += numero + ", ";
+			}
+			adresse += voie + ", " + codepostal +  ", " + commune;
+			$("span.result").text("Géolocalisation en cours...");
+			<?php if($key_googlemap != null) :?>
+				// Récupération de l'adresse tapée dans le formulaire
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode( { 'address': adresse}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK)
+					{
+						$("span.result").text("OK");
+						map.setCenter(results[0].geometry.location);
+						// Récupération des coordonnées GPS du lieu tapé dans le formulaire
+						var strposition = results[0].geometry.location+"";
+						strposition=strposition.replace('(', '');
+						strposition=strposition.replace(')', '');
+						// Affichage des coordonnées
+						var lonlat=strposition.split(",");
+						$("input[name='lat']").val(lonlat[0]);
+						$("input[name='lon']").val(lonlat[1]);
+						// Création du marqueur du lieu (épingle)
+						marker = new google.maps.Marker({
+							map: map,
+							position: results[0].geometry.location,
+							title: "GEOLOCALISATION DE L'ETABLISSEMENT",
+							//zoom:18,
+							draggable:true
+						});
+						// Info-bulle avec l'adresse recherchée
+						var infowindow = new google.maps.InfoWindow({
+							content:
+							"<b>Position de l'établissement</b> <br />"+
+							$("input[name='numero']").val() + " " + $("input[name='voie_ac']").val() + "<br/>" +
+							$("input[name='code_postal']").val() + " " + $("input[name='commune_ac']").val()
+						});
+						infowindow.open(map,marker);
+						//map.setCenter(new google.maps.LatLng(geolocations[0].lat,geolocations[0].lon));
+						map.setZoom(18);
+						// Si l'on déplace le marker, les coordonnées sont mises à jour
+						marker.addListener('drag', handleEvent);
+						function handleEvent(event) {
+							$("input[name='lat']").val(event.latLng.lat());
+							$("input[name='lon']").val(event.latLng.lng());
+						};
+						google.maps.event.addListener(marker, 'rightclick', function(events) {
+						   if(confirm("Etes-vous sur de vouloir supprimer ce marqueur ?")){
+							  this.setMap(null);
+						   }
+						});
+					}
+					else
+					{
+						$("span.result").text("Adresse introuvable: " + status);
+					}
+				});
+			<?php endif ?>
+			<?php if($this->key_ign != null) : ?>
+				//var lonlat = new OpenLayers.LonLat(geolocations[0].lon, geolocations[0].lat);
+				//lonlat = lonlat.transform('EPSG:4326', viewer.getProjection());
+				//putMarkerAt(viewer, lonlat, viewer.getProjection());
+				//map2.setCenter(parseFloat(geolocations[0].lon), parseFloat(geolocations[0].lat));
+				// Récupération de l'adresse tapée dans le formulaire
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode( { 'address': adresse}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK)
+					{
+						$("span.result").text("OK");
+						//map.setCenter(results[0].geometry.location);
+						// Récupération des coordonnées GPS du lieu tapé dans le formulaire
+						var strposition = results[0].geometry.location+"";
+						strposition=strposition.replace('(', '');
+						strposition=strposition.replace(')', '');
+						// Affichage des coordonnées
+						var lonlat=strposition.split(",");
+						$("input[name='lat']").val(lonlat[0]);
+						$("input[name='lon']").val(lonlat[1]);
+						var lon = parseFloat(lonlat[1]);
+						var lat = parseFloat(lonlat[0]);
+						map2.setCenter({
+							x:lon,
+							y:lat,
+							projection : "EPSG:4326"
+						});
+						map2.setZoom(17);
+					}
+					else
+					{
+						$("span.result").text("Adresse introuvable: " + status);
+					}
+				});
+			<?php endif ?>
+			<?php if ($this->geoconcept_url != null): ?>
+				var lonlat = new OpenLayers.LonLat(geolocations[0].lon, geolocations[0].lat);
+				lonlat = lonlat.transform(new OpenLayers.Projection('EPSG:4326'), new OpenLayers.Projection(map.getProjection()));
+				map.moveTo(lonlat, 8);
+				geoConceptPutMarkerAt(map, lonlat);
+				map.updateSize();
+			<?php endif ?>
+		});
+		
+		// Géolocalisation de l'adresse avec Nominatim
         $('#adresse-modal #geolocme_nominatim').click(function() {
-            element = $(this);
+			element = $(this);
             $.ajax({
                 url: "//nominatim.openstreetmap.org/search",
                 dataType: 'json',
@@ -1052,21 +1400,80 @@
                     postalcode: $("input[name='code_postal']").val()
                 },
                 beforeSend: function() {
-                    element.text("Géolocalisation en cours ...");
+                    $("span.result").text("Géolocalisation en cours ...");
                 },
                 success: function(geolocations) {
-                    element.text("Géolocaliser cette adresse (Nominatim)");
+                    $("span.result").text("OK");
                     if(geolocations.length > 0) {
                         $("span.result").text("OK");
                         $("input[name='lon']").val(geolocations[0].lon);
                         $("input[name='lat']").val(geolocations[0].lat);
+						// Traitement en fonction des cartes disponibles
+						<?php if($key_googlemap != null) :?>
+							marker = new google.maps.Marker({
+                                position: new google.maps.LatLng(geolocations[0].lat, geolocations[0].lon),
+                                map: map,
+                                title: "GEOLOCALISATION DE L'ETABLISSEMENT",
+								draggable:true
+							});
+							// Info-bulle avec l'adresse recherchée
+							var infowindow = new google.maps.InfoWindow({
+                                content:
+                                "<b>Position de l'établissement</b> <br />"+
+                                $("input[name='numero']").val() + " " + $("input[name='voie_ac']").val() + "<br/>" +
+                                $("input[name='code_postal']").val() + " " + $("input[name='commune_ac']").val()
+							});
+							infowindow.open(map,marker);
+							map.setCenter(new google.maps.LatLng(geolocations[0].lat,geolocations[0].lon));
+							map.setZoom(18);
+							// Si l'on déplace le marker, les coordonnées sont mises à jour
+							marker.addListener('drag', handleEvent);
+							function handleEvent(event) {
+								$("input[name='lat']").val(event.latLng.lat());
+								$("input[name='lon']").val(event.latLng.lng());
+							};
+							google.maps.event.addListener(marker, 'rightclick', function(events) {
+								if(confirm("Etes-vous sur de vouloir supprimer ce marqueur ?")){
+									this.setMap(null);
+								}
+							});
+						<?php endif ?>
+						
                         <?php if($this->key_ign != null) : ?>
-                            var map = viewer.getViewer().getMap(); 
+						
+                            //var viewer = map2.getViewer().getMap(); 
+							//var lonlat = new OpenLayers.LonLat(geolocations[0].lon, geolocations[0].lat);
+                            //lonlat = lonlat.transform('EPSG:4326', viewer.getProjection());
+                            //putMarkerAt(map2, lonlat, map.getProjection());
+                            //viewer.setCenter(parseFloat(geolocations[0].lon), parseFloat(geolocations[0].lat));
+                            var lon = parseFloat(geolocations[0].lon);
+							var lat = parseFloat(geolocations[0].lat);
+							map2.setCenter({
+								x:lon,
+								y:lat,
+								projection : "EPSG:4326"
+							});
+							map2.setZoom(18);
+							map2.listen(centerChanged, updateLonLat, this);
+							function updateLonLat()
+							{
+								alert("ça bouge");
+								//$("input[name='lat']").val(Gp.Center.x);
+							};
+							map2.on('pointermove', function(e) {
+								if (e.dragging) {
+								  $(element).popover('destroy');
+								  return;
+								}
+							});
+						<?php endif ?>
+						
+                        <?php if ($this->geoconcept_url != null): ?>
                             var lonlat = new OpenLayers.LonLat(geolocations[0].lon, geolocations[0].lat);
-                            lonlat = lonlat.transform('EPSG:4326', map.getProjection());
-                            putMarkerAt(map, lonlat, map.getProjection());
-                            viewer.setCenter(parseFloat(geolocations[0].lon), parseFloat(geolocations[0].lat));
-                            viewer.setZoom(17);
+                            lonlat = lonlat.transform(new OpenLayers.Projection('EPSG:4326'), new OpenLayers.Projection(map.getProjection()));
+                            map.moveTo(lonlat, 8);
+                            geoConceptPutMarkerAt(map, lonlat);
+                            map.updateSize();
                         <?php endif ?>
                     }
                     else {
@@ -1076,12 +1483,15 @@
                     }
                 },
                 error: function() {
-                    element.text("Serveur de géolocalisation introuvable").attr('disabled', true);
+                    $("span.result").text("Serveur de géolocalisation introuvable");
                 }
             });
-
             return false;
         });
+	});
 
+	$(document).ready(function() {
+        // Par défaut, on montre le premier onglet disponible (carte, diapo, ou plans) sinon rien
+        $('#menu_nav a:first').tab('show');
     });
 </script>
